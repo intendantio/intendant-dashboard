@@ -1,6 +1,6 @@
 {
   "name": "@intendant/dashboard",
-  "homepage": "/admin/",
+  "homepage": "/",
   "version": "0.0.1",
   "dependencies": {
     "@emotion/react": "^11.7.1",
