@@ -166,12 +166,12 @@ class NewWidget extends React.Component {
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     <Box>
                                         <Typography variant='subtitle1'  >
-                                            {configuration.reference}
+                                            {String.capitalizeFirstLetter(configuration.reference)}
                                         </Typography>
                                         {
                                             configuration.room &&
                                             <Typography variant='body2' color="text.secondary"  >
-                                                {configuration.room.name}
+                                                {String.capitalizeFirstLetter(configuration.room.name)}
                                             </Typography>
                                         }
                                     </Box>

@@ -135,7 +135,7 @@ class NewRapport extends React.Component {
                                 <Card variant='outlined' >
                                     <CardActionArea onClick={() => { this.setState({ configuration: configuration, step: 2 }) }} style={{ padding: 10 }}>
                                         <Typography variant='subtitle1'  >
-                                            {configuration.name}
+                                            {String.capitalizeFirstLetter(configuration.name)}
                                         </Typography>
                                     </CardActionArea>
                                 </Card>
@@ -147,12 +147,12 @@ class NewRapport extends React.Component {
                                 <Card variant='outlined'   >
                                     <CardActionArea onClick={() => { this.setState({ configuration: configuration, step: 2 }) }} style={{ padding: 10 }} >
                                         <Typography variant='subtitle1'  >
-                                            {configuration.reference}
+                                            {String.capitalizeFirstLetter(configuration.reference)}
                                         </Typography>
                                         {
                                             configuration.room &&
                                             <Typography variant='body2' color="text.secondary"  >
-                                                {configuration.room.name}
+                                                {String.capitalizeFirstLetter(configuration.room.name)}
                                             </Typography>
                                         }
                                     </CardActionArea>

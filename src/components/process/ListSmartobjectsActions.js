@@ -11,12 +11,12 @@ function ListSmartobjectsActions(props) {
                     <AccordionSummary expandIcon={<ExpandMore />} >
                         <Box>
                             <Typography variant='subtitle1'   >
-                                {smartobject.reference}
+                                {String.capitalizeFirstLetter(smartobject.reference)}
                             </Typography>
                             {
                                 smartobject.room &&
                                 <Typography variant='body2' color="text.secondary"  >
-                                    {smartobject.room.name}
+                                    {String.capitalizeFirstLetter(smartobject.room.name)}
                                 </Typography>
                             }
                         </Box>

@@ -114,7 +114,7 @@ class DetailRoom extends React.Component {
                                                         </Box>
                                                         <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
                                                             <Typography variant='subtitle1' color={smartobject.state.status == "online" ? "text.primary" : "text.secondary"} >
-                                                                {smartobject.reference}
+                                                                {String.capitalizeFirstLetter(smartobject.reference)}
                                                             </Typography>
                                                         </Box>
                                                     </Box>
