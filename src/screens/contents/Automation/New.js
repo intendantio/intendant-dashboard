@@ -155,6 +155,12 @@ class NewAutomation extends React.Component {
                                                             <Typography variant='subtitle1'  >
                                                                 {String.capitalizeFirstLetter(source.reference)}
                                                             </Typography>
+                                                            {
+                                                                source.room &&
+                                                                <Typography variant='body2' color="text.secondary"  >
+                                                                    {String.capitalizeFirstLetter(source.room.name)}
+                                                                </Typography>
+                                                            }
                                                         </CardActionArea>
                                                     </Card>
                                                 </Grid>
@@ -182,8 +188,8 @@ class NewAutomation extends React.Component {
                                                         </Grid>
                                                         <NextButton xs={6} md={1} lg={1} onClick={() => { this.setState({ step: "description", action: action, selected: null, description: this.state.description + action.name.toLowerCase() }) }} />
                                                             {
-                                                                action.settings.map(setting => {
-                                                                    return <Action options={setting.options} label={String.capitalizeFirstLetter(setting.id)} setState={this.setState.bind(this)} id={action.id + "-" + setting.id} action={setting} />
+                                                                action.settings.map((setting,pIndex) => {
+                                                                    return <Action key={pIndex} options={setting.options} label={String.capitalizeFirstLetter(setting.id)} setState={this.setState.bind(this)} id={action.id + "-" + setting.id} action={setting} />
                                                                 })
                                                             }
                                                     </Grid>
@@ -207,6 +213,12 @@ class NewAutomation extends React.Component {
                                                                 <Typography variant='subtitle1'  >
                                                                     {String.capitalizeFirstLetter(source.reference)}
                                                                 </Typography>
+                                                                {
+                                                                    source.room &&
+                                                                    <Typography variant='body2' color="text.secondary"  >
+                                                                        {String.capitalizeFirstLetter(source.room.name)}
+                                                                    </Typography>
+                                                                }
                                                             </CardActionArea>
                                                         </Card>
                                                     </Grid>

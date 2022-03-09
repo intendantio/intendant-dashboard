@@ -3,9 +3,7 @@ import { Drawer, IconButton, Button, List, AppBar, Typography, Toolbar, Box, Div
 import { ShoppingCart, House, Menu, DevicesOther, ExitToApp, AccountTree, Category, DeviceHub, BarChart, Extension, Settings, Person, ArrowBack, ArrowBackIos } from '@mui/icons-material'
 import { Link, withRouter } from "react-router-dom"
 
-import BottomNavigation from '@mui/material/BottomNavigation'
-import BottomNavigationAction from '@mui/material/BottomNavigationAction'
-
+import Request from '../utils/Request'
 
 class Sidebar extends React.Component {
 
@@ -28,16 +26,16 @@ class Sidebar extends React.Component {
         document.getElementById('main').scroll({ top: 0, left: 0 })
     }
 
-    getStatus() {
-        setTimeout(() => {
-            this.setState({
-                loading: false,
-                information: {
-                    status: "",
-                    version: "1.0.0"
-                }
-            })
-        }, 1000)
+    async getStatus() {
+        let result = await new Request().fetch("/api/configurations")
+        this.setState({
+            loading: false,
+            information: {
+                status: "",
+                version: result.data.version,
+                build: result.data.build
+            }
+        })
     }
     
     onClick() {
@@ -282,10 +280,14 @@ class Sidebar extends React.Component {
                                 :
                                 <>
                                     <Typography variant='body2'>
-                                        {"Subscription free"}
+                                        {"Version " + this.state.information.version + ""}
                                     </Typography>
-                                    <Typography variant='caption'>
-                                        {"Version " + this.state.information.version + " - License GPL-3.0+"}
+                                    <Typography  variant='caption'>
+                                        {"Build " + this.state.information.build + ""}
+                                    </Typography>
+                                    
+                                    <Typography paragraph variant='caption'>
+                                        {"License GPL-3.0+"}
                                     </Typography>
                                 </>
                         }

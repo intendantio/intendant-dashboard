@@ -68,12 +68,12 @@ class UserList extends React.Component {
                 <Loading loading={this.state.loading}>
                     <Grid container spacing={1} style={{marginTop: 0}}>
                         {
-                            this.state.users.map(user => {
+                            this.state.users.map((user,index) => {
                                 let profile = this.state.profiles.filter(profile => {
                                     return profile.id == user.profile
                                 })
                                 return (
-                                    <Grid item xs={12} md={6} lg={4} >
+                                    <Grid key={index} item xs={12} md={6} lg={4} >
                                         <Card variant={'outlined'}   >
                                             <CardActionArea style={{ padding: 12, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }} onClick={() => { this.props.history.push('/user/' + user.id) }}  >
                                                 <Grid container spacing={1}>

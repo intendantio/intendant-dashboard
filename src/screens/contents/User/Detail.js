@@ -82,9 +82,9 @@ class DetailUser extends React.Component {
                                 <FormControl>
                                     <RadioGroup value={this.state.user.profile} onChange={(event) => { this.updateProfile(event.target.value) }} >
                                         {
-                                            this.state.profiles.map(profile => {
+                                            this.state.profiles.map((profile,index) => {
                                                 return (
-                                                    <FormControlLabel value={profile.id} control={<Radio />} label={String.capitalizeFirstLetter(profile.name)} />
+                                                    <FormControlLabel key={index} value={profile.id} control={<Radio />} label={String.capitalizeFirstLetter(profile.name)} />
                                                 )
                                             })
                                         }
@@ -98,10 +98,10 @@ class DetailUser extends React.Component {
                                     {"Histories"}
                                 </Typography>
                                 {
-                                    this.state.user.histories.map(history => {
+                                    this.state.user.histories.map((history,index) => {
                                         let moment = Moment(history.date)
                                         return (
-                                            <Typography variant='body1'  >
+                                            <Typography key={index} variant='body1'  >
                                                 {moment.format("HH:mm:ss") + " - " + history.action}
                                             </Typography>
                                         )

@@ -1,9 +1,7 @@
 import React from 'react'
 import Action from './Action'
-
-
-import { Grid, Card, CardActionArea, CardContent, Box, Collapse, IconButton, Typography, Button, Paper, Divider, CardHeader, CardActions } from '@mui/material'
-import { ExpandLess, Add } from '@mui/icons-material'
+import { Grid, Card, CardActionArea, CardContent, Collapse, IconButton, Typography, Divider, CardActions } from '@mui/material'
+import { Add } from '@mui/icons-material'
 import WidgetSkeleton from './WidgetSkeleton'
 
 class WidgetNewItem extends React.Component {

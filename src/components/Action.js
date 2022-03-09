@@ -17,7 +17,6 @@ const style = {
 
 class Action extends React.Component {
 
-
     constructor(props) {
         super(props)
         this.state = {
@@ -31,8 +30,6 @@ class Action extends React.Component {
             colors: ["#FFFFFF"]
         }
     }
-
-
 
     updateAction(action, value) {
         let tmp = {}

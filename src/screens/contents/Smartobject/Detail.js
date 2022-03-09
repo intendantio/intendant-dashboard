@@ -1,6 +1,6 @@
 import React from 'react'
 import JSONPretty from 'react-json-pretty'
-import { Paper, Alert, Typography, Card, Grid, Accordion, Box, Modal, AccordionSummary, AccordionDetails, ListItem, TableCell, TableRow, Button, TextField, FormControlLabel, IconButton, Switch, Divider, CardActionArea } from '@mui/material'
+import { Paper, Alert, Typography, Card, Grid, Accordion, Box, Modal, AccordionSummary, AccordionDetails, Button, TextField, FormControlLabel, IconButton, Switch, Divider, CardActionArea } from '@mui/material'
 import { ExpandMore, Edit, Warning, FlashOff, FlashOn, House, Cached, RocketLaunch } from '@mui/icons-material'
 import AlertComponent from '../../../components/Alert'
 import Action from '../../../components/Action'
@@ -263,7 +263,7 @@ class DetailSmartObject extends React.Component {
                                         <Grid item xs={12} md={4} lg={4}>
                                             <TextField
                                                 value={this.state.reference}
-                                                color={this.state.smartobject.reference != this.state.reference && "warning"}
+                                                color={this.state.smartobject.reference != this.state.reference ? "warning" : "info"}
                                                 onChange={(event) => { this.setState({ reference: event.nativeEvent.target.value }) }}
                                                 onBlur={(event) => { this.updateReference() }}
                                                 style={{

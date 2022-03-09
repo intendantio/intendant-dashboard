@@ -134,7 +134,6 @@ class NewRapport extends React.Component {
             description_off: this.state.descriptionOff,
             mode: this.state.mode,
             state: "on",
-            room: 0,
             actions: [],
             inputs: []
         }
@@ -311,12 +310,8 @@ class NewRapport extends React.Component {
                                 this.state.mode == "button" ? null :
                                     <SwitchState actionsOff={this.state.actionsOff} actionsOn={this.state.actionsOn} state={this.state.currentState} onChange={(state) => { this.setState({ currentState: state, index: -1 }) }} />
                             }
-                            <NextButton xs={4} md={this.state.mode == "button" ? 8 : 5} lg={this.state.mode == "button" ? 8 : 5} onClick={() => { this.submitAction() }} />
+                            <NextButton xs={this.state.mode == "button" ? 12 : 4} md={this.state.mode == "button" ? 6 : 1} lg={this.state.mode == "button" ? 8 : 3} onClick={() => { this.submitAction() }} />
                             <ExecuteActions mode={this.state.mode} state={this.state.currentState} actions={this.state.currentState == "on" ? this.state.actionsOn : this.state.actionsOff} onChange={(action) => { this.updateAction(action) }} />
-                            {
-                                this.state.product == "cloud" ?
-                                    <>{/*TODO*/}</>
-                                    :
                                     <ListSmartobjectsActions
                                         smartobjects={this.state.smartobjects.filter(smartobject => {
                                             return smartobject.configuration.product == this.state.product
@@ -326,7 +321,6 @@ class NewRapport extends React.Component {
                                         onOpen={(index) => { this.setState({ index: this.state.index == index ? -1 : index }) }}
                                         onChange={(action, parent) => { this.updateAction(action, parent) }}
                                     />
-                            }
                         </StepperProxy>
                         <StepperProxy index={"settings"} value={this.state.step} >
                             <MergeActions value={this.state.useMerge} onChange={(value) => { this.setState({ useMerge: value }) }} disabled={this.state.canMerge == false} />

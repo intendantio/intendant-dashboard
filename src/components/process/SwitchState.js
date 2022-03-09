@@ -9,7 +9,7 @@ function SwitchState(props) {
 
 
     return (
-        <Grid item xs={8} md={3} lg={3} style={{ minWidth: 'min-content' }} >
+        <Grid item xs={8} md={5} lg={5} style={{ minWidth: 'min-content' }} >
             <Card variant='outlined' >
                 <ToggleButtonGroup style={{ width: '100%' }} value={props.state} onChange={(event, state) => {
                     if (state != null) {
