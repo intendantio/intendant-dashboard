@@ -20,7 +20,7 @@
     "recharts": "^2.1.8"
   },
   "scripts": {
-    "build": "react-scripts build",
+    "build": "react-scripts build && node script",
     "start": "react-scripts start"
   },
   "browserslist": {
