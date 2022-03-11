@@ -1,6 +1,6 @@
 {
-    "name": "",
-    "short_name": "",
+    "name": "Intendant - Smart home" ,
+    "short_name": "Intendant",
     "icons": [
         {
             "src": "/android-chrome-192x192.png",
@@ -13,7 +13,8 @@
             "type": "image/png"
         }
     ],
-    "theme_color": "#000000",
-    "background_color": "#000000",
+    "start_url": "./index.html",
+    "theme_color": "#222B45",
+    "background_color": "#222B45",
     "display": "standalone"
 }
