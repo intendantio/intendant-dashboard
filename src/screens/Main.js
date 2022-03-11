@@ -34,18 +34,21 @@ import Loading from '../components/Loading'
 import { Grid, Card, Skeleton } from '@mui/material'
 
 import { BrowserRouter as Router, Switch, Route, useHistory, } from "react-router-dom"
+import Desktop from '../components/Desktop'
 
-const renderLoader = () => {
+const renderLoader = (props) => {
     return (
         <>
+        <Desktop isMobile={props.isMobile}>
             <Card variant='outlined' style={{ padding: 10, marginBottom: 8 }}>
-                <Grid container >
-                    <Grid item xs={12} md={12} lg={12} style={{ paddingLeft: 3, paddingRight: 3 }}>
-                        <Skeleton height={35} />
-                        <Skeleton height={22} />
+                    <Grid container >
+                        <Grid item xs={12} md={12} lg={12} style={{ paddingLeft: 3, paddingRight: 3 }}>
+                            <Skeleton height={35} />
+                            <Skeleton height={22} />
+                        </Grid>
                     </Grid>
-                </Grid>
-            </Card>
+                </Card>
+        </Desktop>
             <Card variant='outlined' style={{ padding: 10, marginTop: 8 }}>
                 <Grid container >
                     <Grid item xs={12} md={4} lg={4} style={{ paddingLeft: 5, paddingRight: 5 }}>
@@ -80,7 +83,7 @@ function Main(mainProps) {
                     <main id='main' style={{ paddingTop: mainProps.isMobile ? 8 : '4vh', width: '100vw', paddingLeft: '5vw', paddingRight: '5vw', overflowX: 'hidden', overflowY: 'visible' }} >
                         <div style={{ marginLeft: mainProps.isMobile ? 0 : 240, height: '96vh' }}>
                             <Switch>
-                                <Suspense fallback={renderLoader()}>
+                                <Suspense fallback={renderLoader(mainProps)}>
                                     <Route exact path="/" render={(props) => <Room setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject" render={(props) => <Smartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject/new/:id" render={(props) => <NewSmartObject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
