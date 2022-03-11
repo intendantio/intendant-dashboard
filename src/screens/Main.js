@@ -39,8 +39,8 @@ import Desktop from '../components/Desktop'
 const renderLoader = (props) => {
     return (
         <>
-        <Desktop isMobile={props.isMobile}>
-            <Card variant='outlined' style={{ padding: 10, marginBottom: 8 }}>
+            <Desktop isMobile={props.isMobile}>
+                <Card variant='outlined' style={{ padding: 10, marginBottom: 8 }}>
                     <Grid container >
                         <Grid item xs={12} md={12} lg={12} style={{ paddingLeft: 3, paddingRight: 3 }}>
                             <Skeleton height={35} />
@@ -48,7 +48,7 @@ const renderLoader = (props) => {
                         </Grid>
                     </Grid>
                 </Card>
-        </Desktop>
+            </Desktop>
             <Card variant='outlined' style={{ padding: 10, marginTop: 8 }}>
                 <Grid container >
                     <Grid item xs={12} md={4} lg={4} style={{ paddingLeft: 5, paddingRight: 5 }}>
@@ -82,8 +82,8 @@ function Main(mainProps) {
                     <Sidebar title={title} actionType={actionType} isMobile={mainProps.isMobile} onDisconnect={() => { mainProps.onDisconnect() }} />
                     <main id='main' style={{ paddingTop: mainProps.isMobile ? 8 : '4vh', width: '100vw', paddingLeft: '5vw', paddingRight: '5vw', overflowX: 'hidden', overflowY: 'visible' }} >
                         <div style={{ marginLeft: mainProps.isMobile ? 0 : 240, height: '96vh' }}>
-                            <Switch>
-                                <Suspense fallback={renderLoader(mainProps)}>
+                            <Suspense fallback={renderLoader(mainProps)}>
+                                <Switch>
                                     <Route exact path="/" render={(props) => <Room setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject" render={(props) => <Smartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject/new/:id" render={(props) => <NewSmartObject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
@@ -111,8 +111,8 @@ function Main(mainProps) {
                                     <Route exact path="/room/new" render={(props) => <NewRoom setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/room/:id" render={(props) => <DetailRoom setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/authorisation" render={(props) => <Authorisation setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                </Suspense>
-                            </Switch>
+                                </Switch>
+                            </Suspense>
                         </div>
                     </main>
                 </Router>
