@@ -1,8 +1,9 @@
 import React from 'react'
-import { Paper, Typography, Box, Grid, Card, CardActionArea, FormControlLabel, Switch } from '@mui/material'
+import { Paper, Typography, Box, Grid, Card, CardActionArea, FormControlLabel, Switch, Skeleton } from '@mui/material'
 import { FlashOff, FlashOn } from '@mui/icons-material'
 import Desktop from '../../../components/Desktop'
 import DeleteButton from '../../../components/views/DeleteButton'
+import AddButton from '../../../components/views/AddButton'
 import Request from '../../../utils/Request'
 import * as AbstractIcon from '@mui/icons-material'
 import Loading from '../../../components/Loading'
@@ -76,24 +77,30 @@ class DetailRoom extends React.Component {
                     <Paper variant="outlined" style={{ padding: 12, justifyContent: 'left' }}>
                         <Box style={{ display: 'flex', flex: 1 }} >
                             {
-                                this.state.loading ? null :
-                                <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center', marginRight: 16 }}>
-                                    <CurrentIcon fontSize='large' />
-                                </Box> 
+                                this.state.loading ? 
+                                <Box style={{width: '100%'}}>
+                                    <Skeleton height={40} />
+                                    <Skeleton height={20} />
+                                </Box> :
+                                    <>
+                                        <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center', marginRight: 16 }}>
+                                            <CurrentIcon fontSize='large' />
+                                        </Box>
+                                        <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
+                                            <Typography variant='h6' fontWeight='bold' >
+                                                {String.capitalizeFirstLetter(this.state.room.name)}
+                                            </Typography>
+                                            <Typography variant='subtitle2' color="text.secondary"   >
+                                                {String.capitalizeFirstLetter(this.state.room.description)}
+                                            </Typography>
+                                        </Box>
+                                    </>
                             }
-                            <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
-                                <Typography variant='h6'  fontWeight='bold' >
-                                    {String.capitalizeFirstLetter(this.state.room.name)}
-                                </Typography>
-                                <Typography variant='subtitle2' color="text.secondary"   >
-                                    {String.capitalizeFirstLetter(this.state.room.description)}
-                                </Typography>
-                            </Box>
                         </Box>
                     </Paper>
                 </Desktop>
                 <Loading loading={this.state.loading}>
-                    <Grid container spacing={1} style={{marginTop: 0}} >
+                    <Grid container spacing={1} style={{ marginTop: 0 }} >
                         {
                             this.state.room.smartobjects.length == 0 ?
                                 <Grid item xs={12} md={12} lg={12}>
@@ -106,7 +113,7 @@ class DetailRoom extends React.Component {
                                     return (
                                         <Grid key={index} item xs={12} md={6} lg={6} >
                                             <Card variant={'outlined'}   >
-                                                <CardActionArea style={{ padding: 12, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }} onClick={() => { this.props.history.push('/smartobject/' + smartobject.id) }}  >
+                                                <CardActionArea style={{ padding: 12, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }} onClick={() => { this.props.history.push('/room/' + this.state.id + '/smartobject/' + smartobject.id) }}  >
 
                                                     <Box style={{ display: 'flex', flex: 1 }} >
                                                         <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center', marginRight: 16 }}>
@@ -124,6 +131,7 @@ class DetailRoom extends React.Component {
                                     )
                                 })
                         }
+                        <AddButton to={"/room/" + this.state.id + "/smartobject/gallery"} />
                         <Grid item xs={12} md={12} lg={12}>
                             <Card variant='outlined' style={{ padding: 12 }}  >
                                 <Box style={{ display: 'flex', flexWrap: 'wrap' }}>

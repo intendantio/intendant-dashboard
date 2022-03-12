@@ -1,11 +1,10 @@
 import React from 'react'
 import Package from '../../package.json'
-import { Paper, TextField, Button, Typography, Box, IconButton } from '@mui/material'
+import { Paper, TextField, Button, Typography, Box, Skeleton } from '@mui/material'
 import Alert from '../components/Alert'
 import Main from './Main'
 import GetStarted from './GetStarted'
 import Request from '../utils/Request'
-import { Settings } from '@mui/icons-material'
 
 class Authentification extends React.Component {
 
@@ -91,7 +90,24 @@ class Authentification extends React.Component {
 
     render() {
         if (this.state.loading) {
-            return <div />
+            return (
+                <Paper variant='outlined' style={{ padding: 10, width: '25vw', minWidth: 330, textAlign: 'center' }}>
+                    <Box style={{ padding: 10 }}>
+                        <Box style={{ marginBottom: 20 }}>
+                            <img src={process.env.PUBLIC_URL + "/logo.svg"} style={{ height: '15vh', width: '15vh', minWidth: 125, minHeight: 125, borderRadius: 7 }} />
+                            <Typography variant='h3' fontWeight='bold'>
+                                Intendant
+                            </Typography>
+                            <Typography variant='h5' fontWeight='bold'>
+                                Smart home
+                            </Typography>
+                        </Box>
+                        <Skeleton height={45} />
+                        <Skeleton height={45} />
+                        <Skeleton height={45} />
+                    </Box>
+                </Paper>
+            )
         }
         if (this.state.getStarted) {
             return (
@@ -114,7 +130,7 @@ class Authentification extends React.Component {
                             <form noValidate onSubmit={(e) => { e.preventDefault(); this.login() }} autoComplete="off" >
                                 {
                                     this.state.customAddress ?
-                                            <TextField style={{ marginTop: 5, marginBottom: 5 }} value={this.state.address} fullWidth label="Server address" autoFocus onChange={(event) => { this.setState({ address: event.nativeEvent.target.value }) }} />
+                                        <TextField style={{ marginTop: 5, marginBottom: 5 }} value={this.state.address} fullWidth label="Server address" autoFocus onChange={(event) => { this.setState({ address: event.nativeEvent.target.value }) }} />
                                         :
                                         null
                                 }

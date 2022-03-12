@@ -83,8 +83,8 @@ class Process extends React.Component {
                                     )
                                 })
                         }
+                        <AddButton to="/process/new" />
                     </Grid>
-                    <AddButton to="/process/new" />
                 </Loading>
             </>
         )

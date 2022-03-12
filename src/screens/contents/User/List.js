@@ -99,8 +99,8 @@ class UserList extends React.Component {
                                 )
                             })
                         }
+                        <AddButton to="/user/new" />
                     </Grid>
-                    <AddButton to="/user/new" />
                 </Loading>
             </>
         )

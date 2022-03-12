@@ -1,6 +1,6 @@
 import React from 'react'
 import { Drawer, IconButton, Button, List, AppBar, Typography, Toolbar, Box, Divider, ListItem, ListItemIcon, ListItemText, Skeleton } from '@mui/material'
-import { ShoppingCart, House, Menu, DevicesOther, ExitToApp, AccountTree, Category, DeviceHub, BarChart, Extension, Settings, Person, ArrowBack, ArrowBackIos } from '@mui/icons-material'
+import { ShoppingCart, House, Menu, DevicesOther, ExitToApp, AccountTree, Category, DeviceHub, BarChart, Extension, Settings, Person, ArrowBack, ArrowBackIos, Home, Lightbulb } from '@mui/icons-material'
 import { Link, withRouter } from "react-router-dom"
 
 import Request from '../utils/Request'
@@ -37,9 +37,9 @@ class Sidebar extends React.Component {
             }
         })
     }
-    
+
     onClick() {
-        if(this.props.actionType == "list") {
+        if (this.props.actionType == "list") {
             this.setState({ open: true })
         } else {
             this.props.history.goBack()
@@ -62,19 +62,19 @@ class Sidebar extends React.Component {
                             >
                                 {
                                     this.props.actionType == "list" ?
-                                    <Menu /> : <ArrowBackIos />
+                                        <Menu /> : <ArrowBackIos />
 
                                 }
-                                </IconButton> 
+                            </IconButton>
                             <Link to="/smartobject" onClick={() => { this.navigate() }} style={{ paddingTop: 10, paddingBottom: 10, display: 'flex', textDecoration: 'none', color: 'white', flexDirection: 'row', alignItems: 'center' }}>
                                 <img src={process.env.PUBLIC_URL + "/logo.svg"} style={{ minHeight: 40, minWidth: 40, height: '3vh', width: '3vh', borderRadius: 7, marginRight: 10 }} />
                                 {
                                     this.props.title.length == 0 ?
-                                    <Skeleton height={30} variant="text" style={{width: 100}} />
-                                    :
-                                    <Typography variant="h5" fontWeight='bold' component="div" sx={{ flexGrow: 1 }}>
-                                        {this.props.title}
-                                    </Typography>
+                                        <Skeleton height={30} variant="text" style={{ width: 100 }} />
+                                        :
+                                        <Typography variant="h5" fontWeight='bold' component="div" sx={{ flexGrow: 1 }}>
+                                            {this.props.title}
+                                        </Typography>
                                 }
                             </Link>
                         </Toolbar>
@@ -94,10 +94,18 @@ class Sidebar extends React.Component {
                                     </Box>
                                 </Box>
                                 <Divider />
+                                <Link to="/home" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
+                                    <ListItem button key={"home"}>
+                                        <ListItemIcon>
+                                            <Home />
+                                        </ListItemIcon>
+                                        <ListItemText primary={"Home"} />
+                                    </ListItem>
+                                </Link>
                                 <Link to="/room" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
                                     <ListItem button key={"room"}>
                                         <ListItemIcon>
-                                            <House />
+                                            <Lightbulb />
                                         </ListItemIcon>
                                         <ListItemText primary={"Room"} />
                                     </ListItem>
@@ -202,10 +210,18 @@ class Sidebar extends React.Component {
                             </Box>
                         </Box>
                         <Divider />
+                        <Link to="/home" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
+                            <ListItem button key={"home"}>
+                                <ListItemIcon>
+                                    <Home />
+                                </ListItemIcon>
+                                <ListItemText primary={"Home"} />
+                            </ListItem>
+                        </Link>
                         <Link to="/room" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
                             <ListItem button key={"room"}>
                                 <ListItemIcon>
-                                    <House />
+                                    <Lightbulb />
                                 </ListItemIcon>
                                 <ListItemText primary={"Room"} />
                             </ListItem>
@@ -282,10 +298,10 @@ class Sidebar extends React.Component {
                                     <Typography variant='body2'>
                                         {"Version " + this.state.information.version + ""}
                                     </Typography>
-                                    <Typography  variant='caption'>
+                                    <Typography variant='caption'>
                                         {"Build " + this.state.information.build + ""}
                                     </Typography>
-                                    
+
                                     <Typography paragraph variant='caption'>
                                         {"License GPL-3.0+"}
                                     </Typography>

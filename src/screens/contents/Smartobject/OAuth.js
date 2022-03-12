@@ -22,7 +22,7 @@ class RedirectSmartobject extends React.Component {
 
             let result = await fetch("https://market.intendant.io/docs?id=" + this.props.match.params.id)
             let resultJSON = await result.json()
-    
+
 
             let settings = {}
             if (location.search.split("?").length == 2) {
@@ -33,24 +33,24 @@ class RedirectSmartobject extends React.Component {
                     }
                 })
             }
-            
-            if(settings.error == "true") {
+
+            if (settings.error == "true") {
                 this.setState({
-                    message: settings.message.replace(/\%20/g," "),
+                    message: settings.message.replace(/\%20/g, " "),
                     error: true
                 })
-            } else if(settings.reference == undefined || settings.reference == "") {
+            } else if (settings.reference == undefined || settings.reference == "") {
                 this.setState({
                     message: "Missing reference, please retry",
                     error: true
                 })
-            } else if(settings.room == undefined || settings.room == "") {
+            } else if (settings.room == undefined || settings.room == "") {
                 this.setState({
                     message: "Missing room, please retry",
                     error: true
                 })
             } else {
-                let reference = settings.reference 
+                let reference = settings.reference
                 delete settings.reference
                 let room = settings.room
                 delete settings.room
@@ -60,18 +60,18 @@ class RedirectSmartobject extends React.Component {
                 for (const key in settings) {
                     realSettings.push({
                         reference: key,
-                        value: settings[key].replace(/%7C/g,"|")
+                        value: settings[key].replace(/%7C/g, "|")
                     })
                 }
 
-                let resultInsert = await new Request().post({ room: room, module: resultJSON.package.name, reference: reference.replace(/\%20/g," "), settings: realSettings }).fetch("/api/smartobjects")
+                let resultInsert = await new Request().post({ room: room, module: resultJSON.package.name, reference: reference.replace(/\%20/g, " "), settings: realSettings }).fetch("/api/smartobjects")
                 if (resultInsert.error) {
                     this.setState({
                         message: resultInsert.message,
                         error: true
                     })
                 } else {
-                    this.props.history.push('/smartobject/' + resultInsert.data.id)
+                    this.props.history.push('/room/' + room + '/smartobject/' + resultInsert.data.id)
                 }
             }
 
@@ -96,15 +96,15 @@ class RedirectSmartobject extends React.Component {
                 </Desktop>
                 {
                     this.state.error ?
-                    <Card variant='outlined' style={{padding: 10}}>
-                    <Typography variant='h5' >{"Oups ! Smartobject cannot to be create"}</Typography>
-                    <Typography style={{marginTop: 5}} variant='subtitle1' >{"Reason : " + this.state.message}</Typography>
-                    <Link to={'/smartobject/new/' + this.props.match.params.id}>
-                        <Button variant='outlined' color='inherit' style={{marginTop: 10, borderColor:'white', color:'white'}}>
-                            {"Retry now"}
-                        </Button>
-                    </Link>
-                    </Card> : null
+                        <Card variant='outlined' style={{ padding: 10 }}>
+                            <Typography variant='h5' >{"Oups ! Smartobject cannot to be create"}</Typography>
+                            <Typography style={{ marginTop: 5 }} variant='subtitle1' >{"Reason : " + this.state.message}</Typography>
+                            <Link to={'/room'}>
+                                <Button variant='outlined' color='inherit' style={{ marginTop: 10, borderColor: 'white', color: 'white' }}>
+                                    {"Retry now"}
+                                </Button>
+                            </Link>
+                        </Card> : null
                 }
             </>
         )

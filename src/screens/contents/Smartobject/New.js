@@ -11,7 +11,8 @@ class NewSmartobject extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            id: props.match.params.id,
+            id: props.match.params.idSmartobject,
+            idRoom: props.match.params.id,
             loading: true,
             reference: "",
             activeStep: 0,
@@ -36,50 +37,41 @@ class NewSmartobject extends React.Component {
 
     async componentDidMount() {
 
-        let result = await fetch("https://market.intendant.io/docs?id=" + this.props.match.params.id)
+        let result = await fetch("https://market.intendant.io/docs?id=" + this.props.match.params.idSmartobject)
         let resultJSON = await result.json()
 
         if (resultJSON.conditions == undefined) {
             this.props.setMessage("Missing docs")
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
             return
         }
         if (resultJSON.steps == undefined) {
             this.props.setMessage("Missing docs")
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
             return
         }
         if (resultJSON.video == undefined) {
             this.props.setMessage("Missing docs")
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
             return
         }
         if (resultJSON.package == undefined) {
             this.props.setMessage("Missing docs")
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
             return
-        }
-
-        let resultRooms = await new Request().get().fetch("/api/rooms")
-
-        if (resultRooms.data.length == 0) {
-            this.props.setMessage("You must have a minimum of one room")
-            this.props.history.push('/room')
         }
 
         let resultInstall = await new Request().patch({package: resultJSON.package.name}).fetch("/api/smartobjects")
         if(resultInstall.error) {
             this.props.setMessage(resultInstall.message)
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
             return
 
         }
         this.setState({
             loading: false,
             docs: resultJSON,
-            package: resultJSON.package,
-            rooms: resultRooms.data,
-            room: resultRooms.data[0]
+            package: resultJSON.package
         })
     }
 
@@ -95,11 +87,11 @@ class NewSmartobject extends React.Component {
                 value: this.state["settings-" + setting.id] ? this.state["settings-" + setting.id] : ""
             })
         }
-        let result = await new Request().post({ room: this.state.room.id, module: this.state.package.name, reference: this.state.reference, settings: settings }).fetch("/api/smartobjects")
+        let result = await new Request().post({ room: this.state.idRoom, module: this.state.package.name, reference: this.state.reference, settings: settings }).fetch("/api/smartobjects")
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
         } else {
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/' + result.data.id)
         }
     }
 
@@ -137,7 +129,7 @@ class NewSmartobject extends React.Component {
             )
         } else if (this.state.package.submit.type == "oauth") {
             return (
-                <a href={this.state.package.submit.url + "?reference=" + this.state.reference + this.getOauthSettings() + "&room=" + this.state.room.id + "&redirect_uri=" + window.location.origin + "/admin/smartobject/oauth/" + this.props.match.params.id}>
+                <a href={this.state.package.submit.url + "?reference=" + this.state.reference + this.getOauthSettings() + "&room=" + this.state.idRoom + "&redirect_uri=" + window.location.origin + "/admin/smartobject/oauth/" + this.props.match.params.idSmartobject}>
                     <Button size='large' variant='contained' style={{ height: '100%', textTransform: 'none' }} >
                         <Typography color='white' >
                             {this.state.package.submit.name}
@@ -164,16 +156,6 @@ class NewSmartobject extends React.Component {
         }
     }
 
-    setRoom(id) {
-        this.state.rooms.forEach(pRoom => {
-            if (pRoom.id === id) {
-                this.setState({
-                    room: pRoom
-                })
-            }
-        })
-    }
-
     render() {
         return (
             <>
@@ -188,15 +170,6 @@ class NewSmartobject extends React.Component {
                         <Grid item xs={12} md={12} lg={12}>
                             <Card variant="outlined" style={{ padding: 10, flexDirection: this.props.isMobile ? 'column' : 'row', display: 'flex' }}>
                                 <TextField onChange={(event) => { this.setState({ reference: event.nativeEvent.target.value }) }} style={{ width: '100%', marginRight: 10, marginBottom: this.props.isMobile ? 10 : 0 }} label="Name" variant="outlined" />
-                                <FormControl fullWidth variant="outlined" >
-                                    <Select value={this.state.room.id} onChange={(event) => { this.setRoom(event.target.value) }} >
-                                        {
-                                            this.state.rooms.map((pRoom, index) => {
-                                                return <MenuItem key={index} value={pRoom.id} >{pRoom.name}</MenuItem>
-                                            })
-                                        }
-                                    </Select>
-                                </FormControl>
                             </Card>
                         </Grid>
                         {

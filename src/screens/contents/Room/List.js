@@ -52,7 +52,7 @@ class Room extends React.Component {
                                 let CurrentIcon = AbstractIcon[room.icon]
                                 return (
                                     <Grid key={index} item xs={12} md={6} lg={4} >
-                                        <Card variant='outlined'  >
+                                        <Card variant='outlined' style={{height: '100%', display:'flex'}}  >
                                             <CardActionArea onClick={() => { this.props.history.push('/room/' + room.id) }} style={{ padding: 12, display: 'flex', justifyContent: 'flex-start' }} >
                                                 <Box style={{ display: 'flex', flex: 1 }} >
                                                     <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center', marginRight: 16 }}>
@@ -73,8 +73,8 @@ class Room extends React.Component {
                                 )
                             })
                         }
+                        <AddButton to="/room/new" />
                     </Grid>
-                    <AddButton to="/room/new" />
                 </Loading>
             </>
         )

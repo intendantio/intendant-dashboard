@@ -85,11 +85,7 @@ function Main(mainProps) {
                             <Suspense fallback={renderLoader(mainProps)}>
                                 <Switch>
                                     <Route exact path="/" render={(props) => <Room setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/smartobject" render={(props) => <Smartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/smartobject/new/:id" render={(props) => <NewSmartObject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject/oauth/:id" render={(props) => <OAuthSmartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/smartobject/gallery" render={(props) => <GallerySmartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/smartobject/:id" render={(props) => <DetailSmartObject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/module" render={(props) => <Module setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/module/gallery" render={(props) => <GalleryModule setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/module/:id" render={(props) => <DetailModule setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
@@ -109,6 +105,9 @@ function Main(mainProps) {
                                     <Route exact path="/user/:id" render={(props) => <DetailUser setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/room" render={(props) => <Room setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/room/new" render={(props) => <NewRoom setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
+                                    <Route exact path="/room/:id/smartobject/new/:idSmartobject" render={(props) => <NewSmartObject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
+                                    <Route exact path="/room/:id/smartobject/gallery" render={(props) => <GallerySmartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
+                                    <Route exact path="/room/:id/smartobject/:idSmartobject" render={(props) => <DetailSmartObject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/room/:id" render={(props) => <DetailRoom setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/authorisation" render={(props) => <Authorisation setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                 </Switch>

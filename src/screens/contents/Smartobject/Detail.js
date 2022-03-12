@@ -16,7 +16,8 @@ class DetailSmartObject extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            id: props.match.params.id,
+            id: props.match.params.idSmartobject,
+            idRoom: props.match.params.id,
             smartobject: {
                 reference: "",
                 actions: [],
@@ -41,10 +42,10 @@ class DetailSmartObject extends React.Component {
         let resultSmartobject = await new Request().get().fetch("/api/smartobjects/" + this.state.id)
         if (resultRoom.error) {
             this.props.setMessage(resultRoom.package + " : " + resultRoom.message)
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom)
         } else if (resultSmartobject.error) {
             this.props.setMessage(resultSmartobject.package + " : " + resultSmartobject.message)
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom)
         } else {
             this.props.setTitle(resultSmartobject.data.reference)
             this.setState({ reference: resultSmartobject.data.reference, loadingAction: "", loading: false, smartobject: resultSmartobject.data, rooms: resultRoom.data })
@@ -56,7 +57,7 @@ class DetailSmartObject extends React.Component {
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
         } else {
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom)
         }
     }
 
@@ -108,7 +109,7 @@ class DetailSmartObject extends React.Component {
         let result = await new Request().patch({package: this.state.smartobject.module}).fetch("/api/smartobjects")
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
-            this.props.history.push('/smartobject')
+            this.props.history.push('/room/' + this.state.idRoom)
         } else {
             this.componentDidMount()
         }

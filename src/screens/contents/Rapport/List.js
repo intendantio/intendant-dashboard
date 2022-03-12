@@ -72,8 +72,8 @@ class Rapport extends React.Component {
                                 )
                             })
                         }
+                        <AddButton to="/rapport/new" />
                     </Grid>
-                    <AddButton to="/rapport/new" />
                 </Loading>
             </>
         )

@@ -13,6 +13,7 @@ class Smartobject extends React.Component {
         super(props)
         this.state = {
             page: 0,
+            idRoom: props.match.params.id,
             loading: true,
             filter: "",
             product: "",
@@ -83,7 +84,7 @@ class Smartobject extends React.Component {
             <>
                 <Desktop isMobile={this.props.isMobile}>
                     <Paper variant="outlined" style={{ padding: 12, justifyContent: 'left' }}>
-                        <Typography variant='h6' fontWeight='bold' >Smartobject</Typography>
+                        <Typography variant='h6' fontWeight='bold' >New smartobject</Typography>
                         <Typography variant='subtitle2' color="text.secondary"  >Automate your home</Typography>
                     </Paper>
                 </Desktop>
@@ -137,7 +138,7 @@ class Smartobject extends React.Component {
                                             />
 
                                             <CardContent style={{ paddingBottom: 2 }} >
-                                                <Typography variant="body1" component="div" >{product.name}</Typography>
+                                                <Typography variant="subtitle1" component="div" >{product.name}</Typography>
                                                 <Typography variant="body2" color="text.secondary">
                                                     {String.capitalizeFirstLetter(product.package.manufacturer) + " - " + String.capitalizeFirstLetter(product.package.product)}
                                                 </Typography>
@@ -148,7 +149,7 @@ class Smartobject extends React.Component {
                                                         <ShoppingCart fontSize='small' />
                                                     </IconButton>
                                                 </a>
-                                                <Link to={"/smartobject/new/" + md5(product.package.name)}>
+                                                <Link to={"/room/" + this.state.idRoom + "/smartobject/new/" + md5(product.package.name)}>
                                                     <IconButton style={{ borderRadius: 3 }} >
                                                         <Add fontSize='small' />
                                                     </IconButton>

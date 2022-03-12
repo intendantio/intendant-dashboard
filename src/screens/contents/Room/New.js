@@ -1,6 +1,6 @@
 import React from 'react'
 import { TextField, Grid, Card, Typography, CardActionArea, IconButton } from '@mui/material'
-import { Hotel, KingBed, Balcony, Bathtub, Shower, Kitchen, Blender, Weekend, Chair, Tv, Crib, MeetingRoom, Park, LocalFlorist, AutoStories } from '@mui/icons-material'
+import { Hotel, KingBed, Balcony, Bathtub, Shower, Kitchen, Blender, Weekend, Chair, Tv, Crib, MeetingRoom, Park, LocalFlorist, AutoStories, TableBar, Deck, SingleBed, Microwave, OutdoorGrill } from '@mui/icons-material'
 import Desktop from '../../../components/Desktop'
 import SaveButton from '../../../components/views/SaveButton'
 import Request from '../../../utils/Request'
@@ -99,6 +99,21 @@ class NewLocalisation extends React.Component {
                             </IconContainer>
                             <IconContainer enabled={this.state.icon == "AutoStories"} name="AutoStories" onClick={(icon) => { this.setState({ icon: icon }) }}>
                                 <AutoStories fontSize='large' />
+                            </IconContainer>
+                            <IconContainer enabled={this.state.icon == "TableBar"} name="TableBar" onClick={(icon) => { this.setState({ icon: icon }) }}>
+                                <TableBar fontSize='large' />
+                            </IconContainer>
+                            <IconContainer enabled={this.state.icon == "Deck"} name="Deck" onClick={(icon) => { this.setState({ icon: icon }) }}>
+                                <Deck fontSize='large' />
+                            </IconContainer>
+                            <IconContainer enabled={this.state.icon == "SingleBed"} name="SingleBed" onClick={(icon) => { this.setState({ icon: icon }) }}>
+                                <SingleBed fontSize='large' />
+                            </IconContainer>
+                            <IconContainer enabled={this.state.icon == "Microwave"} name="Microwave" onClick={(icon) => { this.setState({ icon: icon }) }}>
+                                <Microwave fontSize='large' />
+                            </IconContainer>
+                            <IconContainer enabled={this.state.icon == "OutdoorGrill"} name="OutdoorGrill" onClick={(icon) => { this.setState({ icon: icon }) }}>
+                                <OutdoorGrill fontSize='large' />
                             </IconContainer>
                         </Card>
                     </Grid>

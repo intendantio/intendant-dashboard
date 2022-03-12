@@ -160,8 +160,8 @@ class Routine extends React.Component {
                                     )
                                 })
                         }
+                        <AddButton to="/automation/new" />
                     </Grid>
-                    <AddButton to="/automation/new" />
                 </Loading>
             </>
         )

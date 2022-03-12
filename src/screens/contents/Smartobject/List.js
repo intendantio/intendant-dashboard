@@ -87,8 +87,8 @@ class Smartobject extends React.Component {
                                     )
                                 })
                         }
+                        <AddButton to="/smartobject/gallery" />
                     </Grid>
-                    <AddButton to="/smartobject/gallery" />
                 </Loading>
             </>
         )

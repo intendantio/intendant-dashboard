@@ -71,8 +71,8 @@ class Widget extends React.Component {
                                     />
                                 ))
                         }
+                        <AddButton to="/widget/new" />
                     </Grid>
-                    <AddButton to="/widget/new" />
                 </Loading>
             </>
         )
