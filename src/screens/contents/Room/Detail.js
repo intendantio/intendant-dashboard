@@ -131,7 +131,7 @@ class DetailRoom extends React.Component {
                                     )
                                 })
                         }
-                        <AddButton to={"/room/" + this.state.id + "/smartobject/gallery"} />
+                        <AddButton xs={12} fill md={6} lg={6} to={"/room/" + this.state.id + "/smartobject/gallery"} />
                         <Grid item xs={12} md={12} lg={12}>
                             <Card variant='outlined' style={{ padding: 12 }}  >
                                 <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
