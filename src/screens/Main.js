@@ -1,30 +1,30 @@
 import React, { lazy, Suspense } from 'react'
-const Smartobject = lazy(() => import('./contents/Smartobject/List'))
-const DetailSmartObject = lazy(() => import('./contents/Smartobject/Detail'))
-const GallerySmartobject = lazy(() => import('./contents/Smartobject/Gallery'))
-const NewSmartObject = lazy(() => import('./contents/Smartobject/New'))
-const ListProcess = lazy(() => import('./contents/Process/List'))
-const NewProcess = lazy(() => import('./contents/Process/New'))
-const DetailProcess = lazy(() => import('./contents/Process/Detail'))
-const Automation = lazy(() => import('./contents/Automation/List'))
-const NewAutomation = lazy(() => import('./contents/Automation/New'))
-const DetailAutomation = lazy(() => import('./contents/Automation/Detail'))
-const Module = lazy(() => import('./contents/Module/List'))
-const DetailModule = lazy(() => import('./contents/Module/Detail'))
-const GalleryModule = lazy(() => import('./contents/Module/Gallery'))
-const Widget = lazy(() => import('./contents/Widget/List'))
-const NewWidget = lazy(() => import('./contents/Widget/New'))
-const Rapport = lazy(() => import('./contents/Rapport/List'))
-const NewRapport = lazy(() => import('./contents/Rapport/New'))
-const DetailRapport = lazy(() => import('./contents/Rapport/Detail'))
-const User = lazy(() => import('./contents/User/List'))
-const NewUser = lazy(() => import('./contents/User/New'))
-const DetailUser = lazy(() => import('./contents/User/Detail'))
-const Room = lazy(() => import('./contents/Room/List'))
-const NewRoom = lazy(() => import('./contents/Room/New'))
-const DetailRoom = lazy(() => import('./contents/Room/Detail'))
-const OAuthSmartobject = lazy(() => import('./contents/Smartobject/OAuth'))
-const Authorisation = lazy(() => import('./contents/Authorisation/List'))
+const Smartobject = lazy(() => import('./Smartobject/List'))
+const DetailSmartObject = lazy(() => import('./Smartobject/Detail'))
+const GallerySmartobject = lazy(() => import('./Smartobject/Gallery'))
+const NewSmartObject = lazy(() => import('./Smartobject/New'))
+const ListProcess = lazy(() => import('./Process/List'))
+const NewProcess = lazy(() => import('./Process/New'))
+const DetailProcess = lazy(() => import('./Process/Detail'))
+const Automation = lazy(() => import('./Automation/List'))
+const NewAutomation = lazy(() => import('./Automation/New'))
+const Module = lazy(() => import('./Module/List'))
+const DetailModule = lazy(() => import('./Module/Detail'))
+const GalleryModule = lazy(() => import('./Module/Gallery'))
+const Widget = lazy(() => import('./Widget/List'))
+const NewWidget = lazy(() => import('./Widget/New'))
+const Rapport = lazy(() => import('./Rapport/List'))
+const NewRapport = lazy(() => import('./Rapport/New'))
+const DetailRapport = lazy(() => import('./Rapport/Detail'))
+const User = lazy(() => import('./User/List'))
+const NewUser = lazy(() => import('./User/New'))
+const DetailUser = lazy(() => import('./User/Detail'))
+const Room = lazy(() => import('./Room/List'))
+const NewRoom = lazy(() => import('./Room/New'))
+const DetailRoom = lazy(() => import('./Room/Detail'))
+const OAuthSmartobject = lazy(() => import('./Smartobject/OAuth'))
+const Home = lazy(() => import('./Home/List'))
+const Authorisation = lazy(() => import('./Authorisation/List'))
 
 import Sidebar from '../components/Sidebar'
 import Context from '../utils/Context'
@@ -35,7 +35,7 @@ import { Grid, Card, Skeleton } from '@mui/material'
 
 import { BrowserRouter as Router, Switch, Route, useHistory, } from "react-router-dom"
 import Desktop from '../components/Desktop'
-import System from './contents/System/List'
+import System from './System/List'
 
 const renderLoader = (props) => {
     return (
@@ -81,11 +81,11 @@ function Main(mainProps) {
             {({ title, setTitle, setActionType, actionType, setMessage }) => (
                 <Router basename='/admin'>
                     <Sidebar title={title} actionType={actionType} isMobile={mainProps.isMobile} onDisconnect={() => { mainProps.onDisconnect() }} />
-                    <main id='main' style={{ paddingTop: mainProps.isMobile ? 8 : '4vh', width: '100vw', paddingLeft: '5vw', paddingRight: '5vw', overflowX: 'hidden', overflowY: 'visible' }} >
-                        <div style={{ marginLeft: mainProps.isMobile ? 0 : 240, height: '96vh' }}>
+                    <main id='main' style={{ paddingTop: mainProps.isMobile ? 8 : '4vh', height: '100%', width: '100vw', paddingLeft: '5vw', paddingRight: '5vw', overflowX: 'hidden', overflowY: 'visible' }} >
+                        <div style={{ marginLeft: mainProps.isMobile ? 0 : 240, marginBottom: 12 }}>
                             <Suspense fallback={renderLoader(mainProps)}>
                                 <Switch>
-                                    <Route exact path="/" render={(props) => <Room setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
+                                    <Route exact path="/" render={(props) => <Home setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject/oauth/:id" render={(props) => <OAuthSmartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/system" render={(props) => <System setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/module" render={(props) => <Module setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
@@ -93,7 +93,6 @@ function Main(mainProps) {
                                     <Route exact path="/module/:id" render={(props) => <DetailModule setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/automation" render={(props) => <Automation setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/automation/new" render={(props) => <NewAutomation setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/automation/:id" render={(props) => <DetailAutomation setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={true} {...props} />} />
                                     <Route exact path="/rapport" render={(props) => <Rapport setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/rapport/new" render={(props) => <NewRapport setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/rapport/:id" render={(props) => <DetailRapport setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />

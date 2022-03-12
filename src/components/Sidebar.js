@@ -66,7 +66,7 @@ class Sidebar extends React.Component {
 
                                 }
                             </IconButton>
-                            <Link to="/smartobject" onClick={() => { this.navigate() }} style={{ paddingTop: 10, paddingBottom: 10, display: 'flex', textDecoration: 'none', color: 'white', flexDirection: 'row', alignItems: 'center' }}>
+                            <Box style={{ paddingTop: 10, paddingBottom: 10, display: 'flex', textDecoration: 'none', color: 'white', flexDirection: 'row', alignItems: 'center' }}>
                                 <img src={process.env.PUBLIC_URL + "/logo.svg"} style={{ minHeight: 40, minWidth: 40, height: '3vh', width: '3vh', borderRadius: 7, marginRight: 10 }} />
                                 {
                                     this.props.title.length == 0 ?
@@ -76,7 +76,7 @@ class Sidebar extends React.Component {
                                             {this.props.title}
                                         </Typography>
                                 }
-                            </Link>
+                            </Box>
                         </Toolbar>
                     </AppBar>
                     <Drawer elevation={0} onClose={() => this.setState({ open: false })} anchor="left" open={this.state.open} style={{ width: 240 }} >
@@ -94,7 +94,7 @@ class Sidebar extends React.Component {
                                     </Box>
                                 </Box>
                                 <Divider />
-                                <Link to="/home" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
+                                <Link to="/" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
                                     <ListItem button key={"home"}>
                                         <ListItemIcon>
                                             <Home />
@@ -218,7 +218,7 @@ class Sidebar extends React.Component {
                             </Box>
                         </Box>
                         <Divider />
-                        <Link to="/home" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
+                        <Link to="/" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
                             <ListItem button key={"home"}>
                                 <ListItemIcon>
                                     <Home />
