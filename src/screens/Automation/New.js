@@ -4,10 +4,8 @@ import Request from '../../utils/Request'
 import Desktop from '../../components/Desktop'
 import Loading from '../../components/Loading'
 import Action from '../../components/Action'
-import AddButton from '../../components/views/AddButton'
 import StepperProxy from '../../components/StepperProxy'
 import NextButton from '../../components/NextButton'
-
 
 class NewAutomation extends React.Component {
 
@@ -33,7 +31,7 @@ class NewAutomation extends React.Component {
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
             this.props.history.push('/automation')
-        } else if(resultProcess.error) {
+        } else if (resultProcess.error) {
             this.props.setMessage(resultProcess.package + " : " + resultProcess.message)
             this.props.history.push('/automation')
         } else {
@@ -53,8 +51,8 @@ class NewAutomation extends React.Component {
                 process.actions = [
                     {
                         id: "process",
-                        name: process.mode == "switch" ?  process.description_on + "/" + process.description_off : process.description_on,
-                        description: process.mode == "switch" ?  process.description_on + "/" + process.description_off : process.description_on,
+                        name: process.mode == "switch" ? process.description_on + "/" + process.description_off : process.description_on,
+                        description: process.mode == "switch" ? process.description_on + "/" + process.description_off : process.description_on,
                         type: "effect",
                         settings: process.inputs.map(input => {
                             input.id = input.reference
@@ -79,7 +77,7 @@ class NewAutomation extends React.Component {
                 value: this.state[this.state.action.id + "-" + setting.id] ? this.state[this.state.action.id + "-" + setting.id] : null
             })
         }
-        
+
         let automation = {
             description: this.state.description,
             trigger: {
@@ -147,7 +145,7 @@ class NewAutomation extends React.Component {
                                     })
                                     :
                                     this.state.sources.map((source, index) => {
-                                        if(source.triggers.length > 0) {
+                                        if (source.triggers.length > 0) {
                                             return (
                                                 <Grid key={index} item xs={12} md={12} lg={12} >
                                                     <Card variant='outlined'   >
@@ -181,17 +179,17 @@ class NewAutomation extends React.Component {
                                             <Grid key={index} item xs={12} md={12} lg={12} >
                                                 <Card variant='outlined' style={{ padding: 10 }}  >
                                                     <Grid container spacing={1}>
-                                                        <Grid item xs={6} md={11} lg={11} style={{alignSelf:'center'}}>
+                                                        <Grid item xs={6} md={11} lg={11} style={{ alignSelf: 'center' }}>
                                                             <Typography variant='subtitle1'  >
                                                                 {action.name}
                                                             </Typography>
                                                         </Grid>
                                                         <NextButton xs={6} md={1} lg={1} onClick={() => { this.setState({ step: "description", action: action, selected: null, description: this.state.description + action.name.toLowerCase() }) }} />
-                                                            {
-                                                                action.settings.map((setting,pIndex) => {
-                                                                    return <Action key={pIndex} options={setting.options} label={String.capitalizeFirstLetter(setting.id)} setState={this.setState.bind(this)} id={action.id + "-" + setting.id} action={setting} />
-                                                                })
-                                                            }
+                                                        {
+                                                            action.settings.map((setting, pIndex) => {
+                                                                return <Action key={pIndex} options={setting.options} label={String.capitalizeFirstLetter(setting.id)} setState={this.setState.bind(this)} id={action.id + "-" + setting.id} action={setting} />
+                                                            })
+                                                        }
                                                     </Grid>
                                                 </Card>
                                             </Grid>
@@ -199,35 +197,35 @@ class NewAutomation extends React.Component {
                                     })
                                     :
                                     <>
-                                    {
-                                        this.state.sources.map((source, index) => {
-                                            let find = false
-                                            source.actions.forEach(action => {
-                                                if(action.type == "effect") { find = true }
-                                            })
-                                            if(find) {
-                                                return (
-                                                    <Grid key={index} item xs={12} md={12} lg={12} >
-                                                        <Card variant='outlined'   >
-                                                            <CardActionArea onClick={() => { this.setState({ selected: source }) }} style={{ padding: 10 }} >
-                                                                <Typography variant='subtitle1'  >
-                                                                    {String.capitalizeFirstLetter(source.reference)}
-                                                                </Typography>
-                                                                {
-                                                                    source.room &&
-                                                                    <Typography variant='body2' color="text.secondary"  >
-                                                                        {String.capitalizeFirstLetter(source.room.name)}
+                                        {
+                                            this.state.sources.map((source, index) => {
+                                                let find = false
+                                                source.actions.forEach(action => {
+                                                    if (action.type == "effect") { find = true }
+                                                })
+                                                if (find) {
+                                                    return (
+                                                        <Grid key={index} item xs={12} md={12} lg={12} >
+                                                            <Card variant='outlined'   >
+                                                                <CardActionArea onClick={() => { this.setState({ selected: source }) }} style={{ padding: 10 }} >
+                                                                    <Typography variant='subtitle1'  >
+                                                                        {String.capitalizeFirstLetter(source.reference)}
                                                                     </Typography>
-                                                                }
-                                                            </CardActionArea>
-                                                        </Card>
-                                                    </Grid>
-                                                )
-                                            }
-                                        })
-                                    }
+                                                                    {
+                                                                        source.room &&
+                                                                        <Typography variant='body2' color="text.secondary"  >
+                                                                            {String.capitalizeFirstLetter(source.room.name)}
+                                                                        </Typography>
+                                                                    }
+                                                                </CardActionArea>
+                                                            </Card>
+                                                        </Grid>
+                                                    )
+                                                }
+                                            })
+                                        }
                                     </>
-                                    
+
                             }
                         </StepperProxy>
                         <StepperProxy index={"description"} value={this.state.step} >
@@ -257,7 +255,4 @@ class NewAutomation extends React.Component {
     }
 }
 
-
 export default NewAutomation
-
-//

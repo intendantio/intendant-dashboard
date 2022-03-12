@@ -1,6 +1,6 @@
 import React from 'react'
-import { Typography, Paper, Grid, Card, CardActionArea, Box, Collapse, CardActions, IconButton } from '@mui/material'
-import { ExpandLess, Delete } from '@mui/icons-material'
+import { Typography, Paper, Grid, Card, Box } from '@mui/material'
+import { Bolt, Highlight } from '@mui/icons-material'
 import Request from '../../utils/Request'
 import Desktop from '../../components/Desktop'
 import Loading from '../../components/Loading'
@@ -32,10 +32,7 @@ class Routine extends React.Component {
         } else if (resultProcess.error) {
             this.props.setMessage(resultProcess.package + " : " + resultProcess.message)
         } else {
-
             let automations = result.data.map(automation => {
-
-
                 if (automation.trigger.type == "smartobject") {
                     resultSmartobject.data.forEach(smartobject => {
                         if (smartobject.id == automation.trigger.object) {
@@ -49,7 +46,6 @@ class Routine extends React.Component {
                         }
                     })
                 }
-
                 if (automation.action.type == "smartobject") {
                     resultSmartobject.data.forEach(smartobject => {
                         if (smartobject.id == automation.action.object) {
@@ -63,23 +59,21 @@ class Routine extends React.Component {
                         }
                     })
                 }
-
-
                 return automation
-
             })
-
             this.setState({ loading: false, automations: automations })
         }
     }
 
 
-    async delete() {
-        let result = await new Request().delete({}).fetch("/api/automations/" + this.state.open)
+    async delete(id) {
+        let result = await new Request().delete({}).fetch("/api/automations/" + id)
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
         } else {
-            this.setState({ loading: true, anchorEl: null, popover: false }, () => { this.componentDidMount() })
+            this.setState({ loading: true }, () => { 
+                this.componentDidMount() 
+            })
         }
     }
 
@@ -105,56 +99,31 @@ class Routine extends React.Component {
                                 this.state.automations.map((automation, index) => {
                                     return (
                                         <Grid key={index} item xs={12} md={12} lg={12}>
-                                            <Card variant='outlined' >
-                                                <CardActionArea onClick={() => { this.setState({ open: automation.id }) }} style={{ padding: 12, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }}>
-                                                    <Grid container spacing={1} style={{ marginTop: 0 }}>
-                                                        <Grid item xs={3} md={1} lg={1}>
-                                                            <Card variant='outlined' style={{ padding: 5, borderRadius: 5, marginRight: 10, paddingLeft: 12, paddingRight: 12 }}>
-                                                                <Typography variant='subtitle1' style={{ textAlign:'center' }} >IF</Typography>
-                                                            </Card>
-                                                        </Grid>
-                                                        <Grid item xs={9} md={5} lg={2}>
-                                                            <Card variant='outlined' style={{ padding: 5, borderRadius: 5, marginRight: 10, paddingLeft: 12, paddingRight: 12 }}>
-                                                                <Typography variant='subtitle1' style={{ textAlign:'center' }} >{automation.trigger.trigger.toUpperCase()}</Typography>
-                                                            </Card>
-                                                        </Grid>
-                                                        <Grid item xs={3} md={1} lg={1}>
-                                                            <Card variant='outlined' style={{ padding: 5, borderRadius: 5, marginRight: 10, paddingLeft: 12, paddingRight: 12 }}>
-                                                                <Typography variant='subtitle1' style={{ textAlign:'center' }} >ON</Typography>
-                                                            </Card>
-                                                        </Grid>
-                                                        <Grid item xs={9} md={5} lg={2}>
-                                                            <Card variant='outlined' style={{ padding: 5, borderRadius: 5, marginRight: 10, paddingLeft: 12, paddingRight: 12 }}>
-                                                                <Typography variant='subtitle1' style={{ textAlign:'center' }} >{automation.trigger.type == "smartobject" ? automation.trigger.source.reference.toUpperCase() : automation.trigger.source.description.toUpperCase()}</Typography>
-                                                            </Card>
-                                                        </Grid>
-                                                        <Grid item xs={4} md={2} lg={1}>
-                                                            <Card variant='outlined' style={{ padding: 5, borderRadius: 5, marginRight: 10, paddingLeft: 12, paddingRight: 12 }}>
-                                                                <Typography variant='subtitle1' style={{ textAlign:'center' }} >THEN</Typography>
-                                                            </Card>
-                                                        </Grid>
-                                                        <Grid item xs={8} md={4} lg={2}>
-                                                            <Card variant='outlined' style={{ padding: 5, borderRadius: 5, marginRight: 10, paddingLeft: 12, paddingRight: 12 }}>
-                                                                <Typography variant='subtitle1' style={{ textAlign:'center' }} >{automation.action.action.toUpperCase()}</Typography>
-                                                            </Card>
-                                                        </Grid>
-                                                        <Grid item xs={3} md={1} lg={1}>
-                                                            <Card variant='outlined' style={{ padding: 5, borderRadius: 5, marginRight: 10, paddingLeft: 12, paddingRight: 12 }}>
-                                                                <Typography variant='subtitle1' style={{ textAlign:'center' }} >ON</Typography>
-                                                            </Card>
-                                                        </Grid>
-                                                        <Grid item xs={9} md={5} lg={2}>
-                                                            <Card variant='outlined' style={{ padding: 5, borderRadius: 5, paddingLeft: 10, paddingRight: 10 }}>
-                                                                <Typography variant='subtitle1' style={{ textAlign:'center' }} >{automation.action.type == "smartobject" ? automation.action.source.reference.toUpperCase() : automation.action.source.description.toUpperCase()}</Typography>
-                                                            </Card>
-                                                        </Grid>
+                                            <Card variant='outlined' style={{ padding: 12, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }} >
+                                                <Grid container spacing={1} >
+                                                    <Grid item xs={12} md={10} lg={5}>
+                                                        <Card variant='outlined' style={{ justifyContent: 'center', alignItems: 'center', padding: 5, display: 'flex', flexDirection: 'row', borderRadius: 5, marginRight: 10 }}>
+                                                            <Bolt fontSize='medium' />
+                                                            <Box style={{ marginLeft: 12 }}>
+                                                                <Typography variant='subtitle1' >{automation.trigger.trigger.toUpperCase() + " - " + (automation.trigger.type == "smartobject" ? automation.trigger.source.reference.toUpperCase() : automation.trigger.source.description.toUpperCase())}</Typography>
+                                                            </Box>
+                                                        </Card>
                                                     </Grid>
-                                                </CardActionArea>
-                                                <Collapse in={this.state.open == automation.id} timeout="auto" unmountOnExit>
-                                                    <CardActions>
-                                                        <DeleteButton onClick={() => { this.delete() }} />
-                                                    </CardActions>
-                                                </Collapse>
+                                                    <Grid item xs={12} md={2} lg={1}>
+                                                        <Card variant='outlined' style={{ padding: 5, borderRadius: 5, marginRight: 10 }}>
+                                                            <Typography variant='subtitle1' style={{ textAlign: 'center' }} >THEN</Typography>
+                                                        </Card>
+                                                    </Grid>
+                                                    <Grid item xs={12} md={11} lg={5}>
+                                                        <Card variant='outlined' style={{ justifyContent: 'center', alignItems: 'center', padding: 5, display: 'flex', flexDirection: 'row', borderRadius: 5, marginRight: 10 }}>
+                                                            <Highlight fontSize='medium' />
+                                                            <Box style={{ marginLeft: 12 }}>
+                                                                <Typography variant='subtitle1' >{(automation.action.type == "smartobject" ? automation.action.source.reference.toUpperCase() : automation.action.source.description.toUpperCase()) + " - " + automation.action.action.toUpperCase()}</Typography>
+                                                            </Box>
+                                                        </Card>
+                                                    </Grid>
+                                                    <DeleteButton xs={12} md={1} lg={1} onClick={() => { this.delete(automation.id) }} />
+                                                </Grid>
                                             </Card>
                                         </Grid>
                                     )

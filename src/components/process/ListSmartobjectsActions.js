@@ -6,7 +6,7 @@ function ListSmartobjectsActions(props) {
 
     return props.smartobjects.map((smartobject, index) => {
         return (
-            <Grid item xs={12} md={12} lg={12} >
+            <Grid item xs={12} md={12} lg={6} >
                 <Accordion style={{ borderRadius: 5 }} variant='outlined' expanded={props.index == index} onChange={() => { props.onOpen(index) }}>
                     <AccordionSummary expandIcon={<ExpandMore />} >
                         <Box>

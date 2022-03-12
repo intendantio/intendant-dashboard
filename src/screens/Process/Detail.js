@@ -1,15 +1,9 @@
 import React from 'react'
-import JSONPretty from 'react-json-pretty'
-
-import { Grid, Switch, ListItem, FormControlLabel, Card, CardActionArea, IconButton, TableHead, TextField, Typography, Paper, Divider, TableBody, TableContainer, TableCell, Table, TableRow, FormControl, Select, Button } from '@mui/material'
-
-import { ToggleOff, Close, Delete, Autorenew, ToggleOn, RadioButtonChecked } from '@mui/icons-material'
-
-import Alert from '../../components/Alert'
+import { Grid, Switch, ListItem, FormControlLabel, Card, Typography, Paper, Button } from '@mui/material'
+import { ToggleOff, ToggleOn, RadioButtonChecked } from '@mui/icons-material'
 import Action from '../../components/Action'
 import Desktop from '../../components/Desktop'
 import Request from '../../utils/Request'
-import Source from '../../utils/Source'
 import DeleteButton from '../../components/views/DeleteButton'
 import Loading from '../../components/Loading'
 
@@ -19,26 +13,9 @@ class DetailProcess extends React.Component {
         super(props)
         this.state = {
             id: props.match.params.id,
-            process: {
-                state: "",
-                mode: "",
-                description: "",
-                description_on: "",
-                description_off: "",
-                inputs: [],
-                profiles: []
-            },
+            process: null,
             profiles: [],
-            executeInformation: "",
-            referenceInput: "",
-            nameInput: "",
-            typeInput: "",
-            modeInput: 0,
-            action: "",
-            source: "",
             loading: true,
-            isChecked: false,
-            sources: []
         }
         props.setTitle("Process")
         props.setActionType("return")
@@ -58,22 +35,6 @@ class DetailProcess extends React.Component {
                 loading: false
             })
         }
-    }
-
-    setSource(id) {
-        let fSource = false
-        this.state.sources.forEach(source => {
-            if (source.id === id) { fSource = source }
-        })
-        this.setState({ source: fSource })
-    }
-
-    setAction(id) {
-        let fAction = false
-        this.state.source.actions.forEach(action => {
-            if (action.id === id) { fAction = action }
-        })
-        this.setState({ action: fAction })
     }
 
 
@@ -106,9 +67,6 @@ class DetailProcess extends React.Component {
             this.props.setMessage(result.package + " : " + result.message)
         } else {
             this.setState(resetState)
-            if (result.data) {
-                this.setState({ executeInformation: JSON.stringify(result.data) })
-            }
             this.componentDidMount()
         }
     }
@@ -225,8 +183,8 @@ class DetailProcess extends React.Component {
                                 }
                             </Card>
                         </Grid>
+                        <DeleteButton onClick={() => { this.delete(this.state.process.id) }} />
                     </Grid>
-                    <DeleteButton onClick={() => { this.delete(this.state.process.id) }} />
                 </Loading>
             </>
         )

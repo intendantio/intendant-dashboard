@@ -1,18 +1,11 @@
 import React from 'react'
-import Alert from '../../components/Alert'
-import Action from '../../components/Action'
 import Request from '../../utils/Request'
-
-import AccordionSkeleton from '../../components/AccordionSkeleton'
-
-import { Grid, Card, AccordionDetails, CardContent, Box, Accordion, AccordionSummary, Typography, Button, Paper, Divider, CardHeader, CardActions } from '@mui/material'
-import { ExpandLess, ExpandMore, SettingsSharp } from '@mui/icons-material'
+import { Grid, AccordionDetails, Box, Accordion, AccordionSummary, Typography, Paper, Divider } from '@mui/material'
+import { ExpandMore } from '@mui/icons-material'
 import WidgetNewItem from '../../components/WidgetNewItem'
 import Loading from '../../components/Loading'
 import Desktop from '../../components/Desktop'
 import Utils from '../../utils/Utils'
-
-
 
 class NewWidget extends React.Component {
 
@@ -46,13 +39,11 @@ class NewWidget extends React.Component {
             this.props.history.push('/widget')
         } else {
             let configurations = []
-
             resultSmartobjects.data.forEach(smartobject => {
                 if (Array.isArray(smartobject.widgets) && smartobject.widgets.length > 0) {
                     configurations.push(smartobject)
                 }
             })
-
             resultModules.data.forEach(pModule => {
                 if (Array.isArray(pModule.widgets) && pModule.widgets.length > 0) {
                     configurations.push({
@@ -65,7 +56,6 @@ class NewWidget extends React.Component {
                     })
                 }
             })
-
             if (configurations.length == 0) {
                 this.props.setMessage("No widget available")
                 this.props.history.push('/widget')
@@ -76,7 +66,6 @@ class NewWidget extends React.Component {
     }
 
     async submit(callback) {
-
         let settings = []
         let resetState = {}
         for (let indexSettings = 0; indexSettings < this.state.settings.length; indexSettings++) {
@@ -95,7 +84,6 @@ class NewWidget extends React.Component {
             object: this.state.configuration.configuration.module == "smartobject" ? this.state.configuration.id : Utils.getSum(this.state.configuration.name),
             settings: settings
         }).fetch("/api/widgets")
-
         if (result.error) {
             callback()
             this.props.setMessage(result.package + " : " + result.message)
@@ -120,9 +108,7 @@ class NewWidget extends React.Component {
         } else if (this.state.open && widget.name == this.state.widget.name && configuration.module == "module" && this.state.configuration.module == "module") {
             return
         }
-        this.setState({
-            open: false
-        })
+        this.setState({ open: false })
         let settings = []
         let settingsId = []
         if (Array.isArray(configuration.dataSources)) {
@@ -141,14 +127,12 @@ class NewWidget extends React.Component {
                         }
                     })
                 }
-
             })
         }
         this.setState({ widget: widget, settings: settings, configuration: configuration }, () => {
             this.setState({ open: true })
         })
     }
-
 
     render() {
         return (

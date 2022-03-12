@@ -158,8 +158,8 @@ class DetailRoom extends React.Component {
                                 </Box>
                             </Card>
                         </Grid>
-                    </Grid>
                     <DeleteButton onClick={() => { this.delete(this.state.id) }} />
+                    </Grid>
                 </Loading>
             </>
         )

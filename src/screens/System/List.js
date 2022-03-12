@@ -91,23 +91,23 @@ class System extends React.Component {
                                 <Divider style={{ marginTop: 12, marginBottom: 12 }} />
                                 <Box style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
                                     {this.state.status.web.status == "ok" ? <CheckCircle color='success' /> : this.state.status.web.status == "warning" ? <Error color='warning' /> : <Error color='error' />}
-                                    <Typography style={{ alignSelf: 'center', marginLeft: 12 }} variant='body1' >{"Website"}</Typography>
-                                    <Typography style={{ alignSelf: 'center', marginLeft: 12 }} color="text.secondary" variant='body1' >{this.state.status.web.message}</Typography>
+                                    <Typography style={{ marginLeft: 12 }} variant='body1' >{"Website"}</Typography>
+                                    <Typography style={{ alignSelf: 'center', marginLeft: 12, overflowWrap: 'anywhere' }} color="text.secondary" variant='body1' >{this.state.status.web.message}</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
                                     {this.state.status.cloud.status == "ok" ? <CheckCircle color='success' /> : this.state.status.cloud.status == "warning" ? <Error color='warning' /> : <Error color='error' />}
-                                    <Typography style={{ alignSelf: 'center', marginLeft: 12 }} variant='body1' >{"Cloud system"}</Typography>
-                                    <Typography style={{ alignSelf: 'center', marginLeft: 12 }} color="text.secondary" variant='body1' >{this.state.status.cloud.message}</Typography>
+                                    <Typography style={{ marginLeft: 12 }} variant='body1' >{"Cloud"}</Typography>
+                                    <Typography style={{ alignSelf: 'center', marginLeft: 12, overflowWrap: 'anywhere' }} color="text.secondary" variant='body1' >{this.state.status.cloud.message}</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
                                     {this.state.status.market.status == "ok" ? <CheckCircle color='success' /> : this.state.status.market.status == "warning" ? <Error color='warning' /> : <Error color='error' />}
-                                    <Typography style={{ alignSelf: 'center', marginLeft: 12 }} variant='body1' >{"Market"}</Typography>
-                                    <Typography style={{ alignSelf: 'center', marginLeft: 12 }} color="text.secondary" variant='body1' >{this.state.status.market.message}</Typography>
+                                    <Typography style={{ marginLeft: 12 }} variant='body1' >{"Market"}</Typography>
+                                    <Typography style={{ alignSelf: 'center', marginLeft: 12, overflowWrap: 'anywhere' }} color="text.secondary" variant='body1' >{this.state.status.market.message}</Typography>
                                 </Box>
                                 <Box style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
                                     {this.state.status.manager.status == "ok" ? <CheckCircle color='success' /> : this.state.status.manager.status == "warning" ? <Error color='warning' /> : <Error color='error' />}
-                                    <Typography style={{ alignSelf: 'center', marginLeft: 12 }} variant='body1' >{"Manager"}</Typography>
-                                    <Typography style={{ alignSelf: 'center', marginLeft: 12 }} color="text.secondary" variant='body1' >{this.state.status.manager.message}</Typography>
+                                    <Typography style={{ marginLeft: 12 }} variant='body1' >{"Manager"}</Typography>
+                                    <Typography style={{ alignSelf: 'center', marginLeft: 12, overflowWrap: 'anywhere' }} color="text.secondary" variant='body1' >{this.state.status.manager.message}</Typography>
                                 </Box>
                             </Card>
                         </Grid>

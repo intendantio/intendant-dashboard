@@ -66,9 +66,9 @@ class UserList extends React.Component {
                     </Paper>
                 </Desktop>
                 <Loading loading={this.state.loading}>
-                    <Grid container spacing={1} style={{marginTop: 0}}>
+                    <Grid container spacing={1} style={{ marginTop: 0 }}>
                         {
-                            this.state.users.map((user,index) => {
+                            this.state.users.map((user, index) => {
                                 let profile = this.state.profiles.filter(profile => {
                                     return profile.id == user.profile
                                 })

@@ -8,8 +8,6 @@ import Desktop from '../../components/Desktop'
 import Request from '../../utils/Request'
 import Loading from '../../components/Loading'
 import * as AbstractIcon from '@mui/icons-material'
-import DeleteButton from '../../components/views/DeleteButton'
-
 
 class Detail extends React.Component {
 

@@ -13,7 +13,7 @@ class DetailUser extends React.Component {
         this.state = {
             id: props.match.params.id,
             profiles: [],
-            loading: false,
+            loading: true,
             user: {
                 login: "",
                 imei: "",
@@ -82,7 +82,7 @@ class DetailUser extends React.Component {
                                 <FormControl>
                                     <RadioGroup value={this.state.user.profile} onChange={(event) => { this.updateProfile(event.target.value) }} >
                                         {
-                                            this.state.profiles.map((profile,index) => {
+                                            this.state.profiles.map((profile, index) => {
                                                 return (
                                                     <FormControlLabel key={index} value={profile.id} control={<Radio />} label={String.capitalizeFirstLetter(profile.name)} />
                                                 )
@@ -98,7 +98,7 @@ class DetailUser extends React.Component {
                                     {"Histories"}
                                 </Typography>
                                 {
-                                    this.state.user.histories.map((history,index) => {
+                                    this.state.user.histories.map((history, index) => {
                                         let moment = Moment(history.date)
                                         return (
                                             <Typography key={index} variant='body1'  >
@@ -109,8 +109,8 @@ class DetailUser extends React.Component {
                                 }
                             </Card>
                         </Grid>
+                        <DeleteButton onClick={() => { this.delete() }} />
                     </Grid>
-                    <DeleteButton onClick={() => { this.delete() }} />
                 </Loading>
             </>
         )

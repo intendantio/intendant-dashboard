@@ -6,30 +6,23 @@ import { ToggleOff, RadioButtonChecked, ToggleOn, ExpandMore, Lightbulb, Thermos
 
 function ExecuteActions(props) {
 
+    if(props.actions.length == 0) {
+        return null
+    }
     return (
         <Grid item xs={12} md={12} lg={12} >
             <Card variant='outlined' style={{ height: '100%', display: 'flex', alignItems: 'center' }} >
                 <Grid container spacing={1} style={{ padding: 10 }} >
-                    <Grid item xs={12} md={12} lg={12} key={0} >
-                        <Typography variant='subtitle1'  >{
-                            props.mode == "button" ?
-                                "Action executed"
-                                :
-                                "Action executed in mode " + props.state.toUpperCase()
-                        }</Typography>
-                        <Divider style={{ marginTop: 5, marginBottom: 5 }} />
-                    </Grid>
                     {
-
                         props.actions.map((action, ppIndex) => {
                             return (
-                                <Grid item xs={12} md={6} lg={6} key={ppIndex} >
-                                    <Card variant='outlined'   >
+                                <Grid item xs={12} md={6} lg={3} key={ppIndex} >
+                                    <Card variant='outlined'  >
                                         <CardActionArea onClick={() => { props.onChange(action) }} style={{ padding: 8 }}>
-                                            <Typography variant='body1' >
+                                            <Typography variant='subtitle1' >
                                                 {action.name}
                                             </Typography>
-                                            <Typography variant="caption" color="text.secondary" >
+                                            <Typography variant="body2" color="text.secondary" >
                                                 {action.parent.reference}
                                             </Typography>
                                         </CardActionArea>

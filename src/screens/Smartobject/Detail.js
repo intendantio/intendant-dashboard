@@ -280,8 +280,8 @@ class DetailSmartObject extends React.Component {
                                 </AccordionDetails>
                             </Accordion>
                         </Grid>
-                    </Grid>
                     <DeleteButton onClick={() => { this.delete() }} />
+                    </Grid>
                     <Modal open={this.state.modalOpen} style={{ top: '25%', left: '25%' }} onClose={() => { this.setState({ modalOpen: false }) }} >
                         <Card variant='outlined' style={{ overflow: 'auto', maxHeight: '50vh', maxWidth: '50vw', padding: 20 }}>
                             <JSONPretty style={{ fontSize: 12 }} id="json-pretty" data={this.state.content}></JSONPretty>
