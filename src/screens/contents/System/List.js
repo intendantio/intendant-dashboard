@@ -87,7 +87,7 @@ class System extends React.Component {
                         <Grid item xs={12} md={12} lg={5} >
                             <Card variant='outlined' style={{ padding: 12 }}  >
                                 <Typography variant='subtitle1' fontWeight='bold' >Cloud service</Typography>
-                                <Typography variant='subtitle2' color="text.secondary" >Powered from Intendant.io</Typography>
+                                <Typography variant='subtitle2' color="text.secondary" >Powered from status.intendant.io</Typography>
                                 <Divider style={{ marginTop: 12, marginBottom: 12 }} />
                                 <Box style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
                                     {this.state.status.web.status == "ok" ? <CheckCircle color='success' /> : this.state.status.web.status == "warning" ? <Error color='warning' /> : <Error color='error' />}
