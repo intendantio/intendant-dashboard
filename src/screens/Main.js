@@ -35,6 +35,7 @@ import { Grid, Card, Skeleton } from '@mui/material'
 
 import { BrowserRouter as Router, Switch, Route, useHistory, } from "react-router-dom"
 import Desktop from '../components/Desktop'
+import System from './contents/System/List'
 
 const renderLoader = (props) => {
     return (
@@ -86,6 +87,7 @@ function Main(mainProps) {
                                 <Switch>
                                     <Route exact path="/" render={(props) => <Room setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject/oauth/:id" render={(props) => <OAuthSmartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
+                                    <Route exact path="/system" render={(props) => <System setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/module" render={(props) => <Module setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/module/gallery" render={(props) => <GalleryModule setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/module/:id" render={(props) => <DetailModule setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />

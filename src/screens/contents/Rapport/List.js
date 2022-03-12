@@ -49,6 +49,7 @@ class Rapport extends React.Component {
                             </Grid>
                             :
                             this.state.rapports.map((rapport,index) => {
+                                console.log(rapport)
                                 return (
                                     <Grid key={index} item xs={12} md={12} lg={12} >
                                         <Card variant='outlined'   >
@@ -59,10 +60,10 @@ class Rapport extends React.Component {
                                                 <Box style={{ display: 'flex', flex: 1 }} >
                                                     <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
                                                         <Typography variant='subtitle1'  >
-                                                            {String.capitalizeFirstLetter(rapport.configuration.module == "smartobject" ? (rapport.reference + " - " + rapport.smartobject.reference) : rapport.reference)}
+                                                            {String.capitalizeFirstLetter(rapport.smartobject.reference + " - " + rapport.reference)}
                                                         </Typography>
                                                         <Typography variant='body2' color="text.secondary"  >
-                                                            {String.capitalizeFirstLetter(rapport.configuration.name)}
+                                                            {String.capitalizeFirstLetter(rapport.smartobject.room.name)}
                                                         </Typography>
                                                     </Box>
                                                 </Box>

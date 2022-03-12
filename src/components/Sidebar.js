@@ -1,6 +1,6 @@
 import React from 'react'
 import { Drawer, IconButton, Button, List, AppBar, Typography, Toolbar, Box, Divider, ListItem, ListItemIcon, ListItemText, Skeleton } from '@mui/material'
-import { ShoppingCart, House, Menu, DevicesOther, ExitToApp, AccountTree, Category, DeviceHub, BarChart, Extension, Settings, Person, ArrowBack, ArrowBackIos, Home, Lightbulb } from '@mui/icons-material'
+import { ShoppingCart, House, Menu, DevicesOther, ExitToApp, AccountTree, Category, DeviceHub, BarChart, Extension, Settings, Person, ArrowBack, ArrowBackIos, Home, Lightbulb, Storage, CloudCircle } from '@mui/icons-material'
 import { Link, withRouter } from "react-router-dom"
 
 import Request from '../utils/Request'
@@ -158,6 +158,14 @@ class Sidebar extends React.Component {
                                         <ListItemText primary={"User"} />
                                     </ListItem>
                                 </Link>
+                                <Link to="/system" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
+                                    <ListItem button key={"system"} >
+                                        <ListItemIcon>
+                                            <CloudCircle />
+                                        </ListItemIcon>
+                                        <ListItemText primary={"Information"} />
+                                    </ListItem>
+                                </Link>
                                 <Divider />
                                 <ListItem button key={"disconnect"} onClick={() => { this.props.onDisconnect() }} >
                                     <ListItemIcon>
@@ -272,6 +280,14 @@ class Sidebar extends React.Component {
                                     <Person />
                                 </ListItemIcon>
                                 <ListItemText primary={"User"} />
+                            </ListItem>
+                        </Link>
+                        <Link to="/system" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
+                            <ListItem button key={"system"} >
+                                <ListItemIcon>
+                                    <CloudCircle />
+                                </ListItemIcon>
+                                <ListItemText primary={"Information"} />
                             </ListItem>
                         </Link>
                         <Divider />

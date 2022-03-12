@@ -111,7 +111,7 @@ class DetailRoom extends React.Component {
                                 :
                                 this.state.room.smartobjects.map((smartobject, index) => {
                                     return (
-                                        <Grid key={index} item xs={12} md={6} lg={6} >
+                                        <Grid key={index} item xs={12} md={6} lg={4} >
                                             <Card variant={'outlined'}   >
                                                 <CardActionArea style={{ padding: 12, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }} onClick={() => { this.props.history.push('/room/' + this.state.id + '/smartobject/' + smartobject.id) }}  >
 
@@ -131,7 +131,7 @@ class DetailRoom extends React.Component {
                                     )
                                 })
                         }
-                        <AddButton xs={12} fill md={6} lg={6} to={"/room/" + this.state.id + "/smartobject/gallery"} />
+                        <AddButton xs={12} fill md={6} lg={4} to={"/room/" + this.state.id + "/smartobject/gallery"} />
                         <Grid item xs={12} md={12} lg={12}>
                             <Card variant='outlined' style={{ padding: 12 }}  >
                                 <Box style={{ display: 'flex', flexWrap: 'wrap' }}>
