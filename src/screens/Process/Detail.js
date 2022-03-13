@@ -13,7 +13,10 @@ class DetailProcess extends React.Component {
         super(props)
         this.state = {
             id: props.match.params.id,
-            process: null,
+            process: {
+                description: "",
+                inputs: []
+            },
             profiles: [],
             loading: true,
         }
@@ -29,6 +32,7 @@ class DetailProcess extends React.Component {
             this.props.setMessage(result.package + " : " + result.message)
             this.props.history.push('/process')
         } else {
+            console.log(result.data)
             this.setState({
                 process: result.data,
                 profiles: resultProfile.data,
