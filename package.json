@@ -2,7 +2,7 @@
   "name": "@intendant/dashboard",
   "homepage": "",
   "license": "GPL-3.0+",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",
@@ -15,6 +15,7 @@
     "react-apexcharts": "^1.3.9",
     "react-color": "^2.19.3",
     "react-dom": "^17.0.2",
+    "react-grid-layout": "^1.3.4",
     "react-json-pretty": "^2.2.0",
     "react-router-dom": "^5.2.0",
     "react-scripts": "5.0.0",

@@ -24,16 +24,21 @@ class Authentification extends React.Component {
 
 
     async componentDidMount() {
-        let server = localStorage.getItem("server")
-        if (server) {
-            let result = await new Request().get().fetch("/api/smartobjects")
-            if (result.error == false) {
-                this.setState({ enabled: false, authentification: false })
+        try {
+            let server = localStorage.getItem("server")
+            if (server) {
+                let result = await new Request().get().fetch("/api/smartobjects")
+                if (result.error == false) {
+                    this.setState({ enabled: false, authentification: false })
+                }
+            } else if (server) {
+                this.setState({ address: server.replace("http://", "") })
             }
-        } else if (server) {
-            this.setState({ address: server.replace("http://", "") })
+            this.setState({ loading: false })
+        } catch (error) {
+            localStorage.clear()
+            this.setState({ loading: false })
         }
-        this.setState({ loading: false })
     }
 
     async login() {
@@ -51,6 +56,7 @@ class Authentification extends React.Component {
                 this.props.setMessage(resultJSON.package + " : " + resultJSON.message)
             } else {
                 localStorage.setItem("expiry", resultJSON.data.expiry + "")
+                localStorage.setItem("user", resultJSON.data.user)
                 localStorage.setItem("access_token", resultJSON.data.access_token)
                 localStorage.setItem("refresh_token", resultJSON.data.refresh_token)
                 this.setState({ enabled: false, message: "", authentification: false })

@@ -32,7 +32,6 @@ class DetailProcess extends React.Component {
             this.props.setMessage(result.package + " : " + result.message)
             this.props.history.push('/process')
         } else {
-            console.log(result.data)
             this.setState({
                 process: result.data,
                 profiles: resultProfile.data,

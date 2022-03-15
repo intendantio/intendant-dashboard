@@ -25,11 +25,11 @@ const DetailRoom = lazy(() => import('./Room/Detail'))
 const OAuthSmartobject = lazy(() => import('./Smartobject/OAuth'))
 const Home = lazy(() => import('./Home/List'))
 const Authorisation = lazy(() => import('./Authorisation/List'))
+const NewHome = lazy(() => import('./Home/New'))
 
 import Sidebar from '../components/Sidebar'
 import Context from '../utils/Context'
 
-import Loading from '../components/Loading'
 
 import { Grid, Card, Skeleton } from '@mui/material'
 
@@ -86,6 +86,7 @@ function Main(mainProps) {
                             <Suspense fallback={renderLoader(mainProps)}>
                                 <Switch>
                                     <Route exact path="/" render={(props) => <Home setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
+                                    <Route exact path="/dashboard/new" render={(props) => <NewHome setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject/oauth/:id" render={(props) => <OAuthSmartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/system" render={(props) => <System setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/module" render={(props) => <Module setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />

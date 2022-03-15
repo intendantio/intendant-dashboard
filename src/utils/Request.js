@@ -90,6 +90,7 @@ class Request {
             }
         }
 
+        localStorage.setItem("user", resultJSON.data.user)
         localStorage.setItem("access_token", resultJSON.data.access_token)
         localStorage.setItem("expiry", resultJSON.data.expiry + "")
 
