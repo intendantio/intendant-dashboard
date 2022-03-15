@@ -84,7 +84,7 @@ class Process extends React.Component {
         return (
             <>
                 <Modal onClose={() => { this.setState({ open: false }) }} open={this.state.open}>
-                    <Card variant='outlined' style={{ padding: 10, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 400 }}>
+                    <Card variant='outlined' style={{ padding: 10, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300 }}>
                         <Grid container spacing={1}>
                         {
                             this.state.process.inputs.filter(input => input.state == this.state.process.state).map((input, index) => {
