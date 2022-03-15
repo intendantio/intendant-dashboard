@@ -79,7 +79,7 @@ function Main(mainProps) {
     return (
         <Context.Consumer>
             {({ title, setTitle, setActionType, actionType, setMessage }) => (
-                <Router basename='/admin'>
+                <Router basename='/'>
                     <Sidebar title={title} actionType={actionType} isMobile={mainProps.isMobile} onDisconnect={() => { mainProps.onDisconnect() }} />
                     <main id='main' style={{ paddingTop: mainProps.isMobile ? 8 : '4vh', height: '100%', width: '100vw', paddingLeft: '5vw', paddingRight: '5vw', overflowX: 'hidden', overflowY: 'visible' }} >
                         <div style={{ marginLeft: mainProps.isMobile ? 0 : 240, marginBottom: 12 }}>
