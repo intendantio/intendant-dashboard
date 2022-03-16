@@ -30,6 +30,9 @@ function TypeProduct(props) {
                     <ToggleButton style={{ width: '100%' }} value="bridge">
                         <Hub />
                     </ToggleButton >
+                    <ToggleButton style={{ width: '100%' }} value="security">
+                        <Security />
+                    </ToggleButton >
                 </ToggleButtonGroup>
             </Card>
         </Grid>
