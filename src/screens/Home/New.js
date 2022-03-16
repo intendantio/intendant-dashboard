@@ -4,6 +4,7 @@ import Request from '../../utils/Request'
 import { Grid, Card, Step, StepLabel, Stepper, Typography, Paper, CardActionArea } from '@mui/material'
 import Loading from '../../components/Loading'
 import Utils from '../../utils/Utils'
+import Desktop from '../../components/Desktop'
 
 class New extends React.Component {
 
@@ -59,7 +60,7 @@ class New extends React.Component {
     }
 
     async save(type, object, action) {
-       let idUser = localStorage.getItem("user")
+        let idUser = localStorage.getItem("user")
         let result = await new Request().post({
             user: idUser,
             type: type,
@@ -165,7 +166,7 @@ class New extends React.Component {
                     return (
                         <Grid key={index} item xs={12} md={12} lg={12} >
                             <Card variant='outlined'   >
-                                <CardActionArea onClick={() => { this.save(this.state.dbType,this.state.source.id,source.id) }} style={{ padding: 10 }} >
+                                <CardActionArea onClick={() => { this.save(this.state.dbType, this.state.source.id, source.id) }} style={{ padding: 10 }} >
                                     <Typography variant='subtitle1' >
                                         {source.name}
                                     </Typography>
@@ -214,9 +215,11 @@ class New extends React.Component {
     render() {
         return (
             <>
-                <Paper variant="outlined" style={{ padding: 12, justifyContent: 'left' }}>
-                    <Typography variant='h6' fontWeight='bold' >New item</Typography>
-                </Paper>
+                <Desktop isMobile={this.props.isMobile}>
+                    <Paper variant="outlined" style={{ padding: 12, justifyContent: 'left' }}>
+                        <Typography variant='h6' fontWeight='bold' >New item</Typography>
+                    </Paper>
+                </Desktop>
                 <Card variant='outlined' style={{ padding: 10, marginTop: 8 }}>
                     <Stepper activeStep={this.state.step} >
                         <Step key={"type"}>
@@ -228,7 +231,7 @@ class New extends React.Component {
                     </Stepper>
                 </Card>
                 <Loading loading={this.state.loading}>
-                    <Grid container spacing={1} style={{ marginTop: 0}} >
+                    <Grid container spacing={1} style={{ marginTop: 0 }} >
                         {this.getStep()}
                     </Grid>
                 </Loading>

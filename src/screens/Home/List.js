@@ -54,7 +54,7 @@ class Home extends React.Component {
     newLayout() {
         return {
             lg: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type)
+                let width = this.getWidth(dashboard.type,"lg")
                 return {
                     x: parseInt(dashboard.x),
                     y: parseInt(dashboard.y),
@@ -66,7 +66,7 @@ class Home extends React.Component {
                 }
             }),
             md: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type)
+                let width = this.getWidth(dashboard.type,"md")
                 return {
                     x: parseInt(dashboard.x),
                     y: parseInt(dashboard.y),
@@ -78,7 +78,7 @@ class Home extends React.Component {
                 }
             }),
             sm: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type)
+                let width = this.getWidth(dashboard.type,"sm")
                 return {
                     x: parseInt(dashboard.x),
                     y: parseInt(dashboard.y),
@@ -90,7 +90,7 @@ class Home extends React.Component {
                 }
             }),
             xs: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type)
+                let width = this.getWidth(dashboard.type,"xs")
                 return {
                     x: parseInt(dashboard.x),
                     y: parseInt(dashboard.y),
@@ -102,7 +102,7 @@ class Home extends React.Component {
                 }
             }),
             xxs: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type)
+                let width = this.getWidth(dashboard.type,"xxs")
                 return {
                     x: parseInt(dashboard.x),
                     y: parseInt(dashboard.y),
@@ -165,21 +165,21 @@ class Home extends React.Component {
         return
     }
 
-    getWidth(type) {
+    getWidth(type,breakpointType) {
         switch (type) {
             case "smartobject":
                 return {
-                    w: 5,
+                    w: 4,
                     h: 2
                 }
             case "process":
                 return {
-                    w: 5,
+                    w: 4,
                     h: 2
                 }
             case "rapport":
                 return {
-                    w: 3,
+                    w: 2,
                     h: 2
                 }
             case "widget":
@@ -267,13 +267,14 @@ class Home extends React.Component {
                                             preventCollision={true}
                                             rowHeight={30}
                                             useCSSTransforms={true}
-                                            verticalCompact={false}
+                                            compactType={null}
                                             measureBeforeMount={false}
-                                            layout={this.state.layouts}
-                                            cols={{ lg: 24, md: 24, sm: 12, xs: 12, xxs: 4 }}
+                                            cols={{ lg: 16, md: 14, sm: 12, xs: 8, xxs: 4 }}
                                         >
                                             {
                                                 this.state.layouts[this.state.currentBreakpoint].map((layout, index) => {
+                                                    console.log(layout)
+                                                    
                                                     return (
                                                         <Card data-grid={layout} style={{ borderWidth: '0px' }} variant='outlined' key={"" + layout.i} >
                                                             {
