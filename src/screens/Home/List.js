@@ -119,23 +119,23 @@ class Home extends React.Component {
     updateLayout() {
         let newLayout = {
             lg: this.state.layouts.lg.map((layout) => {
-                layout.static = this.state.mode == "view"
+                layout.static = this.state.mode != "edit"
                 return layout
             }),
             md: this.state.layouts.md.map((layout) => {
-                layout.static = this.state.mode == "view"
+                layout.static = this.state.mode != "edit"
                 return layout
             }),
             sm: this.state.layouts.sm.map((layout) => {
-                layout.static = this.state.mode == "view"
+                layout.static = this.state.mode != "edit"
                 return layout
             }),
             xs: this.state.layouts.xs.map((layout) => {
-                layout.static = this.state.mode == "view"
+                layout.static = this.state.mode != "edit"
                 return layout
             }),
             xxs: this.state.layouts.xxs.map((layout) => {
-                layout.static = this.state.mode == "view"
+                layout.static = this.state.mode != "edit"
                 return layout
             })
         }
