@@ -136,12 +136,12 @@ class Authentification extends React.Component {
                             <form noValidate onSubmit={(e) => { e.preventDefault(); this.login() }} autoComplete="off" >
                                 {
                                     this.state.customAddress ?
-                                        <TextField style={{ marginTop: 5, marginBottom: 5 }} value={this.state.address} fullWidth label="Server address" autoFocus onChange={(event) => { this.setState({ address: event.nativeEvent.target.value }) }} />
+                                        <TextField style={{ marginTop: 5, marginBottom: 5 }} value={this.state.address} fullWidth label="Server address" autoFocus inputProps={{ autoCapitalize: 'none', autoCorrect: 'off' }} onChange={(event) => { this.setState({ address: event.nativeEvent.target.value }) }} />
                                         :
                                         null
                                 }
-                                <TextField style={{ marginTop: 5, marginBottom: 5 }} autocorrect="off" autocapitalize="none" value={this.state.login} fullWidth label="Login" autoComplete="current-login" inputProps={{ maxLength: 12 }} onChange={(event) => { this.setState({ login: event.nativeEvent.target.value }) }} />
-                                <TextField style={{ marginTop: 5, marginBottom: 5 }} autocorrect="off" autocapitalize="none" value={this.state.password} fullWidth label="Password" type='password' autoComplete="current-login" inputProps={{ maxLength: 12 }} onChange={(event) => { this.setState({ password: event.nativeEvent.target.value }) }} />
+                                <TextField style={{ marginTop: 5, marginBottom: 5 }} value={this.state.login} fullWidth label="Login" autoComplete="current-login" inputProps={{ maxLength: 12,autoCapitalize: 'none', autoCorrect: 'off' }} onChange={(event) => { this.setState({ login: event.nativeEvent.target.value }) }} />
+                                <TextField style={{ marginTop: 5, marginBottom: 5 }} value={this.state.password} fullWidth label="Password" type='password' autoComplete="current-login" inputProps={{ maxLength: 12,autoCapitalize: 'none', autoCorrect: 'off' }} onChange={(event) => { this.setState({ password: event.nativeEvent.target.value }) }} />
                                 <Box style={{ display: 'flex', justifyContent: 'end', marginTop: 10 }}>
                                     <Button color='inherit' type='submit' variant='plain' on onSubmit={() => { this.login() }} onClick={() => { this.login() }}  >
                                         Connection
