@@ -65,7 +65,7 @@ class Authentification extends React.Component {
     }
 
     disconnect() {
-        localStorage.removeItem("access_token")
+        localStorage.clear()
         this.setState({ authentification: true, password: "" })
     }
 
