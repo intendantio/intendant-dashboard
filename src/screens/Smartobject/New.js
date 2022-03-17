@@ -128,8 +128,9 @@ class NewSmartobject extends React.Component {
                 </Button>
             )
         } else if (this.state.package.submit.type == "oauth") {
+            
             return (
-                <a href={this.state.package.submit.url + "?reference=" + this.state.reference + this.getOauthSettings() + "&room=" + this.state.idRoom + "&redirect_uri=" + window.location.origin + "/admin/smartobject/oauth/" + this.props.match.params.idSmartobject}>
+                <a href={this.state.package.submit.url + (this.state.package.submit.url.includes("?") ? "&" : "?")+  "reference=" + this.state.reference + this.getOauthSettings() + "&room=" + this.state.idRoom + "&redirect_uri=" + window.location.origin + "/admin/smartobject/oauth/" + this.props.match.params.idSmartobject}>
                     <Button size='large' variant='contained' style={{ height: '100%', textTransform: 'none' }} >
                         <Typography color='white' >
                             {this.state.package.submit.name}
