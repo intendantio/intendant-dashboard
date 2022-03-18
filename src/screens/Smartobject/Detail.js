@@ -1,6 +1,6 @@
 import React from 'react'
 import JSONPretty from 'react-json-pretty'
-import { Paper, Alert, Typography, Card, Grid, Accordion, Box, Modal, AccordionSummary, AccordionDetails, Button, TextField, FormControlLabel, IconButton, Switch, Divider, CardActionArea } from '@mui/material'
+import { Paper, OutlinedInput , Typography, Card, Grid, Accordion, Box, Modal, AccordionSummary, AccordionDetails, Button, TextField, FormControlLabel, IconButton, Switch, Divider, CardActionArea } from '@mui/material'
 import { ExpandMore, Cloud, Edit, Warning, Refresh, Downloading, House, Settings, RocketLaunch } from '@mui/icons-material'
 import Action from '../../components/Action'
 import Desktop from '../../components/Desktop'
@@ -252,7 +252,7 @@ class DetailSmartObject extends React.Component {
                                                 let CurrentIcon = AbstractIcon[room.icon]
                                                 return (
                                                     <Grid key={index} item xs={12} md={3} lg={2}>
-                                                        <Button onClick={() => { this.updateRoom(room) }} variant={room.id == this.state.smartobject.room.id ? 'contained' : 'outlined'} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderColor: 'white', width: '100%' }} >
+                                                        <Button onClick={() => { this.updateRoom(room) }} color={room.id == this.state.smartobject.room.id ? 'success' : 'primary' } variant={'contained'} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderColor: 'white', width: '100%' }} >
                                                             <CurrentIcon style={{ color: 'white' }} />
                                                             <Typography variant='body1' style={{ marginLeft: 10, color: 'white' }}   >
                                                                 {room.name}
@@ -278,18 +278,13 @@ class DetailSmartObject extends React.Component {
                                 <AccordionDetails>
                                     <Grid container spacing={2} style={{ marginTop: 2 }}>
                                         <Grid item xs={12} md={4} lg={4}>
-                                            <TextField
+                                            <OutlinedInput 
                                                 value={this.state.reference}
                                                 color={this.state.smartobject.reference != this.state.reference ? "warning" : "info"}
                                                 onChange={(event) => { this.setState({ reference: event.nativeEvent.target.value }) }}
                                                 onBlur={(event) => { this.updateReference() }}
-                                                style={{
-                                                    width: '100%',
-                                                    marginRight: 10,
-                                                    marginBottom: this.props.isMobile ? 10 : 0
-                                                }}
-                                                label="Name"
-                                                variant="outlined"
+                                                variant="filled"
+                                                margin='none'
                                             />
                                         </Grid>
                                     </Grid>
