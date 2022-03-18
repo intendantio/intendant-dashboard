@@ -276,7 +276,7 @@ class DetailSmartObject extends React.Component {
                                 </AccordionSummary>
                                 <Divider />
                                 <AccordionDetails>
-                                    <Grid container spacing={2} style={{ marginTop: 2 }}>
+                                    <Grid container spacing={2} >
                                         <Grid item xs={12} md={4} lg={4}>
                                             <OutlinedInput 
                                                 value={this.state.reference}
