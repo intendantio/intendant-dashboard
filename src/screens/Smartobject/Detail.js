@@ -1,14 +1,14 @@
 import React from 'react'
 import JSONPretty from 'react-json-pretty'
 import { Paper, Alert, Typography, Card, Grid, Accordion, Box, Modal, AccordionSummary, AccordionDetails, Button, TextField, FormControlLabel, IconButton, Switch, Divider, CardActionArea } from '@mui/material'
-import { ExpandMore, Edit, Warning, FlashOff, FlashOn, House, Cached, RocketLaunch } from '@mui/icons-material'
-import AlertComponent from '../../components/Alert'
+import { ExpandMore, Cloud, Edit, Warning, Refresh, Downloading, House, Settings, RocketLaunch } from '@mui/icons-material'
 import Action from '../../components/Action'
 import Desktop from '../../components/Desktop'
 import Request from '../../utils/Request'
 import Loading from '../../components/Loading'
 import * as AbstractIcon from '@mui/icons-material'
 import DeleteButton from '../../components/views/DeleteButton'
+import md5 from 'md5'
 
 
 class DetailSmartObject extends React.Component {
@@ -24,6 +24,11 @@ class DetailSmartObject extends React.Component {
                 room: {},
                 state: {
                     status: 'unknown'
+                },
+                configuration: {
+                    submit: {
+                        type: "none"
+                    }
                 }
             },
             expanded: "action",
@@ -105,16 +110,40 @@ class DetailSmartObject extends React.Component {
     }
 
     async installPackage() {
-        this.setState({loading: true})
-        let result = await new Request().patch({package: this.state.smartobject.module}).fetch("/api/smartobjects")
+        this.setState({ loading: true })
+        let result = await new Request().patch({ package: this.state.smartobject.module }).fetch("/api/smartobjects")
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
             this.props.history.push('/room/' + this.state.idRoom)
         } else {
-            this.componentDidMount()
+            setTimeout(() => {
+                this.componentDidMount()
+            }, 3000)
         }
     }
 
+    async restart() {
+        this.setState({ loading: true })
+        let result = await new Request().post().fetch("/api/smartobjects/" + this.state.smartobject.id + "/restart")
+        if (result.error) {
+            this.props.setMessage(result.package + " : " + result.message)
+        } else {
+            setTimeout(() => {
+                this.componentDidMount()
+            }, 3000)
+        }
+    }
+    
+    async reinstall() {
+
+        location.href = this.state.smartobject.configuration.submit.url + 
+            (this.state.smartobject.configuration.submit.url.includes("?") ? "&" : "?")+  
+            "smartobject_id=" + this.state.smartobject.id + "&reference=" + this.state.smartobject.reference  + 
+            "&room=" + this.state.smartobject.room.id + "&redirect_uri=" + 
+            window.location.origin + "/smartobject/oauth/" + 
+            md5(this.state.smartobject.configuration.name)
+        
+    }
 
     render() {
         let lastGroup = ""
@@ -139,7 +168,7 @@ class DetailSmartObject extends React.Component {
                         {
                             this.state.smartobject.state.status == "uninstalled" ?
                                 <><Grid item xs={12} md={6} lg={10} >
-                                    <Card variant='outlined' style={{ padding: 12}}>
+                                    <Card variant='outlined' style={{ padding: 12 }}>
                                         <Box style={{ display: 'flex', flexDirection: 'row' }}>
                                             <Warning style={{ fontSize: '24px' }} />
                                             <Typography variant='subtitle1' style={{ marginLeft: 12 }}>
@@ -150,9 +179,9 @@ class DetailSmartObject extends React.Component {
                                     </Card>
                                 </Grid>
                                     <Grid item xs={12} md={6} lg={2} >
-                                        <Card style={{height: '100%'}} variant='outlined'>
-                                            <Button onClick={() => {this.installPackage()}} style={{ padding: 10, height: '100%', width: '100%' }} variant='contained' size='small' color='error' >
-                                                <Typography variant='subtitle1' style={{ textAlign:'center', color:'white', textTransform:'none' }} >
+                                        <Card style={{ height: '100%' }} variant='outlined'>
+                                            <Button onClick={() => { this.installPackage() }} style={{ padding: 10, height: '100%', width: '100%' }} variant='contained' size='small' color='error' >
+                                                <Typography variant='subtitle1' style={{ textAlign: 'center', color: 'white', textTransform: 'none' }} >
                                                     Fix smartobject
                                                 </Typography>
                                             </Button>
@@ -165,7 +194,7 @@ class DetailSmartObject extends React.Component {
                             <Accordion variant='outlined' expanded={this.state.expanded === 'action'} onChange={() => this.setState({ expanded: "action" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     <RocketLaunch style={{ fontSize: '28px' }} />
-                                    <Typography variant='h6' style={{ marginLeft: 5 }}>
+                                    <Typography variant='h6' style={{ marginLeft: 10 }}>
                                         Action
                                     </Typography>
                                 </AccordionSummary>
@@ -174,25 +203,12 @@ class DetailSmartObject extends React.Component {
                                     <Grid container >
                                         {
                                             this.state.smartobject.actions.map((action, index) => {
-                                                if (action.type == "trigger") {
-                                                    return null
-                                                }
-                                                let showDivider = action.group && action.group != lastGroup
-                                                lastGroup = action.group ? action.group : ""
                                                 return (
                                                     <Grid key={index} item xs={12} md={12} lg={12} style={{ marginTop: 7 }} >
-                                                        {
-                                                            showDivider &&
-                                                            <Divider style={{ marginBottom: 14 }}>
-                                                                <Typography textAlign='center' variant='subtitle1'>
-                                                                    {lastGroup}
-                                                                </Typography>
-                                                            </Divider>
-                                                        }
                                                         <Grid container spacing={action.settings.length == 0 && this.props.isMobile ? 0 : 2} >
                                                             <Grid item xs={12} md={3} lg={3} >
                                                                 <Card elevation={2}  >
-                                                                    <Button disabled={action.id == this.state.loadingAction || this.state.smartobject.state.status != "online"} variant='contained' onClick={() => { this.executeAction(action, action.settings) }} style={{ width: '100%', flexDirection: 'row', display: 'flex' }}>
+                                                                    <Button disabled={action.id == this.state.loadingAction || this.state.smartobject.state.status != "online"} variant='contained' onClick={() => { this.executeAction(action, action.settings) }} style={{ width: '100%', height: '100%', flexDirection: 'row', display: 'flex' }}>
                                                                         <Typography textAlign='center' variant='subtitle2'>
                                                                             {action.name}
                                                                         </Typography>
@@ -224,7 +240,7 @@ class DetailSmartObject extends React.Component {
                             <Accordion variant='outlined' expanded={this.state.expanded === 'room'} onChange={() => this.setState({ expanded: "room" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     <House style={{ fontSize: '28px' }} />
-                                    <Typography variant='h6' style={{ marginLeft: 5 }}>
+                                    <Typography variant='h6' style={{ marginLeft: 10 }}>
                                         Room
                                     </Typography>
                                 </AccordionSummary>
@@ -254,13 +270,13 @@ class DetailSmartObject extends React.Component {
                             <Accordion variant='outlined' expanded={this.state.expanded === 'edit'} onChange={() => this.setState({ expanded: "edit" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     <Edit style={{ fontSize: '28px' }} />
-                                    <Typography variant='h6' style={{ marginLeft: 5 }}>
+                                    <Typography variant='h6' style={{ marginLeft: 10 }}>
                                         Edit
                                     </Typography>
                                 </AccordionSummary>
                                 <Divider />
                                 <AccordionDetails>
-                                    <Grid container spacing={1} style={{ marginTop: 2 }}>
+                                    <Grid container spacing={2} style={{ marginTop: 2 }}>
                                         <Grid item xs={12} md={4} lg={4}>
                                             <TextField
                                                 value={this.state.reference}
@@ -277,18 +293,60 @@ class DetailSmartObject extends React.Component {
                                             />
                                         </Grid>
                                     </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                        </Grid>
-                    <DeleteButton onClick={() => { this.delete() }} />
+                            </AccordionDetails>
+                        </Accordion>
+                    </Grid> <Grid item xs={12} md={12} lg={12} >
+                            <Accordion variant='outlined' expanded={this.state.expanded === 'more'} onChange={() => this.setState({ expanded: "more" })}>
+                                <AccordionSummary expandIcon={<ExpandMore />} >
+                                    <Settings style={{ fontSize: '28px' }} />
+                                    <Typography variant='h6' style={{ marginLeft: 10 }}>
+                                        More
+                                    </Typography>
+                                </AccordionSummary>
+                                <Divider />
+                                <AccordionDetails>
+                                    <Grid container spacing={2} style={{ marginTop: 2 }}>
+                                        <Grid item xs={12} md={3} lg={2}>
+                                            <Button onClick={() => { this.restart() }} variant={'contained'} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderColor: 'white', width: '100%', height: '100%' }} >
+                                                <Refresh style={{ color: 'white' }} />
+                                                <Typography variant='body1' style={{ marginLeft: 10, color: 'white' }}   >
+                                                    {"Restart"}
+                                                </Typography>
+                                            </Button>
+                                        </Grid>
+                                        <Grid item xs={12} md={3} lg={2}>
+                                            <Button onClick={() => { this.installPackage() }} variant={'contained'} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderColor: 'white', width: '100%', height: '100%' }} >
+                                                <Downloading style={{ color: 'white' }} />
+                                                <Typography variant='body1' style={{ marginLeft: 10, color: 'white' }}   >
+                                                    {"Update"}
+                                                </Typography>
+                                            </Button>
+                                        </Grid>
+                                        {
+                                            this.state.smartobject.configuration.submit.type == "oauth" ?
+                                            <Grid item xs={12} md={3} lg={2}>
+                                                <Button onClick={() => { this.reinstall() }} color='warning' variant={'contained'} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderColor: 'white', width: '100%', height: '100%' }} >
+                                                    <Cloud style={{ color: 'white' }} />
+                                                    <Typography variant='body1' style={{ marginLeft: 10, color: 'white' }}   >
+                                                        {"Reset"}
+                                                    </Typography>
+                                                </Button>
+                                            </Grid> : null
+                                        }
+                                        
+                                    </Grid>
+                            </AccordionDetails>
+                        </Accordion>
                     </Grid>
-                    <Modal open={this.state.modalOpen} style={{ top: '25%', left: '25%' }} onClose={() => { this.setState({ modalOpen: false }) }} >
-                        <Card variant='outlined' style={{ overflow: 'auto', maxHeight: '50vh', maxWidth: '50vw', padding: 20 }}>
-                            <JSONPretty style={{ fontSize: 12 }} id="json-pretty" data={this.state.content}></JSONPretty>
+                    <DeleteButton onClick={() => { this.delete() }} />
+                </Grid>
+                <Modal open={this.state.modalOpen} style={{ top: '25%', left: '25%' }} onClose={() => { this.setState({ modalOpen: false }) }} >
+                    <Card variant='outlined' style={{ overflow: 'auto', maxHeight: '50vh', maxWidth: '50vw', padding: 20 }}>
+                        <JSONPretty style={{ fontSize: 12 }} id="json-pretty" data={this.state.content}></JSONPretty>
 
-                        </Card>
-                    </Modal>
-                </Loading>
+                    </Card>
+                </Modal>
+            </Loading>
             </>
         )
     }

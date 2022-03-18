@@ -33,29 +33,8 @@ class RedirectSmartobject extends React.Component {
                     }
                 })
             }
-
-            if (settings.error == "true") {
-                this.setState({
-                    message: settings.message.replace(/\%20/g, " "),
-                    error: true
-                })
-            } else if (settings.reference == undefined || settings.reference == "") {
-                this.setState({
-                    message: "Missing reference, please retry",
-                    error: true
-                })
-            } else if (settings.room == undefined || settings.room == "") {
-                this.setState({
-                    message: "Missing room, please retry",
-                    error: true
-                })
-            } else {
-                let reference = settings.reference
-                delete settings.reference
-                let room = settings.room
-                delete settings.room
-                delete settings.error
-
+            
+            if(settings.smartobject_id != "false") {
                 let realSettings = []
                 for (const key in settings) {
                     realSettings.push({
@@ -63,15 +42,55 @@ class RedirectSmartobject extends React.Component {
                         value: settings[key].replace(/%7C/g, "|")
                     })
                 }
-
-                let resultInsert = await new Request().post({ room: room, module: resultJSON.package.name, reference: reference.replace(/\%20/g, " "), settings: realSettings }).fetch("/api/smartobjects")
+                let resultInsert = await new Request().post({ settings: realSettings }).fetch("/api/smartobjects/ " + settings.smartobject_id.replace(/\%20/g, " "))
                 if (resultInsert.error) {
                     this.setState({
                         message: resultInsert.message,
                         error: true
                     })
                 } else {
-                    this.props.history.push('/room/' + room + '/smartobject/' + resultInsert.data.id)
+                    this.props.history.push('/room/' + resultInsert.data.room.id + '/smartobject/' + resultInsert.data.id)
+                }
+            } else {
+                if (settings.error == "true") {
+                    this.setState({
+                        message: settings.message.replace(/\%20/g, " "),
+                        error: true
+                    })
+                } else if (settings.reference == undefined || settings.reference == "") {
+                    this.setState({
+                        message: "Missing reference, please retry",
+                        error: true
+                    })
+                } else if (settings.room == undefined || settings.room == "") {
+                    this.setState({
+                        message: "Missing room, please retry",
+                        error: true
+                    })
+                } else {
+                    let reference = settings.reference
+                    delete settings.reference
+                    let room = settings.room
+                    delete settings.room
+                    delete settings.error
+    
+                    let realSettings = []
+                    for (const key in settings) {
+                        realSettings.push({
+                            reference: key,
+                            value: settings[key].replace(/%7C/g, "|")
+                        })
+                    }
+    
+                    let resultInsert = await new Request().post({ room: room, module: resultJSON.package.name, reference: reference.replace(/\%20/g, " "), settings: realSettings }).fetch("/api/smartobjects")
+                    if (resultInsert.error) {
+                        this.setState({
+                            message: resultInsert.message,
+                            error: true
+                        })
+                    } else {
+                        this.props.history.push('/room/' + room + '/smartobject/' + resultInsert.data.id)
+                    }
                 }
             }
 

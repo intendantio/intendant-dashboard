@@ -2,7 +2,7 @@
   "name": "@intendant/dashboard",
   "homepage": "",
   "license": "GPL-3.0+",
-  "version": "0.0.3",
+  "version": "0.0.4",
   "dependencies": {
     "@emotion/react": "^11.7.1",
     "@emotion/styled": "^11.6.0",

@@ -273,8 +273,6 @@ class Home extends React.Component {
                                         >
                                             {
                                                 this.state.layouts[this.state.currentBreakpoint].map((layout, index) => {
-                                                    console.log(layout)
-                                                    
                                                     return (
                                                         <Card data-grid={layout} style={{ borderWidth: '0px' }} variant='outlined' key={"" + layout.i} >
                                                             {
