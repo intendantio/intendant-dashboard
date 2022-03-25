@@ -220,7 +220,7 @@ class DetailSmartObject extends React.Component {
                                 <AccordionDetails>
                                     <Grid container >
                                         {
-                                            this.state.state.contents.map(content => {
+                                            this.state.state.contents && this.state.state.contents.map(content => {
                                                 return (
                                                     <Grid style={{ paddingLeft: 12, marginTop: 12 }} item xs={12} md={12} lg={12} >
                                                         <Typography variant='body2' >
