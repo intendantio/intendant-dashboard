@@ -30,6 +30,7 @@ class System extends React.Component {
         let resultConfigurations = await new Request().get().fetch("/api/configurations")
         let resultStatus = await fetch("https://status.intendant.io/")
         let resultStatusJSON = await resultStatus.json()
+        this.setState({ status: resultStatusJSON, loading: false })
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
         } else if (resultUpgrade.error) {
@@ -40,12 +41,11 @@ class System extends React.Component {
             this.setState({
                 upgrade: resultUpgrade.data.upgrade,
                 version: resultUpgrade.data.version,
-                status: resultStatusJSON,
                 currentVersion: resultConfigurations.data.version,
                 logs: result.data.map(log => {
                     log.dateTime = Moment(parseInt(log.date)).format("HH:mm")
                     return log
-                }).reverse(), loading: false
+                }).reverse()
             })
         }
     }

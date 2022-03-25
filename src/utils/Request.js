@@ -61,6 +61,7 @@ class Request {
             })
             return await result.json()
         } catch (error) {
+            console.log(error)
             return {
                 error: true,
                 message: "An error has occurred",

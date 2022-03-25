@@ -50,7 +50,7 @@ class Process extends React.Component {
                                 :
                                 this.state.processes.map(process => {
                                     return (
-                                        <Grid item xs={12} md={12} lg={12} >
+                                        <Grid item xs={12} md={6} lg={6} >
                                             <Card variant='outlined'   >
                                                 <CardActionArea style={{ padding: 12, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }} onClick={() => { this.props.history.push('/process/' + process.id) }}  >
                                                     <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center', marginRight: 16 }}>
@@ -59,9 +59,9 @@ class Process extends React.Component {
                                                                 <RadioButtonChecked fontSize='large' /> :
 
                                                                 process.state == "on" ?
-                                                                    <ToggleOn fontSize='large' />
-                                                                    :
                                                                     <ToggleOff fontSize='large' />
+                                                                    :
+                                                                    <ToggleOn  color='success'  fontSize='large' />
                                                         }
                                                     </Box>
                                                     <Box>

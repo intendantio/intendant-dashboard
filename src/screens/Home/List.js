@@ -34,6 +34,12 @@ class Home extends React.Component {
         }
         props.setTitle("Home")
         props.setActionType("list")
+        this.globalInterval = setInterval(() => {
+            if(this.state.mode == "view") {
+                this.setState({ loading: true })
+                this.componentDidMount()
+            }
+        }, 60000)
     }
 
     async componentDidMount() {
@@ -42,13 +48,16 @@ class Home extends React.Component {
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
         } else {
-
             this.setState({ loading: false, dashboards: result.data.dashboards }, () => {
                 this.setState({
                     layouts: this.newLayout()
                 })
             })
         }
+    }
+
+    componentWillUnmount() {
+        clearInterval(this.globalInterval)
     }
 
     newLayout() {
