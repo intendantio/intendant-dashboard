@@ -71,7 +71,7 @@ class System extends React.Component {
                                 <>
                                     <Grid item xs={12} md={10} lg={10} >
                                         <Card variant='outlined' style={{ padding: 12, display: 'flex', flexDirection: 'row' }}  >
-                                            <Typography variant='subtitle1' fontWeight='bold' >{"Intendant core, an update is available " + this.state.currentVersion + " > " + this.state.version}</Typography>
+                                            <Typography variant='subtitle1' fontWeight='bold' >{"An update is available " + this.state.currentVersion + " > " + this.state.version}</Typography>
                                         </Card>
                                     </Grid>
                                     <Grid item xs={12} md={2} lg={2}>
