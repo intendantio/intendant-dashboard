@@ -204,52 +204,65 @@ class DetailSmartObject extends React.Component {
                         <Grid item xs={12} md={12} lg={12} >
                             <Accordion variant='outlined' expanded={this.state.expanded === 'state'} onChange={() => this.setState({ expanded: "state" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
-                                {
-                                                this.state.state.status == "error" ?
-                                                    <AbstractIcon.PriorityHigh style={{ fontSize: '28px' }} /> :
-                                                    this.state.state.status == "ok" ?
-                                                        <AbstractIcon.Check style={{ fontSize: '28px' }} /> :
-                                                        this.state.state.status == "warning" ?
-                                                            <AbstractIcon.QuestionMark style={{ fontSize: '28px' }} /> :
-                                                            <Help  style={{ fontSize: '28px' }} />
-                                            }
-                                            <Typography variant='h6' style={{ marginLeft: 10 }} >
-                                                {this.state.state.reason}
-                                            </Typography>
+                                    {
+                                        this.state.state.status == "error" ?
+                                            <AbstractIcon.PriorityHigh style={{ fontSize: '28px' }} /> :
+                                            this.state.state.status == "ok" ?
+                                                <AbstractIcon.Check style={{ fontSize: '28px' }} /> :
+                                                this.state.state.status == "warning" ?
+                                                    <AbstractIcon.QuestionMark style={{ fontSize: '28px' }} /> :
+                                                    <Help style={{ fontSize: '28px' }} />
+                                    }
+                                    <Typography variant='h6' style={{ marginLeft: 10 }} >
+                                        {this.state.state.reason}
+                                    </Typography>
                                 </AccordionSummary>
                                 <Divider />
                                 <AccordionDetails>
                                     <Grid container >
                                         {
                                             this.state.state.contents && this.state.state.contents.map(content => {
-                                                return (
-                                                    <Grid style={{ paddingLeft: 12, marginTop: 12 }} item xs={12} md={12} lg={12} >
-                                                        <Typography variant='body2' >
-                                                            {content.title}
-                                                        </Typography>
-                                                        {
-                                                            content.descriptions.map(description => {
-                                                                return (
-                                                                    <>
-                                                                    <Typography variant='caption'  color="text.secondary"  >
-                                                                        {description}
-                                                                    </Typography>
-                                                                    <br />
-                                                                    </>
-                                                                )
-                                                                
-                                                            })
-                                                        }
-                                                    </Grid>
-                                                )
+                                                if(content.type == "text") {
+                                                    return (
+                                                        <Grid style={{ paddingLeft: 12, marginTop: 12 }} item xs={12} md={12} lg={12} >
+                                                            <Typography variant='body2' >
+                                                                {content.title}
+                                                            </Typography>
+                                                            {
+                                                                content.descriptions.map(description => {
+                                                                    return (
+                                                                        <>
+                                                                            <Typography variant='caption' color="text.secondary"  >
+                                                                                {description}
+                                                                            </Typography>
+                                                                            <br />
+                                                                        </>
+                                                                    )
+    
+                                                                })
+                                                            }
+                                                        </Grid>
+                                                    )
+                                                } else if(content.type == "color") {
+                                                    return (
+                                                        <Grid style={{ paddingLeft: 12, marginTop: 12 }} item xs={12} md={12} lg={12} >
+                                                            <Box style={{backgroundColor: content.color,paddingTop: 4, paddingBottom: 4, paddingRight: 8, paddingLeft: 8, borderRadius: 4, width: 'fit-content'}}>
+                                                                <Typography variant='body2' >
+                                                                    {content.value}
+                                                                </Typography>
+                                                            </Box>
+                                                        </Grid>
+                                                    )
+                                                }
+                                                
                                             })
                                         }
                                     </Grid>
                                 </AccordionDetails>
                             </Accordion>
                         </Grid>
-                        {(this.state.state.status == "ok" || this.state.state.status == "warning")  && <Grid item xs={12} md={12} lg={12} >
-                            <Accordion variant='outlined'   expanded={this.state.expanded === 'action'} onChange={() => this.setState({ expanded: "action" })}>
+                        {(this.state.state.status == "ok" || this.state.state.status == "warning") && <Grid item xs={12} md={12} lg={12} >
+                            <Accordion variant='outlined' expanded={this.state.expanded === 'action'} onChange={() => this.setState({ expanded: "action" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     <RocketLaunch style={{ fontSize: '28px' }} />
                                     <Typography variant='h6' style={{ marginLeft: 10 }}>
@@ -386,7 +399,6 @@ class DetailSmartObject extends React.Component {
                                                     </Button>
                                                 </Grid> : null
                                         }
-
                                     </Grid>
                                 </AccordionDetails>
                             </Accordion>
