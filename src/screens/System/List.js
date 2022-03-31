@@ -1,5 +1,5 @@
 import React from 'react'
-import { CheckCircle, Error} from '@mui/icons-material'
+import { CheckCircle, Error } from '@mui/icons-material'
 import { Typography, Paper, Grid, Card, Button, Box, Divider, Pagination } from '@mui/material'
 import Request from '../../utils/Request'
 import Desktop from '../../components/Desktop'
@@ -25,29 +25,30 @@ class System extends React.Component {
     }
 
     async componentDidMount() {
-        let result = await new Request().get().fetch("/api/logs")
-        let resultUpgrade = await new Request().get().fetch("/api/upgrade")
-        let resultConfigurations = await new Request().get().fetch("/api/configurations")
         let resultStatus = await fetch("https://status.intendant.io/")
         let resultStatusJSON = await resultStatus.json()
-        this.setState({ status: resultStatusJSON, loading: false })
-        if (result.error) {
-            this.props.setMessage(result.package + " : " + result.message)
-        } else if (resultUpgrade.error) {
-            this.props.setMessage(resultUpgrade.package + " : " + resultUpgrade.message)
-        } else if (resultConfigurations.error) {
-            this.props.setMessage(resultConfigurations.package + " : " + resultConfigurations.message)
-        } else {
-            this.setState({
-                upgrade: resultUpgrade.data.upgrade,
-                version: resultUpgrade.data.version,
-                currentVersion: resultConfigurations.data.version,
-                logs: result.data.map(log => {
-                    log.dateTime = Moment(parseInt(log.date)).format("HH:mm")
-                    return log
-                }).reverse()
-            })
-        }
+        this.setState({ status: resultStatusJSON, loading: false }, async () => {
+            let result = await new Request().get().fetch("/api/logs")
+            let resultUpgrade = await new Request().get().fetch("/api/upgrade")
+            let resultConfigurations = await new Request().get().fetch("/api/configurations")
+            if (result.error) {
+                this.props.setMessage(result.package + " : " + result.message)
+            } else if (resultUpgrade.error) {
+                this.props.setMessage(resultUpgrade.package + " : " + resultUpgrade.message)
+            } else if (resultConfigurations.error) {
+                this.props.setMessage(resultConfigurations.package + " : " + resultConfigurations.message)
+            } else {
+                this.setState({
+                    upgrade: resultUpgrade.data.upgrade,
+                    version: resultUpgrade.data.version,
+                    currentVersion: resultConfigurations.data.version,
+                    logs: result.data.map(log => {
+                        log.dateTime = Moment(parseInt(log.date)).format("HH:mm")
+                        return log
+                    }).reverse()
+                })
+            }
+        })
     }
 
     async upgrade() {

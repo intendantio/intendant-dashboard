@@ -25,7 +25,8 @@ class DetailSmartObject extends React.Component {
                 configuration: {
                     submit: {
                         type: "none"
-                    }
+                    },
+                    version: ""
                 }
             },
             expanded: "action",
@@ -167,7 +168,7 @@ class DetailSmartObject extends React.Component {
                                     {String.capitalizeFirstLetter(this.state.smartobject.reference)}
                                 </Typography>
                                 <Typography variant='subtitle2' color="text.secondary"  >
-                                    {String.capitalizeFirstLetter(this.state.smartobject.module)}
+                                    {String.capitalizeFirstLetter(this.state.smartobject.module) + " - " + this.state.smartobject.configuration.version}
                                 </Typography>
                             </Box>
                         </Box>
