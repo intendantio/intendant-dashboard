@@ -197,11 +197,11 @@ class DetailSmartObject extends React.Component {
                             <Accordion variant='outlined' expanded={this.state.expanded === 'state'} onChange={() => this.setState({ expanded: "state" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     {
-                                        this.state.state.status == "error" ?
+                                        this.state.state.status == "ERROR" ?
                                             <AbstractIcon.PriorityHigh style={{ fontSize: '28px' }} /> :
-                                            this.state.state.status == "ok" ?
+                                            this.state.state.status == "SUCCESS" ?
                                                 <AbstractIcon.Check style={{ fontSize: '28px' }} /> :
-                                                this.state.state.status == "warning" ?
+                                                this.state.state.status == "EXCEPTIONS" ?
                                                     <AbstractIcon.QuestionMark style={{ fontSize: '28px' }} /> :
                                                     <Help style={{ fontSize: '28px' }} />
                                     }
