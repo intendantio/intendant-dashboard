@@ -13,7 +13,7 @@ class System extends React.Component {
         this.state = {
             product: "light",
             logs: [],
-            status: { web: { status: "ok", message: "" }, cloud: { status: "ok", message: "" }, market: { status: "ok", message: "" }, manager: { status: "ok", message: "" } },
+            status: { web: { status: "SUCCESS", message: "" }, cloud: { status: "SUCCESS", message: "" }, market: { status: "SUCCESS", message: "" }, manager: { status: "SUCCESS", message: "" } },
             page: 0,
             loading: true,
             upgrade: false,

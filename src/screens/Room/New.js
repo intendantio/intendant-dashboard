@@ -38,6 +38,11 @@ class NewLocalisation extends React.Component {
             if (result.error) {
                 this.props.setMessage(result.package + " : " + result.message)
             } else {
+
+                await new Request().post({ room: result.data.id, name: "light" }).fetch("/api/links")
+                await new Request().post({ room: result.data.id, name: "nightlight" }).fetch("/api/links")
+                
+
                 this.props.history.push('/room')
             }
         }

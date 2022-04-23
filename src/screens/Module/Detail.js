@@ -20,7 +20,7 @@ class Detail extends React.Component {
                 actions: [],
                 room: {},
                 state: {
-                    status: 'unknown'
+                    status: 'EXCEPTIONS'
                 }
             },
             expanded: "action",
