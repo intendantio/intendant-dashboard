@@ -39,8 +39,8 @@ class NewLocalisation extends React.Component {
                 this.props.setMessage(result.package + " : " + result.message)
             } else {
 
-                await new Request().post({ room: result.data.id, name: "light" }).fetch("/api/links")
-                await new Request().post({ room: result.data.id, name: "nightlight" }).fetch("/api/links")
+                await new Request().post({ room: result.data.id, name: "light" }).fetch("/api/positions")
+                await new Request().post({ room: result.data.id, name: "nightlight" }).fetch("/api/positions")
                 
 
                 this.props.history.push('/room')
