@@ -113,7 +113,7 @@ class Process extends React.Component {
                     </Card>
                 </Modal>
                 <ButtonGroup style={{ width: '100%', height: '100%' }}>
-                    <Button variant='contained' onClick={() => this.onClick(false)} color={'primary'} style={{ backgroundColor: '#00afff82', textTransform: 'none', textAlign: 'center', width: '90%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                    <Button variant='contained' onClick={() => this.onClick(false)} color={'primary'} style={{ backgroundColor: '#00afff82', textTransform: 'none', textAlign: 'center', width: this.state.process.mode == "switch" ? '90%' : '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
                         <Typography variant='caption' color="text.secondary" >
                             {String.capitalizeFirstLetter(this.state.process.description)}
                         </Typography>
