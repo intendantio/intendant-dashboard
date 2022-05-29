@@ -65,16 +65,14 @@ class Process extends React.Component {
     }
 
     checkAction(onReverse = false) {
-        let inputs = this.state.process.inputs.filter(input => onReverse ? input.state != this.state.process.state : input.state == this.state.process.state)
-        if (inputs.length == 0) {
-            this.executeAction()
-        } else {
-            this.setState({
-                onReverse: onReverse,
-                inputs: inputs,
-                open: true
-            })
-        }
+        this.setState({ onReverse: onReverse }, () => {
+            let inputs = this.state.process.inputs.filter(input => onReverse ? input.state != this.state.process.state : input.state == this.state.process.state)
+            if (inputs.length == 0) {
+                this.executeAction()
+            } else {
+                this.setState({ inputs: inputs, open: true })
+            }
+        })
     }
 
     render() {
