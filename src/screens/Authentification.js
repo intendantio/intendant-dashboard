@@ -1,10 +1,6 @@
 import React from 'react'
-import Package from '../../package.json'
-import { Paper, TextField, Button, Typography, Box, Skeleton } from '@mui/material'
-import Alert from '../components/Alert'
+import { Paper, Typography, Box, Skeleton, Grid, Button } from '@mui/material'
 import Main from './Main'
-import GetStarted from './GetStarted'
-import Request from '../utils/Request'
 
 class Authentification extends React.Component {
 
@@ -15,58 +11,49 @@ class Authentification extends React.Component {
             getStarted: false,
             password: "",
             customAddress: true,
-            address: window.location.origin,
             login: "admin",
-            loading: true
+            loading: true,
+            codepin: "",
+            status: "unknown"
         }
     }
 
-
-
     async componentDidMount() {
         try {
-            let server = localStorage.getItem("server")
-            if (server) {
-                let result = await new Request().get().fetch("/api/smartobjects")
-                if (result.error == false) {
-                    this.setState({ enabled: false, authentification: false })
+            let path = sessionStorage.getItem("path")
+            console.log(path)
+            let result = await fetch(path + "/api", {
+                method: this.method,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json'
                 }
-            } else if (server) {
-                this.setState({ address: server.replace("http://", "") })
+            })
+            let resultJSON = await result.json()
+            if(resultJSON.package == "@intendant/core") {
+                this.setState({ loading: false, status: "online" })
+            } else {
+                this.setState({status: "unreachable"})
+                this.props.setMessage("Instance " + path + " is unreachable")
             }
-            this.setState({ loading: false })
         } catch (error) {
-            localStorage.clear()
+            sessionStorage.clear()
             this.setState({ loading: false })
         }
     }
 
     async login() {
         if (await this.checkServer()) {
-            let result = await fetch(localStorage.getItem("server") + "/api/authentification", {
-                method: 'POST',
-                headers: {
-                    'Accept': 'application/json',
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ login: this.state.login, password: this.state.password })
-            })
-            let resultJSON = await result.json()
-            if (resultJSON.error) {
-                this.props.setMessage(resultJSON.package + " : " + resultJSON.message)
-            } else {
-                localStorage.setItem("expiry", resultJSON.data.expiry + "")
-                localStorage.setItem("user", resultJSON.data.user)
-                localStorage.setItem("access_token", resultJSON.data.access_token)
-                localStorage.setItem("refresh_token", resultJSON.data.refresh_token)
-                this.setState({ enabled: false, message: "", authentification: false })
-            }
+            
         }
     }
 
     disconnect() {
-        localStorage.clear()
-        this.setState({ authentification: true, password: "" })
+        sessionStorage.removeItem("expiry")
+        sessionStorage.removeItem("user")
+        sessionStorage.removeItem("access_token")
+        sessionStorage.removeItem("refresh_token")
+        this.setState({ authentification: true, codepin: "" })
     }
 
     async checkServer() {
@@ -81,7 +68,7 @@ class Authentification extends React.Component {
             if (resultJSON.error) {
                 this.props.setMessage('Connection to server failed')
             } else {
-                localStorage.setItem("server", protocol + this.state.address)
+                sessionStorage.setItem("server", protocol + this.state.address)
                 if (resultJSON.data.getStarted) {
                     this.setState({ getStarted: true })
                     return false
@@ -94,68 +81,164 @@ class Authentification extends React.Component {
         return ok
     }
 
+    addPin(item) {
+        this.setState({ codepin: this.state.codepin + item })
+    }
+
+    async submit() {
+        let path = sessionStorage.getItem("path")
+        let result = await fetch(path + "/api/authentification", {
+            method: 'POST',
+            headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ login: "admin_pin", password: this.state.codepin })
+        })
+        let resultJSON = await result.json()
+        if (resultJSON.error) {
+            this.setState({ codepin: "" })
+            this.props.setMessage(resultJSON.message)
+        } else {
+            sessionStorage.setItem("expiry", resultJSON.data.expiry + "")
+            sessionStorage.setItem("user", resultJSON.data.user)
+            sessionStorage.setItem("access_token", resultJSON.data.access_token)
+            sessionStorage.setItem("refresh_token", resultJSON.data.refresh_token)
+            this.setState({ authentification: false })
+        }
+    }
+
     render() {
-        if (this.state.loading) {
+        if (this.state.authentification) {
             return (
-                <Paper variant='outlined' style={{ padding: 10, width: '25vw', minWidth: 330, textAlign: 'center' }}>
+                <Paper variant='outlined' style={{ padding: 10, width: '25vw', minWidth: 300, minHeight: 'min-content', textAlign: 'center' }}>
                     <Box style={{ padding: 10 }}>
-                        <Box style={{ marginBottom: 20 }}>
-                            <img src={process.env.PUBLIC_URL + "/logo.svg"} style={{ height: '15vh', width: '15vh', minWidth: 125, minHeight: 125, borderRadius: 7 }} />
+                        <Box style={{ marginBottom: 10 }}>
+                            <img src={process.env.PUBLIC_URL + "/logo.svg"} style={{ height: '10vh', width: '10vh', minWidth: 100, minHeight: 90, borderRadius: 7 }} />
                             <Typography variant='h3' fontWeight='bold'>
                                 Intendant
                             </Typography>
-                            <Typography variant='h5' fontWeight='bold'>
-                                Smart home
+                            <Typography variant='h5' >
+                                {sessionStorage.getItem("name")}
                             </Typography>
                         </Box>
-                        <Skeleton height={45} />
-                        <Skeleton height={45} />
-                        <Skeleton height={45} />
+                        <Box style={{ marginBottom: 10, justifyContent:'center', display:'flex' }}>
+                            {this.state.loading ?
+                                <Skeleton width={150} height={40} />
+                                :
+                                this.state.codepin.length == 0 ?
+                                    <Typography style={{ color: 'rgb(0, 30, 60)' }} variant='h5' >
+                                        {"."}
+                                    </Typography> : <Typography style={{ letterSpacing: '2px' }} variant='h5' >
+                                        {this.state.codepin}
+                                    </Typography>
+                            }
+                        </Box>
+                        <Box style={{ alignItems: 'center', display: 'flex', alignContent: 'center', alignContent: 'center', justifyContent: 'center' }}>
+                            <Grid container spacing={0} style={{ width: 220, height: 280 }} >
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("7") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            7
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("8") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            8
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("9") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            9
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("4") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            4
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("5") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            5
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("6") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            6
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("1") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            1
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("2") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            2
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("3") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            3
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.setState({ codepin: this.state.codepin.slice(0, this.state.pin.length - 1) }) }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            {"<"}
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.addPin("0") }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                        <Typography variant='h5'>
+                                            0
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                                <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
+                                    <Button variant='contained' onClick={() => { this.submit() }} style={{ width: 60, height: 60 }}>
+                                        <Typography variant='h6'>
+                                            {"OK"}
+                                        </Typography>
+                                    </Button>
+                                </Grid>
+                            </Grid>
+                        </Box>
+                        <Box>
+                            <Typography variant='caption'>
+                                {"Status : " +this.state.status}
+                            </Typography>
+                        </Box>
+                        <Box onClick={() => { sessionStorage.clear(); this.props.onDisconnect() }}>
+                            <Typography variant='caption'>
+                                {"Disconnect of " + sessionStorage.getItem('name')}
+                            </Typography>
+                        </Box>
                     </Box>
                 </Paper>
             )
-        }
-        if (this.state.getStarted) {
-            return (
-                <GetStarted setMessage={this.props.setMessage} isMobile={this.props.isMobile} onFinish={() => { this.setState({ getStarted: false }) }} />
-            )
         } else {
-            if (this.state.authentification) {
-                return (
-                    <Paper variant='outlined' style={{ padding: 10, width: '25vw', minWidth: 330, textAlign: 'center' }}>
-                        <Box style={{ padding: 10 }}>
-                            <Box style={{ marginBottom: 20 }}>
-                                <img src={process.env.PUBLIC_URL + "/logo.svg"} style={{ height: '15vh', width: '15vh', minWidth: 125, minHeight: 125, borderRadius: 7 }} />
-                                <Typography variant='h3' fontWeight='bold'>
-                                    Intendant
-                                </Typography>
-                                <Typography variant='h6' fontWeight='bold'>
-                                    Administration
-                                </Typography>
-                            </Box>
-                            <form noValidate onSubmit={(e) => { e.preventDefault(); this.login() }} autoComplete="off" >
-                                {
-                                    this.state.customAddress ?
-                                        <TextField style={{ marginTop: 5, marginBottom: 5 }} value={this.state.address} fullWidth label="Server address" autoFocus inputProps={{ autoCapitalize: 'none', autoCorrect: 'off' }} onChange={(event) => { this.setState({ address: event.nativeEvent.target.value }) }} />
-                                        :
-                                        null
-                                }
-                                <TextField style={{ marginTop: 5, marginBottom: 5 }} value={this.state.login} fullWidth label="Login" autoComplete="current-login" inputProps={{ maxLength: 12,autoCapitalize: 'none', autoCorrect: 'off' }} onChange={(event) => { this.setState({ login: event.nativeEvent.target.value }) }} />
-                                <TextField style={{ marginTop: 5, marginBottom: 5 }} value={this.state.password} fullWidth label="Password" type='password' autoComplete="current-login" inputProps={{ maxLength: 12,autoCapitalize: 'none', autoCorrect: 'off' }} onChange={(event) => { this.setState({ password: event.nativeEvent.target.value }) }} />
-                                <Box style={{ display: 'flex', justifyContent: 'end', marginTop: 10 }}>
-                                    <Button color='inherit' type='submit' variant='plain' on onSubmit={() => { this.login() }} onClick={() => { this.login() }}  >
-                                        Connection
-                                    </Button>
-                                </Box>
-                            </form>
-                        </Box>
-                    </Paper>
-                )
-            } else {
-                return (
-                    <Main isMobile={this.props.isMobile} onDisconnect={() => { this.disconnect() }} />
-                )
-            }
+            return (
+                <Main setMessage={this.props.setMessage.bind(this)} isMobile={this.props.isMobile} onDisconnect={() => { this.disconnect() }} />
+            )
         }
     }
 

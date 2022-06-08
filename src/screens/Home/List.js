@@ -43,7 +43,7 @@ class Home extends React.Component {
     }
 
     async componentDidMount() {
-        let idUser = localStorage.getItem("user")
+        let idUser = sessionStorage.getItem("user")
         let result = await new Request().get().fetch("/api/users/" + idUser)
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
@@ -162,7 +162,7 @@ class Home extends React.Component {
             }, () => {
                 if (this.state.mode == "view") {
                     this.state.layouts[this.state.currentBreakpoint].forEach(async (layout) => {
-                        let idUser = localStorage.getItem("user")
+                        let idUser = sessionStorage.getItem("user")
                         await new Request().post({
                             x: layout.x,
                             y: layout.y
@@ -200,7 +200,7 @@ class Home extends React.Component {
     }
 
     async delete(idUserDashboard) {
-        let idUser = localStorage.getItem("user")
+        let idUser = sessionStorage.getItem("user")
         let result = await new Request().delete().fetch("/api/users/" + idUser + "/dashboards/" + idUserDashboard)
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)

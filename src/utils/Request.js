@@ -38,8 +38,8 @@ class Request {
 
     async fetch(url) {
         
-        let expiry = parseInt(localStorage.getItem("expiry"))
-        let server = localStorage.getItem("server")
+        let expiry = parseInt(sessionStorage.getItem("expiry"))
+        let path = sessionStorage.getItem("path")
         if (expiry < Moment().add({ minutes: 5 }).valueOf()) {
             let resultRefresh = await this.refreshToken()
             if(resultRefresh.error) {
@@ -47,10 +47,11 @@ class Request {
             }
         }
 
-        let accessToken = localStorage.getItem("access_token")
+        let accessToken = sessionStorage.getItem("access_token")
+  
 
         try {
-            let result = await fetch(server + url, {
+            let result = await fetch(path + url, {
                 method: this.method,
                 headers: {
                     'Accept': 'application/json',
@@ -71,10 +72,10 @@ class Request {
     }
 
     async refreshToken() {
-        let refreshToken = localStorage.getItem("refresh_token")
-        let server = localStorage.getItem("server")
+        let refreshToken = sessionStorage.getItem("refresh_token")
+        let path = sessionStorage.getItem("path")
 
-        let result = await fetch(server + "/api/authentification", {
+        let result = await fetch(path + "/api/authentification", {
             method: "POST",
             headers: {
                 'Accept': 'application/json',
@@ -91,9 +92,9 @@ class Request {
             }
         }
 
-        localStorage.setItem("user", resultJSON.data.user)
-        localStorage.setItem("access_token", resultJSON.data.access_token)
-        localStorage.setItem("expiry", resultJSON.data.expiry + "")
+        sessionStorage.setItem("user", resultJSON.data.user)
+        sessionStorage.setItem("access_token", resultJSON.data.access_token)
+        sessionStorage.setItem("expiry", resultJSON.data.expiry + "")
 
         return {
             package: Package.name,

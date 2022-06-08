@@ -60,7 +60,7 @@ class New extends React.Component {
     }
 
     async save(type, object, action) {
-        let idUser = localStorage.getItem("user")
+        let idUser = sessionStorage.getItem("user")
         let result = await new Request().post({
             user: idUser,
             type: type,
