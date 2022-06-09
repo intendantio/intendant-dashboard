@@ -31,7 +31,12 @@ export default responsiveFontSizes(createTheme({
           "&:-webkit-autofill": {
             "-webkit-box-shadow": "0 0 0 100px var(--primary-weak) inset",
             "-webkit-text-fill-color": "var(--text-primary)",
+            "transition-delay": "9999s"
           },
+          "& input:-internal-autofill-selected": {
+            "-webkit-box-shadow": "0 0 0 100px var(--primary-weak) inset",
+            "-webkit-text-fill-color": "var(--text-primary)"
+          }
         },
       },
     },

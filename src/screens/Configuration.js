@@ -1,6 +1,7 @@
 import React from 'react'
 import { Paper, TextField, Button, Typography, Box, Skeleton } from '@mui/material'
 import Authentification from './Authentification'
+import { Link, withRouter } from "react-router-dom"
 
 const code = "https://cloud.intendant.io/ws/token"
 
@@ -63,7 +64,7 @@ class Configuration extends React.Component {
         let resultJSON = await result.json()
 
         if (resultJSON.error) {
-            this.setState({ loading: false })
+            this.setState({ loading: false, password: "" })
             this.props.setMessage(resultJSON.message)
         } else {
             let resultHome = await fetch("https://cloud.intendant.io/ws/home", {
@@ -105,7 +106,7 @@ class Configuration extends React.Component {
                                 Intendant
                             </Typography>
                             <Typography variant='h6' fontWeight='bold'>
-                                Authentification
+                                Connection
                             </Typography>
                         </Box>
                         <form noValidate onSubmit={(e) => { e.preventDefault(); this.authentification() }} autoComplete="off" >
@@ -121,6 +122,11 @@ class Configuration extends React.Component {
                                 }
                             </Box>
                         </form>
+                        <a href="https://intendant.io" style={{ textDecoration: 'none', color: 'white' }}>
+                            <Typography variant='caption' >
+                                New account ?
+                            </Typography>
+                        </a>
                     </Box>
                 </Paper>
             )

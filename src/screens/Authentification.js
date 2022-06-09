@@ -113,13 +113,12 @@ class Authentification extends React.Component {
             return (
                 <Paper variant='outlined' style={{ padding: 10, width: '25vw', minWidth: 300, minHeight: 'min-content', textAlign: 'center' }}>
                     <Box style={{ padding: 10 }}>
-                        <Box style={{ marginBottom: 10 }}>
-                            <img src={process.env.PUBLIC_URL + "/logo.svg"} style={{ height: '10vh', width: '10vh', minWidth: 100, minHeight: 90, borderRadius: 7 }} />
-                            <Typography variant='h3' fontWeight='bold'>
+                        <Box style={{ marginBottom: 16, marginTop: 4 }}>
+                            <Typography variant='h2' fontWeight='bold'>
                                 Intendant
                             </Typography>
-                            <Typography variant='h5' >
-                                {sessionStorage.getItem("name")}
+                            <Typography style={{marginTop:4}} variant='h5' >
+                                Welcome
                             </Typography>
                         </Box>
                         <Box style={{ marginBottom: 10, justifyContent:'center', display:'flex' }}>
@@ -200,7 +199,7 @@ class Authentification extends React.Component {
                                     </Button>
                                 </Grid>
                                 <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
-                                    <Button variant='outlined' color='inherit' onClick={() => { this.setState({ codepin: this.state.codepin.slice(0, this.state.pin.length - 1) }) }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
+                                    <Button variant='outlined' color='inherit' onClick={() => { this.setState({ codepin: this.state.codepin.slice(0, this.state.codepin.length - 1) }) }} style={{ width: 60, height: 60, borderColor: 'rgba(30, 73, 118,0.8)' }}>
                                         <Typography variant='h5'>
                                             {"<"}
                                         </Typography>
@@ -229,7 +228,7 @@ class Authentification extends React.Component {
                         </Box>
                         <Box onClick={() => { sessionStorage.clear(); this.props.onDisconnect() }}>
                             <Typography variant='caption'>
-                                {"Disconnect of " + sessionStorage.getItem('name')}
+                                {"Disconnect"}
                             </Typography>
                         </Box>
                     </Box>
