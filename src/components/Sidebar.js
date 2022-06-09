@@ -314,10 +314,6 @@ class Sidebar extends React.Component {
                                     <Typography variant='body2'>
                                         {"Version " + this.state.information.version + ""}
                                     </Typography>
-                                    <Typography variant='caption'>
-                                        {"Build " + this.state.information.build + ""}
-                                    </Typography>
-
                                     <Typography paragraph variant='caption'>
                                         {"License GPL-3.0+"}
                                     </Typography>
