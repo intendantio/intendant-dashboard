@@ -64,7 +64,7 @@ class DetailProcess extends React.Component {
                 tmp[input.reference] = null
             }
         }
-        let result = await new Request().post({ inputs: tmp }).fetch("/api/processes/" + this.state.process.id + "/execute")
+        let result = await new Request().post({ inputs: tmp, onReverse: false }).fetch("/api/processes/" + this.state.process.id + "/execute")
         if (result.error) {
             this.setState({ loading: false })
             this.props.setMessage(result.package + " : " + result.message)
