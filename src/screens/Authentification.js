@@ -42,11 +42,7 @@ class Authentification extends React.Component {
         }
     }
 
-    async login() {
-        if (await this.checkServer()) {
-            
-        }
-    }
+   
 
     disconnect() {
         sessionStorage.removeItem("expiry")
@@ -56,36 +52,12 @@ class Authentification extends React.Component {
         this.setState({ authentification: true, codepin: "" })
     }
 
-    async checkServer() {
-        let ok = true
-        let protocol = window.location.protocol + "//"
-        if (this.state.address.split("://").length > 1) {
-            protocol = ""
-        }
-        try {
-            let result = await fetch(protocol + this.state.address + "/api/configurations", {}, 2000)
-            let resultJSON = await result.json()
-            if (resultJSON.error) {
-                this.props.setMessage('Connection to server failed')
-            } else {
-                sessionStorage.setItem("server", protocol + this.state.address)
-                if (resultJSON.data.getStarted) {
-                    this.setState({ getStarted: true })
-                    return false
-                }
-            }
-        } catch (error) {
-            this.props.setMessage('Connection to server failed')
-            ok = false
-        }
-        return ok
-    }
-
     addPin(item) {
         this.setState({ codepin: this.state.codepin + item })
     }
 
     async submit() {
+        this.setState({loading: true})
         let path = sessionStorage.getItem("path")
         let result = await fetch(path + "/api/authentification", {
             method: 'POST',
@@ -106,6 +78,7 @@ class Authentification extends React.Component {
             sessionStorage.setItem("refresh_token", resultJSON.data.refresh_token)
             this.setState({ authentification: false })
         }
+        this.setState({loading: false})
     }
 
     render() {
@@ -114,7 +87,7 @@ class Authentification extends React.Component {
                 <Paper variant='outlined' style={{ padding: 10, width: '25vw', minWidth: 300, minHeight: 'min-content', textAlign: 'center' }}>
                     <Box style={{ padding: 10 }}>
                         <Box style={{ marginBottom: 16, marginTop: 4 }}>
-                            <Typography variant='h2' fontWeight='bold'>
+                            <Typography variant='h3' fontWeight='bold'>
                                 Intendant
                             </Typography>
                             <Typography style={{marginTop:4}} variant='h5' >
@@ -123,7 +96,7 @@ class Authentification extends React.Component {
                         </Box>
                         <Box style={{ marginBottom: 10, justifyContent:'center', display:'flex' }}>
                             {this.state.loading ?
-                                <Skeleton width={150} height={40} />
+                                <Skeleton width={150} height={30} />
                                 :
                                 this.state.codepin.length == 0 ?
                                     <Typography style={{ color: 'rgb(0, 30, 60)' }} variant='h5' >
@@ -213,10 +186,16 @@ class Authentification extends React.Component {
                                     </Button>
                                 </Grid>
                                 <Grid item xs={4} md={4} lg={4} style={{ display: 'flex', alignContent: 'center', justifyContent: "center" }} >
-                                    <Button variant='contained' onClick={() => { this.submit() }} style={{ width: 60, height: 60 }}>
-                                        <Typography variant='h6'>
-                                            {"OK"}
-                                        </Typography>
+                                    <Button variant='contained' onClick={() => { this.state.loading ? null : this.submit() }} style={{ width: 60, height: 60 }}>
+                                        {
+                                            this.state.loading ?
+                                            <Skeleton width={125} height={30} />
+                                            :
+                                            <Typography variant='h6'>
+                                                {"OK"}
+                                            </Typography>
+
+                                        }
                                     </Button>
                                 </Grid>
                             </Grid>
