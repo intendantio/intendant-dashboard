@@ -85,7 +85,7 @@ function Main(mainProps) {
                         <div style={{ marginLeft: mainProps.isMobile ? 0 : 240, marginBottom: 12 }}>
                             <Suspense fallback={renderLoader(mainProps)}>
                                 <Switch>
-                                    <Route exact path="/" render={(props) => <Home setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
+                                    <Route path='*' render={(props) => <Home setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/dashboard/new" render={(props) => <NewHome setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject/oauth/:id" render={(props) => <OAuthSmartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/system" render={(props) => <System setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
