@@ -16,7 +16,7 @@ class GetStarted extends React.Component {
 
     async register() {
         if (this.state.password == this.state.confirmePassword) {
-            let result = await fetch(sessionStorage.getItem("server") + "/api/configurations", {
+            let result = await fetch(localStorage.getItem("server") + "/api/configurations", {
                 method: 'POST',
                 headers: {
                     'Accept': 'application/json',

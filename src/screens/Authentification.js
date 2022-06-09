@@ -20,7 +20,7 @@ class Authentification extends React.Component {
 
     async componentDidMount() {
         try {
-            let path = sessionStorage.getItem("path")
+            let path = localStorage.getItem("path")
             console.log(path)
             let result = await fetch(path + "/api", {
                 method: this.method,
@@ -37,7 +37,7 @@ class Authentification extends React.Component {
                 this.props.setMessage("Instance " + path + " is unreachable")
             }
         } catch (error) {
-            sessionStorage.clear()
+            localStorage.clear()
             this.setState({ loading: false })
         }
     }
@@ -45,10 +45,10 @@ class Authentification extends React.Component {
    
 
     disconnect() {
-        sessionStorage.removeItem("expiry")
-        sessionStorage.removeItem("user")
-        sessionStorage.removeItem("access_token")
-        sessionStorage.removeItem("refresh_token")
+        localStorage.removeItem("expiry")
+        localStorage.removeItem("user")
+        localStorage.removeItem("access_token")
+        localStorage.removeItem("refresh_token")
         this.setState({ authentification: true, codepin: "" })
     }
 
@@ -58,7 +58,7 @@ class Authentification extends React.Component {
 
     async submit() {
         this.setState({loading: true})
-        let path = sessionStorage.getItem("path")
+        let path = localStorage.getItem("path")
         let result = await fetch(path + "/api/authentification", {
             method: 'POST',
             headers: {
@@ -72,10 +72,10 @@ class Authentification extends React.Component {
             this.setState({ codepin: "" })
             this.props.setMessage(resultJSON.message)
         } else {
-            sessionStorage.setItem("expiry", resultJSON.data.expiry + "")
-            sessionStorage.setItem("user", resultJSON.data.user)
-            sessionStorage.setItem("access_token", resultJSON.data.access_token)
-            sessionStorage.setItem("refresh_token", resultJSON.data.refresh_token)
+            localStorage.setItem("expiry", resultJSON.data.expiry + "")
+            localStorage.setItem("user", resultJSON.data.user)
+            localStorage.setItem("access_token", resultJSON.data.access_token)
+            localStorage.setItem("refresh_token", resultJSON.data.refresh_token)
             this.setState({ authentification: false })
         }
         this.setState({loading: false})
@@ -205,7 +205,7 @@ class Authentification extends React.Component {
                                 {"Status : " +this.state.status}
                             </Typography>
                         </Box>
-                        <Box onClick={() => { sessionStorage.clear(); this.props.onDisconnect() }}>
+                        <Box onClick={() => { localStorage.clear(); this.props.onDisconnect() }}>
                             <Typography variant='caption'>
                                 {"Disconnect"}
                             </Typography>

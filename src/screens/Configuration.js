@@ -22,14 +22,14 @@ class Configuration extends React.Component {
 
     componentDidMount() {
         try {
-            let path = sessionStorage.getItem("path")
+            let path = localStorage.getItem("path")
             if (path) {
                 this.setState({ loading: false, authentification: false })
             } else {
                 this.setState({ loading: false })
             }
         } catch (error) {
-            sessionStorage.clear()
+            localStorage.clear()
             this.setState({ loading: false })
         }
     }
@@ -79,14 +79,14 @@ class Configuration extends React.Component {
                 this.setState({ loading: false })
                 this.props.setMessage(resultHomeJSON.message)
             } else {
-                sessionStorage.setItem("cloud_expiry", resultJSON.expires_in + "")
-                sessionStorage.setItem("cloud_token", resultJSON.access_token)
-                sessionStorage.setItem("cloud_manager", resultJSON.refresh_token)
-                sessionStorage.setItem("path", resultHomeJSON.data.path)
-                sessionStorage.setItem("token", resultHomeJSON.data.token)
-                sessionStorage.setItem("uuid", resultHomeJSON.data.uuid)
-                sessionStorage.setItem("type", resultHomeJSON.data.type)
-                sessionStorage.setItem("name", resultHomeJSON.data.name)
+                localStorage.setItem("cloud_expiry", resultJSON.expires_in + "")
+                localStorage.setItem("cloud_token", resultJSON.access_token)
+                localStorage.setItem("cloud_manager", resultJSON.refresh_token)
+                localStorage.setItem("path", resultHomeJSON.data.path)
+                localStorage.setItem("token", resultHomeJSON.data.token)
+                localStorage.setItem("uuid", resultHomeJSON.data.uuid)
+                localStorage.setItem("type", resultHomeJSON.data.type)
+                localStorage.setItem("name", resultHomeJSON.data.name)
                 this.setState({ authentification: false, loading: false })
             }
 
