@@ -76,9 +76,7 @@ class Authentification extends React.Component {
             localStorage.setItem("user", resultJSON.data.user)
             localStorage.setItem("access_token", resultJSON.data.access_token)
             localStorage.setItem("refresh_token", resultJSON.data.refresh_token)
-            this.setState({ authentification: false }, () => {
-                document.getElementById('main').scroll({ top: 0, left: 0 })
-            })
+            this.setState({ authentification: false })
         }
         this.setState({loading: false})
     }

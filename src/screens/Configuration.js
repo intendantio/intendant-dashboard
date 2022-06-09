@@ -87,9 +87,7 @@ class Configuration extends React.Component {
                 localStorage.setItem("uuid", resultHomeJSON.data.uuid)
                 localStorage.setItem("type", resultHomeJSON.data.type)
                 localStorage.setItem("name", resultHomeJSON.data.name)
-                this.setState({ authentification: false, loading: false }, () => {
-                    document.getElementById('main').scroll({ top: 0, left: 0 })
-                })
+                this.setState({ authentification: false, loading: false })
             }
 
 
