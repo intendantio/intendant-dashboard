@@ -193,8 +193,8 @@ class Home extends React.Component {
                 }
             case "widget":
                 return {
-                    w: 4,
-                    h: 4
+                    w: 3,
+                    h: 3
                 }
         }
     }

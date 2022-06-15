@@ -16,6 +16,7 @@ class Rapport extends React.Component {
         this.setState({loading: true})
         let result = await new Request().get().fetch("/api/rapports/" + this.props.source.object)
         if (result.error) {
+            this.props.onDelete()
             this.props.setMessage(result.package + " : " + result.message)
         } else {
             this.setState({ loading: false, rapport: result.data })

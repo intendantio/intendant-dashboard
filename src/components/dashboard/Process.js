@@ -1,7 +1,6 @@
 import React from 'react'
 import Request from '../../utils/Request'
 import { Typography, Skeleton, Modal, Card, Box, Button, Grid, ButtonGroup } from '@mui/material'
-import { Replay } from '@mui/icons-material'
 import Action from '../Action'
 
 class Process extends React.Component {
@@ -10,27 +9,29 @@ class Process extends React.Component {
         super(props)
         this.state = {
             loading: true,
-            process: {},
+            process: {
+                settings: []
+            },
             open: false,
-            onReverse: false,
-            inputs: []
+            settings: []
         }
     }
 
     async componentDidMount() {
-        let result = await new Request().get().fetch("/api/processes/" + this.props.source.object)
+        let result = await new Request().get().fetch("/api/processes/" + this.props.source.action)
         if (result.error) {
+            this.props.onDelete()
             this.props.setMessage(result.package + " : " + result.message)
         } else {
-            this.setState({ loading: false, process: result.data, open: false, inputs: [] })
+            this.setState({ loading: false, process: result.data, open: false, settings: [] })
         }
     }
 
-    onClick(onReverse = false) {
+    onClick() {
         switch (this.props.mode) {
             case "view":
                 if (this.state.loading == false) {
-                    this.checkAction(onReverse)
+                    this.checkAction()
                 }
                 break
             case "edit":
@@ -42,37 +43,45 @@ class Process extends React.Component {
     }
 
     async executeAction() {
+        this.setState({ loading: true })
         let resetState = {}
         let tmp = {}
-        for (let index = 0; index < this.state.process.inputs.length; index++) {
-            let input = this.state.process.inputs[index]
+        for (let index = 0; index < this.state.process.settings.length; index++) {
+            let input = this.state.process.settings[index]
             let value = this.state[input.id]
             resetState[input.id] = null
             if (value) {
-                tmp[input.reference] = value
+                tmp[input.id] = value
             } else {
-                tmp[input.reference] = null
+                tmp[input.id] = null
             }
         }
         this.setState({ open: false })
-        let result = await new Request().post({ inputs: tmp, onReverse: this.state.onReverse }).fetch("/api/processes/" + this.state.process.id + "/execute")
+
+
+        let result = await new Request().post({
+            smartobjects: this.state.process.smartobjects,
+            action: this.state.process.action,
+            settings: tmp
+        }).fetch("/api/processes/execute")
+
+
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
+            this.setState({ loading: false })
         } else {
             this.setState(resetState)
             this.componentDidMount()
         }
     }
 
-    checkAction(onReverse = false) {
-        this.setState({ onReverse: onReverse }, () => {
-            let inputs = this.state.process.inputs.filter(input => onReverse ? input.state != this.state.process.state : input.state == this.state.process.state)
-            if (inputs.length == 0) {
-                this.executeAction()
-            } else {
-                this.setState({ inputs: inputs, open: true })
-            }
-        })
+    checkAction() {
+        let settings = this.state.process.settings
+        if (settings.length == 0) {
+            this.executeAction()
+        } else {
+            this.setState({ settings: settings, open: true })
+        }
     }
 
     render() {
@@ -89,10 +98,10 @@ class Process extends React.Component {
                     <Card variant='outlined' style={{ padding: 10, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300 }}>
                         <Grid container spacing={1}>
                             {
-                                this.state.process.inputs.filter(input => this.state.onReverse ? input.state != this.state.process.state : input.state == this.state.process.state).map((input, index) => {
+                                this.state.process.settings.map((setting, index) => {
                                     return (
                                         <Grid item xs={12} md={12} lg={12}>
-                                            <Action options={input.options} label={String.capitalizeFirstLetter(input.reference.split("_")[0])} setState={this.setState.bind(this)} id={input.id} action={input} />
+                                            <Action options={setting.options} label={String.capitalizeFirstLetter(setting.id)} setState={this.setState.bind(this)} id={setting.id} action={setting} />
                                         </Grid>
                                     )
                                 })
@@ -101,13 +110,9 @@ class Process extends React.Component {
                         </Grid>
                         <Button onClick={() => { this.executeAction() }} size='large' style={{ width: '50%', marginTop: 12 }} variant='contained'>
                             <Typography variant='body2' >
-                                {String.capitalizeFirstLetter(
-                                    this.state.process.mode == "switch" ?
-                                        this.state.process.state == "on" ?
-                                            this.state.process.description_on :
-                                            this.state.process.description_off
-                                        :
-                                        this.state.process.description_on)}
+                                {
+                                    String.capitalizeFirstLetter("Execute")
+                                }
                             </Typography>
                         </Button>
                     </Card>
@@ -115,26 +120,14 @@ class Process extends React.Component {
                 <ButtonGroup style={{ width: '100%', height: '100%' }}>
                     <Button variant='contained' onClick={() => this.onClick(false)} color={'primary'} style={{ backgroundColor: '#00afff82', textTransform: 'none', textAlign: 'center', width: this.state.process.mode == "switch" ? '90%' : '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
                         <Typography variant='caption' color="text.secondary" >
-                            {String.capitalizeFirstLetter(this.state.process.description)}
+                            {String.capitalizeFirstLetter(this.state.process.room.name)}
                         </Typography>
                         <Typography variant='h6'  >
                             {
-                                String.capitalizeFirstLetter(
-                                    this.state.process.mode == "switch" ?
-                                        this.state.process.state == "on" ?
-                                            this.state.process.description_on :
-                                            this.state.process.description_off
-                                        :
-                                        this.state.process.description_on)
+                                String.capitalizeFirstLetter(this.state.process.name)
                             }
                         </Typography>
                     </Button>
-                    {
-                        this.state.process.mode == "switch" &&
-                        <Button variant='contained' onClick={() => this.onClick(true)} color={'primary'} style={{ backgroundColor: 'rgba(0, 124, 255, 0.51)', textTransform: 'none', textAlign: 'center', width: '10%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                            <Replay style={{ fontSize: 18 }} />
-                        </Button>
-                    }
                 </ButtonGroup>
             </>
         )

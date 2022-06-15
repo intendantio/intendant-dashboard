@@ -110,30 +110,6 @@ class Sidebar extends React.Component {
                                         <ListItemText primary={"Room"} />
                                     </ListItem>
                                 </Link>
-                                <Link to="/module" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
-                                    <ListItem button key={"module"}>
-                                        <ListItemIcon>
-                                            <Category />
-                                        </ListItemIcon>
-                                        <ListItemText primary={"Module"} />
-                                    </ListItem>
-                                </Link>
-                                <Link to="/widget" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
-                                    <ListItem button key={"widget"} >
-                                        <ListItemIcon>
-                                            <Extension />
-                                        </ListItemIcon>
-                                        <ListItemText primary={"Widget"} />
-                                    </ListItem>
-                                </Link>
-                                <Link to="/process" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
-                                    <ListItem button key={"process"} >
-                                        <ListItemIcon>
-                                            <DeviceHub />
-                                        </ListItemIcon>
-                                        <ListItemText primary={"Process"} />
-                                    </ListItem>
-                                </Link>
                                 <Link to="/automation" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
                                     <ListItem button key={"automation"} >
                                         <ListItemIcon>
@@ -232,30 +208,6 @@ class Sidebar extends React.Component {
                                     <Lightbulb />
                                 </ListItemIcon>
                                 <ListItemText primary={"Room"} />
-                            </ListItem>
-                        </Link>
-                        <Link to="/module" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
-                            <ListItem button key={"module"}>
-                                <ListItemIcon>
-                                    <Category />
-                                </ListItemIcon>
-                                <ListItemText primary={"Module"} />
-                            </ListItem>
-                        </Link>
-                        <Link to="/widget" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
-                            <ListItem button key={"widget"} >
-                                <ListItemIcon>
-                                    <Extension />
-                                </ListItemIcon>
-                                <ListItemText primary={"Widget"} />
-                            </ListItem>
-                        </Link>
-                        <Link to="/process" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
-                            <ListItem button key={"process"} >
-                                <ListItemIcon>
-                                    <DeviceHub />
-                                </ListItemIcon>
-                                <ListItemText primary={"Process"} />
                             </ListItem>
                         </Link>
                         <Link to="/automation" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>

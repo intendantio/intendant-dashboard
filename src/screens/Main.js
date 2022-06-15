@@ -3,16 +3,11 @@ const Smartobject = lazy(() => import('./Smartobject/List'))
 const DetailSmartObject = lazy(() => import('./Smartobject/Detail'))
 const GallerySmartobject = lazy(() => import('./Smartobject/Gallery'))
 const NewSmartObject = lazy(() => import('./Smartobject/New'))
-const ListProcess = lazy(() => import('./Process/List'))
-const NewProcess = lazy(() => import('./Process/New'))
-const DetailProcess = lazy(() => import('./Process/Detail'))
 const Automation = lazy(() => import('./Automation/List'))
 const NewAutomation = lazy(() => import('./Automation/New'))
 const Module = lazy(() => import('./Module/List'))
 const DetailModule = lazy(() => import('./Module/Detail'))
 const GalleryModule = lazy(() => import('./Module/Gallery'))
-const Widget = lazy(() => import('./Widget/List'))
-const NewWidget = lazy(() => import('./Widget/New'))
 const Rapport = lazy(() => import('./Rapport/List'))
 const NewRapport = lazy(() => import('./Rapport/New'))
 const DetailRapport = lazy(() => import('./Rapport/Detail'))
@@ -88,19 +83,11 @@ function Main(mainProps) {
                                     <Route exact path="/dashboard/new" render={(props) => <NewHome setMessage={setMessage} setTitle={setTitle} setActionType={setActionType} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/smartobject/oauth/:id" render={(props) => <OAuthSmartobject setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/system" render={(props) => <System setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/module" render={(props) => <Module setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/module/gallery" render={(props) => <GalleryModule setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/module/:id" render={(props) => <DetailModule setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/automation" render={(props) => <Automation setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/automation/new" render={(props) => <NewAutomation setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/rapport" render={(props) => <Rapport setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/rapport/new" render={(props) => <NewRapport setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/rapport/:id" render={(props) => <DetailRapport setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/widget" render={(props) => <Widget setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/widget/new" render={(props) => <NewWidget setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/process" render={(props) => <ListProcess setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/process/new" render={(props) => <NewProcess setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
-                                    <Route exact path="/process/:id" render={(props) => <DetailProcess setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/user" render={(props) => <User setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/user/new" render={(props) => <NewUser setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />
                                     <Route exact path="/user/:id" render={(props) => <DetailUser setActionType={setActionType} setMessage={setMessage} setTitle={setTitle} isMobile={mainProps.isMobile} {...props} />} />

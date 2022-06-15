@@ -18,6 +18,7 @@ class Smartobject extends React.Component {
     async componentDidMount() {
         let result = await new Request().get().fetch("/api/smartobjects/" + this.props.source.object)
         if (result.error) {
+            this.props.onDelete()
             this.props.setMessage(result.package + " : " + result.message)
         } else {
             this.setState({ loading: false, smartobject: result.data })

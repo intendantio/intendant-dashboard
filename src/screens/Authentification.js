@@ -21,7 +21,6 @@ class Authentification extends React.Component {
     async componentDidMount() {
         try {
             let path = localStorage.getItem("path")
-            console.log(path)
             let result = await fetch(path + "/api", {
                 method: this.method,
                 headers: {

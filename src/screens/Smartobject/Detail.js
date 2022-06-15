@@ -1,7 +1,7 @@
 import React from 'react'
 import JSONPretty from 'react-json-pretty'
 import { Paper, OutlinedInput, Typography, Card, Grid, Accordion, Box, Modal, AccordionSummary, AccordionDetails, Button, TextField, FormControlLabel, IconButton, Switch, Divider, CardActionArea } from '@mui/material'
-import { ExpandMore, Cloud, Edit, Error, Help, Refresh, Downloading, House, Settings, RocketLaunch, Bolt, CheckCircle, Workspaces } from '@mui/icons-material'
+import { ExpandMore, Cloud, Edit, Delete, Help, Refresh, Downloading, House, Settings, RocketLaunch, Add, CheckCircle, Workspaces } from '@mui/icons-material'
 import Action from '../../components/Action'
 import Desktop from '../../components/Desktop'
 import Request from '../../utils/Request'
@@ -27,6 +27,10 @@ class DetailSmartObject extends React.Component {
                         type: "none"
                     },
                     version: ""
+                },
+                status: {
+                    status: "SUCCESS",
+                    reason: ""
                 }
             },
             positions: [],
@@ -36,11 +40,13 @@ class DetailSmartObject extends React.Component {
             content: {},
             loadingAction: "",
             loading: true,
-            state: {
-                status: "EXCEPTIONS",
-                reason: "",
-                contents: []
-            }
+            smartobjectState: {
+                title: {
+                    value: ""
+                },
+                values: []
+            },
+            positionName: ""
         }
         props.setTitle("")
         props.setActionType("return")
@@ -50,24 +56,25 @@ class DetailSmartObject extends React.Component {
         let resultRoom = await new Request().get().fetch("/api/rooms")
         let resultPositions = await new Request().get().fetch("/api/positions")
         let resultSmartobject = await new Request().get().fetch("/api/smartobjects/" + this.state.id)
-        let resultSmartobjectState = await new Request().get().fetch("/api/smartobjects/" + this.state.id + "/state")
+        //let resultSmartobjectState = await new Request().get().fetch("/api/smartobjects/" + this.state.id + "/state")
+        let resultSmartobjectWidgetState = await new Request().get().fetch("/api/smartobjects/" + this.state.id + "/widgets/state")
+        if(resultSmartobjectWidgetState.error == false) {
+            this.setState({smartobjectState: resultSmartobjectWidgetState.data})
+        }
         if (resultRoom.error) {
             this.props.setMessage(resultRoom.package + " : " + resultRoom.message)
             this.props.history.push('/room/' + this.state.idRoom)
         } else if (resultSmartobject.error) {
             this.props.setMessage(resultSmartobject.package + " : " + resultSmartobject.message)
             this.props.history.push('/room/' + this.state.idRoom)
-        } else if (resultSmartobjectState.error) {
-            this.props.setMessage(resultSmartobjectState.package + " : " + resultSmartobjectState.message)
-            this.props.history.push('/room/' + this.state.idRoom)
-        } else if(resultPositions.error) {
+        } else if (resultPositions.error) {
             this.props.setMessage(resultPositions.package + " : " + resultPositions.message)
             this.props.history.push('/room/' + this.state.idRoom)
         } else {
             this.props.setTitle(resultSmartobject.data.reference)
-            this.setState({ reference: resultSmartobject.data.reference,positions: resultPositions.data.filter(position => {
-                return position.room == resultSmartobject.data.room.id
-            }), loadingAction: "", loading: false, smartobject: resultSmartobject.data, rooms: resultRoom.data, state: resultSmartobjectState.data })
+            this.setState({
+                reference: resultSmartobject.data.reference, positions: resultPositions.data, loadingAction: "", loading: false, smartobject: resultSmartobject.data, rooms: resultRoom.data
+            })
         }
     }
 
@@ -106,6 +113,24 @@ class DetailSmartObject extends React.Component {
                 smartobject: smartobject
             })
             this.componentDidMount()
+        }
+    }
+
+    async addPosition() {
+        if(this.state.positionName.length == "") {
+            this.props.setMessage("Missing position name")
+        } else {
+            let result = await new Request().post({ name: this.state.positionName }).fetch("/api/positions")
+            if (result.error) {
+                this.props.setMessage(result.package + " : " + result.message)
+            } else {
+                let resultPositions = await new Request().get().fetch("/api/positions")
+                if (resultPositions.error) {
+                    this.props.setMessage(resultPositions.package + " : " + resultPositions.message)
+                } else {
+                    this.setState({ positions: resultPositions.data, positionName: "" })
+                }
+            }
         }
     }
 
@@ -162,14 +187,12 @@ class DetailSmartObject extends React.Component {
     }
 
     async reinstall() {
-
         location.href = this.state.smartobject.configuration.submit.url +
             (this.state.smartobject.configuration.submit.url.includes("?") ? "&" : "?") +
             "smartobject_id=" + this.state.smartobject.id + "&reference=" + this.state.smartobject.reference +
             "&room=" + this.state.smartobject.room.id + "&redirect_uri=" +
             window.location.origin + "/smartobject/oauth/" +
             md5(this.state.smartobject.configuration.name)
-
     }
 
     render() {
@@ -197,62 +220,44 @@ class DetailSmartObject extends React.Component {
                             <Accordion variant='outlined' expanded={this.state.expanded === 'state'} onChange={() => this.setState({ expanded: "state" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     {
-                                        this.state.state.status == "ERROR" ?
-                                            <AbstractIcon.PriorityHigh style={{ fontSize: '28px' }} /> :
-                                            this.state.state.status == "SUCCESS" ?
-                                                <AbstractIcon.Check style={{ fontSize: '28px' }} /> :
-                                                this.state.state.status == "EXCEPTIONS" ?
-                                                    <AbstractIcon.QuestionMark style={{ fontSize: '28px' }} /> :
+                                        this.state.smartobject.status.status == "ERROR" ?
+                                            <AbstractIcon.PriorityHigh style={{ fontSize: '28px', marginRight: 10 }} /> :
+                                            this.state.smartobject.status.status == "SUCCESS" ?
+                                                <AbstractIcon.Check style={Object.assign({ fontSize: '28px', marginRight: 10 },this.state.smartobjectState.title.styles)} /> :
+                                                this.state.smartobject.status.status == "EXCEPTIONS" ?
+                                                    <AbstractIcon.QuestionMark style={{ fontSize: '28px', marginRight: 10 }} /> :
                                                     <Help style={{ fontSize: '28px' }} />
                                     }
-                                    <Typography variant='h6' style={{ marginLeft: 10 }} >
-                                        {this.state.state.reason}
-                                    </Typography>
+                                    {
+                                        this.state.smartobject.status.status == "SUCCESS" ?
+                                        <Typography variant='h6' style={this.state.smartobjectState.title.styles} >
+                                            {String.capitalizeFirstLetter(this.state.smartobjectState.title.value)}
+                                        </Typography> :
+                                        <Typography variant='h6' >
+                                            {String.capitalizeFirstLetter(this.state.smartobject.status.reason)}
+                                        </Typography>
+                                    }
                                 </AccordionSummary>
                                 <Divider />
                                 <AccordionDetails>
                                     <Grid container >
                                         {
-                                            this.state.state.contents && this.state.state.contents.map(content => {
-                                                if(content.type == "text") {
+                                            this.state.smartobject.status.status == "SUCCESS" &&
+                                            this.state.smartobjectState.values.map(content => {
                                                     return (
-                                                        <Grid style={{ paddingLeft: 12, marginTop: 12 }} item xs={12} md={12} lg={12} >
-                                                            <Typography variant='body2' >
-                                                                {content.title}
+                                                        <Grid style={{marginTop: 5}} item xs={12} md={12} lg={12} >
+                                                            <Typography style={content.styles} variant='body2' >
+                                                                {String.capitalizeFirstLetter(content.value)}
                                                             </Typography>
-                                                            {
-                                                                content.descriptions.map(description => {
-                                                                    return (
-                                                                        <>
-                                                                            <Typography variant='caption' color="text.secondary"  >
-                                                                                {description}
-                                                                            </Typography>
-                                                                            <br />
-                                                                        </>
-                                                                    )
-                                                                })
-                                                            }
                                                         </Grid>
                                                     )
-                                                } else if(content.type == "color") {
-                                                    return (
-                                                        <Grid style={{ paddingLeft: 12, marginTop: 12 }} item xs={12} md={12} lg={12} >
-                                                            <Box style={{backgroundColor: content.color,paddingTop: 4, paddingBottom: 4, paddingRight: 8, paddingLeft: 8, borderRadius: 4, width: 'fit-content'}}>
-                                                                <Typography variant='body2' >
-                                                                    {content.value}
-                                                                </Typography>
-                                                            </Box>
-                                                        </Grid>
-                                                    )
-                                                }
-                                                
                                             })
                                         }
                                     </Grid>
                                 </AccordionDetails>
                             </Accordion>
                         </Grid>
-                        {(this.state.state.status == "SUCCESS" || this.state.state.status == "EXCEPTIONS") && <Grid item xs={12} md={12} lg={12} >
+                        {(this.state.smartobject.status.status == "SUCCESS" || this.state.smartobject.status.status == "EXCEPTIONS") && <Grid item xs={12} md={12} lg={12} >
                             <Accordion variant='outlined' expanded={this.state.expanded === 'action'} onChange={() => this.setState({ expanded: "action" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     <RocketLaunch style={{ fontSize: '28px' }} />
@@ -270,7 +275,7 @@ class DetailSmartObject extends React.Component {
                                                         <Grid container spacing={action.settings.length == 0 && this.props.isMobile ? 0 : 2} >
                                                             <Grid item xs={12} md={3} lg={3} >
                                                                 <Card elevation={2}  >
-                                                                    <Button disabled={action.id == this.state.loadingAction || this.state.smartobject.state.status != "online"} variant='contained' onClick={() => { this.executeAction(action, action.settings) }} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderColor: 'white', width: '100%', height: '100%' }}>
+                                                                    <Button disabled={action.id == this.state.loadingAction || this.state.smartobject.status.status != "SUCCESS"} variant='contained' onClick={() => { this.executeAction(action, action.settings) }} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderColor: 'white', width: '100%', height: '100%' }}>
                                                                         <Typography textAlign='center' variant='body1' style={{ color: 'white' }}>
                                                                             {action.name}
                                                                         </Typography>
@@ -325,27 +330,15 @@ class DetailSmartObject extends React.Component {
                                             })
                                         }
                                     </Grid>
-                                </AccordionDetails>
-                            </Accordion>
-                        </Grid>
-                        <Grid item xs={12} md={12} lg={12} >
-                            <Accordion variant='outlined' expanded={this.state.expanded === 'position'} onChange={() => this.setState({ expanded: "position" })}>
-                                <AccordionSummary expandIcon={<ExpandMore />} >
-                                    <Workspaces style={{ fontSize: '28px' }} />
-                                    <Typography variant='h6' style={{ marginLeft: 10 }}>
-                                        Position
-                                    </Typography>
-                                </AccordionSummary>
-                                <Divider />
-                                <AccordionDetails>
-                                    <Grid container spacing={1} style={{ marginTop: 2 }}>
+                                    <Divider style={{marginTop: 15, marginBottom: 15}} />
+                                    <Grid container spacing={1}>
                                         {
                                             this.state.positions.map((position, index) => {
-                                                let currentPosition = this.state.smartobject.position  ? this.state.smartobject.position.id : -1
+                                                let currentPosition = this.state.smartobject.position ? this.state.smartobject.position.id : -1
                                                 return (
-                                                    <Grid key={index} item xs={12} md={3} lg={2}>
+                                                    <Grid key={index} item xs={12} md={3} lg={2}  style={{display:'flex'}}>
                                                         <Button onClick={() => { this.updatePosition(currentPosition == position.id ? -1 : position.id) }} color={this.state.smartobject.position && position.id == this.state.smartobject.position.id ? 'success' : 'primary'} variant={'contained'} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderColor: 'white', width: '100%' }} >
-                                                            <Typography variant='body1' style={{color: 'white' }}   >
+                                                            <Typography variant='body1' style={{ color: 'white' }}   >
                                                                 {position.name}
                                                             </Typography>
                                                         </Button>
@@ -353,6 +346,19 @@ class DetailSmartObject extends React.Component {
                                                 )
                                             })
                                         }
+                                        <Grid item xs={12} md={6} lg={2} style={{display:'flex'}}>
+                                            <OutlinedInput
+                                                style={{borderEndEndRadius: 0, borderTopRightRadius: 0, width: '100%'}}
+                                                size='small'
+                                                value={this.state.positionName}
+                                                onChange={(event) => {  this.setState({ positionName: event.nativeEvent.target.value })  }}
+                                                variant="filled"
+                                                margin='none'
+                                            />
+                                            <Button onClick={() => { this.addPosition() }} color={'primary'} variant={'contained'} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderStartStartRadius: 0, borderBottomLeftRadius: 0, borderColor: 'white' }} >
+                                                <Add/>
+                                            </Button>
+                                        </Grid>
                                     </Grid>
                                 </AccordionDetails>
                             </Accordion>
