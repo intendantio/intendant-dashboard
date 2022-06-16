@@ -27,12 +27,17 @@ class NewAutomation extends React.Component {
 
     async componentDidMount() {
         let result = await new Request().get().fetch("/api/smartobjects")
-        let resultProcess = await new Request().get().fetch("/api/processes")
+        //let resultProcess = await new Request().get().fetch("/api/processes")
+        /*
+            if (resultProcess.error) {
+                this.props.setMessage(resultProcess.package + " : " + resultProcess.message)
+                this.props.history.push('/automation')
+            } else 
+        */
+
+
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
-            this.props.history.push('/automation')
-        } else if (resultProcess.error) {
-            this.props.setMessage(resultProcess.package + " : " + resultProcess.message)
             this.props.history.push('/automation')
         } else {
             let sources = []
@@ -43,24 +48,6 @@ class NewAutomation extends React.Component {
             }).forEach(smartobject => {
                 smartobject.type = "smartobject"
                 sources.push(smartobject)
-            })
-            resultProcess.data.forEach(process => {
-                process.type = "process"
-                process.reference = process.description
-                process.triggers = []
-                process.actions = [
-                    {
-                        id: "process",
-                        name: process.mode == "switch" ? process.description_on + "/" + process.description_off : process.description_on,
-                        description: process.mode == "switch" ? process.description_on + "/" + process.description_off : process.description_on,
-                        type: "effect",
-                        settings: process.inputs.map(input => {
-                            input.id = input.reference
-                            return input
-                        })
-                    }
-                ]
-                sources.push(process)
             })
             this.setState({ loading: false, sources: sources })
         }
@@ -132,7 +119,7 @@ class NewAutomation extends React.Component {
                                         trigger.parent = this.state.selected.id
                                         trigger.parentType = this.state.selected.type
                                         return (
-                                            <Grid key={index} item xs={12} md={12} lg={12} >
+                                            <Grid key={index} item xs={12} md={6} lg={4} >
                                                 <Card variant='outlined'   >
                                                     <CardActionArea onClick={() => { this.setState({ step: "action", trigger: trigger, selected: null, description: "IF " + trigger.name.toLowerCase() + " THEN " }) }} style={{ padding: 10 }} >
                                                         <Typography variant='subtitle1'  >
@@ -147,7 +134,7 @@ class NewAutomation extends React.Component {
                                     this.state.sources.map((source, index) => {
                                         if (source.triggers.length > 0) {
                                             return (
-                                                <Grid key={index} item xs={12} md={12} lg={12} >
+                                                <Grid key={index} item xs={12} md={6} lg={4} >
                                                     <Card variant='outlined'   >
                                                         <CardActionArea onClick={() => { this.setState({ selected: source }) }} style={{ padding: 10 }} >
                                                             <Typography variant='subtitle1'  >
@@ -205,7 +192,7 @@ class NewAutomation extends React.Component {
                                                 })
                                                 if (find) {
                                                     return (
-                                                        <Grid key={index} item xs={12} md={12} lg={12} >
+                                                        <Grid key={index} item xs={12} md={6} lg={4} >
                                                             <Card variant='outlined'   >
                                                                 <CardActionArea onClick={() => { this.setState({ selected: source }) }} style={{ padding: 10 }} >
                                                                     <Typography variant='subtitle1'  >

@@ -131,7 +131,7 @@ class NewRapport extends React.Component {
                 return this.state.configurations.map((configuration, index) => {
                     if (configuration.module == "module") {
                         return (
-                            <Grid key={index} item xs={12} md={12} lg={12} >
+                            <Grid key={index} item xs={12} md={6} lg={4} >
                                 <Card variant='outlined' >
                                     <CardActionArea onClick={() => { this.setState({ configuration: configuration, step: 2 }) }} style={{ padding: 10 }}>
                                         <Typography variant='subtitle1'  >
@@ -143,7 +143,7 @@ class NewRapport extends React.Component {
                         )
                     } else {
                         return (
-                            <Grid key={index} item xs={12} md={12} lg={12} >
+                            <Grid key={index} item xs={12} md={6} lg={4} >
                                 <Card variant='outlined'   >
                                     <CardActionArea onClick={() => { this.setState({ configuration: configuration, step: 2 }) }} style={{ padding: 10 }} >
                                         <Typography variant='subtitle1'  >
@@ -165,7 +165,7 @@ class NewRapport extends React.Component {
 
                 return this.state.configuration.dataSources.map((dataSource, index) => {
                     return (
-                        <Grid key={index} item xs={12} md={12} lg={12} >
+                        <Grid key={index} item xs={12} md={6} lg={4} >
                             <Card variant='outlined'   >
                                 <CardActionArea onClick={() => { this.selectSource(dataSource) }} style={{ padding: 10 }} >
                                     <Typography variant='subtitle1' >
@@ -182,7 +182,7 @@ class NewRapport extends React.Component {
                         {
                             this.state.settings.map((setting, index) => {
                                 return (
-                                    <Grid key={index} item xs={12} md={12} lg={12} >
+                                    <Grid key={index} item xs={12} md={6} lg={4} >
                                         <Card variant='outlined' style={{ padding: 10 }}>
                                             <Action options={setting.options} label={String.capitalizeFirstLetter(setting.id)} setState={this.setState.bind(this)} id={"rapport-" + setting.id} action={setting} />
                                         </Card>
@@ -196,7 +196,7 @@ class NewRapport extends React.Component {
             case 4:
                 return INTERVAL.map((interval, index) => {
                     return (
-                        <Grid key={index} item xs={12} md={12} lg={12} >
+                        <Grid key={index} item xs={12} md={6} lg={4} >
                             <Card variant='outlined'   >
                                 <CardActionArea onClick={() => { this.setState({ loading: true, interval: interval.interval }, () => { this.submit() }) }} style={{ padding: 10 }} >
                                     <Typography variant='subtitle1'  >

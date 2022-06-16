@@ -24,44 +24,12 @@ class Routine extends React.Component {
     async componentDidMount() {
         let result = await new Request().get().fetch("/api/automations")
         let resultSmartobject = await new Request().get().fetch("/api/smartobjects")
-        let resultProcess = await new Request().get().fetch("/api/processes")
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
         } else if (resultSmartobject.error) {
             this.props.setMessage(resultSmartobject.package + " : " + resultSmartobject.message)
-        } else if (resultProcess.error) {
-            this.props.setMessage(resultProcess.package + " : " + resultProcess.message)
         } else {
-            let automations = result.data.map(automation => {
-                if (automation.trigger.type == "smartobject") {
-                    resultSmartobject.data.forEach(smartobject => {
-                        if (smartobject.id == automation.trigger.object) {
-                            automation.trigger.source = smartobject
-                        }
-                    })
-                } else if (automation.trigger.type == "process") {
-                    resultProcess.data.forEach(process => {
-                        if (process.id == automation.trigger.object) {
-                            automation.trigger.source = process
-                        }
-                    })
-                }
-                if (automation.action.type == "smartobject") {
-                    resultSmartobject.data.forEach(smartobject => {
-                        if (smartobject.id == automation.action.object) {
-                            automation.action.source = smartobject
-                        }
-                    })
-                } else if (automation.action.type == "process") {
-                    resultProcess.data.forEach(process => {
-                        if (process.id == automation.action.object) {
-                            automation.action.source = process
-                        }
-                    })
-                }
-                return automation
-            })
-            this.setState({ loading: false, automations: automations })
+            this.setState({ loading: false, automations: result.data })
         }
     }
 
@@ -105,7 +73,7 @@ class Routine extends React.Component {
                                                         <Card variant='outlined' style={{ justifyContent: 'center', alignItems: 'center', padding: 5, display: 'flex', flexDirection: 'row', borderRadius: 5, marginRight: 10 }}>
                                                             <Bolt fontSize='medium' />
                                                             <Box style={{ marginLeft: 12 }}>
-                                                                <Typography variant='subtitle1' >{automation.trigger.trigger.toUpperCase() + " - " + (automation.trigger.type == "smartobject" ? automation.trigger.source.reference.toUpperCase() : automation.trigger.source.description.toUpperCase())}</Typography>
+                                                                <Typography variant='subtitle1' >{"TITLE"}</Typography>
                                                             </Box>
                                                         </Card>
                                                     </Grid>
@@ -118,7 +86,7 @@ class Routine extends React.Component {
                                                         <Card variant='outlined' style={{ justifyContent: 'center', alignItems: 'center', padding: 5, display: 'flex', flexDirection: 'row', borderRadius: 5, marginRight: 10 }}>
                                                             <Highlight fontSize='medium' />
                                                             <Box style={{ marginLeft: 12 }}>
-                                                                <Typography variant='subtitle1' >{(automation.action.type == "smartobject" ? automation.action.source.reference.toUpperCase() : automation.action.source.description.toUpperCase()) + " - " + automation.action.action.toUpperCase()}</Typography>
+                                                                <Typography variant='subtitle1' >{"ACTION"}</Typography>
                                                             </Box>
                                                         </Card>
                                                     </Grid>
