@@ -65,7 +65,7 @@ class System extends React.Component {
 
     async upgrade() {
         this.setState({ loading: true })
-        let result = await new Request().post().fetch("/api/upgrade")
+        await new Request().post().fetch("/api/upgrade")
         location.reload()
     }
 
