@@ -269,7 +269,9 @@ class DetailSmartObject extends React.Component {
                                 <AccordionDetails>
                                     <Grid container >
                                         {
-                                            this.state.smartobject.actions.map((action, index) => {
+                                            this.state.smartobject.actions.filter(action => {
+                                                return action.type == "effect"
+                                            }).map((action, index) => {
                                                 return (
                                                     <Grid key={index} item xs={12} md={12} lg={12} style={{ marginTop: 7 }} >
                                                         <Grid container spacing={action.settings.length == 0 && this.props.isMobile ? 0 : 2} >

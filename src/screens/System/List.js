@@ -3,8 +3,8 @@ import { CheckCircle, Error } from '@mui/icons-material'
 import { Typography, Paper, Grid, Card, Button, Box, Divider, Pagination } from '@mui/material'
 import Request from '../../utils/Request'
 import Desktop from '../../components/Desktop'
-import Moment from 'moment'
 import Loading from '../../components/Loading'
+import UpdateVersion from '../../components/UpdateVersion'
 
 class System extends React.Component {
 
@@ -12,12 +12,13 @@ class System extends React.Component {
         super(props)
         this.state = {
             product: "light",
-            logs: [],
             status: { web: { status: "SUCCESS", message: "" }, cloud: { status: "SUCCESS", message: "" }, market: { status: "SUCCESS", message: "" }, manager: { status: "SUCCESS", message: "" } },
             page: 0,
+            packages: [],
             loading: true,
             upgrade: false,
             version: "",
+            smartobjects: [],
             currentVersion: ""
         }
         props.setTitle("System")
@@ -27,25 +28,36 @@ class System extends React.Component {
     async componentDidMount() {
         let resultStatus = await fetch("https://status.intendant.io/")
         let resultStatusJSON = await resultStatus.json()
-        this.setState({ status: resultStatusJSON, loading: false }, async () => {
-            let result = await new Request().get().fetch("/api/logs")
+        let resultMarket = await fetch("https://market.intendant.io/smartobjects.json")
+        let resultMarketJSON = await resultMarket.json()
+        this.setState({ status: resultStatusJSON, smartobjects: resultMarketJSON, loading: false }, async () => {
             let resultUpgrade = await new Request().get().fetch("/api/upgrade")
             let resultConfigurations = await new Request().get().fetch("/api/configurations")
-            if (result.error) {
-                this.props.setMessage(result.package + " : " + result.message)
-            } else if (resultUpgrade.error) {
+            let resultSmartobjects = await new Request().get().fetch("/api/smartobjects")
+            if (resultUpgrade.error) {
                 this.props.setMessage(resultUpgrade.package + " : " + resultUpgrade.message)
             } else if (resultConfigurations.error) {
                 this.props.setMessage(resultConfigurations.package + " : " + resultConfigurations.message)
+            } else if (resultSmartobjects.error) {
+                this.props.setMessage(resultSmartobjects.package + " : " + resultSmartobjects.message)
             } else {
+                let packages = new Map()
+                
+                resultSmartobjects.data.forEach(smartobject => {
+                    if(packages.has(smartobject.module) == false) {
+                        packages.set(smartobject.module,smartobject.configuration)
+                    }
+                })
+
+                let listPackage = Array.from(packages).map(pPackage => {
+                    return pPackage
+                })
+
                 this.setState({
                     upgrade: resultUpgrade.data.upgrade,
+                    packages: listPackage,
                     version: resultUpgrade.data.version,
-                    currentVersion: resultConfigurations.data.version,
-                    logs: result.data.map(log => {
-                        log.dateTime = Moment(parseInt(log.date)).format("HH:mm")
-                        return log
-                    }).reverse()
+                    currentVersion: resultConfigurations.data.version
                 })
             }
         })
@@ -85,7 +97,7 @@ class System extends React.Component {
                                 </> : null
 
                         }
-                        <Grid item xs={12} md={12} lg={5} >
+                        <Grid item xs={12} md={12} lg={3} >
                             <Card variant='outlined' style={{ padding: 12 }}  >
                                 <Typography variant='subtitle1' fontWeight='bold' >Cloud service</Typography>
                                 <Typography variant='subtitle2' color="text.secondary" >Powered from status.intendant.io</Typography>
@@ -112,26 +124,16 @@ class System extends React.Component {
                                 </Box>
                             </Card>
                         </Grid>
-                        <Grid item xs={12} md={12} lg={7} >
+                        <Grid item xs={12} md={12} lg={9} >
                             <Card variant='outlined' style={{ padding: 12 }}  >
-                                <Typography variant='subtitle1' fontWeight='bold' >Log</Typography>
-                                <Typography variant='subtitle2' color="text.secondary" >Local information</Typography>
+                                <Typography variant='subtitle1' fontWeight='bold' >Update</Typography>
+                                <Typography variant='subtitle2' color="text.secondary" >Smartobject update</Typography>
                                 <Divider style={{ marginTop: 12, marginBottom: 12 }} />
                                 {
-                                    this.state.logs.slice(this.state.page * 20, (this.state.page + 1) * 20).map((log, index) => {
-                                        return (
-                                            <Box key={index} style={{ display: 'flex', flexDirecton: 'row', marginBottom: 5 }}>
-                                                <Box style={{ background: log.type == "VERBOSE" ? '#00873D' : log.type == "WARNING" ? "#FFAA15" : "#FF4040", borderRadius: 3, paddingLeft: 5, paddingRight: 5, height: 'min-content' }}>
-                                                    <Typography variant='body2' style={{ alignItems: 'center' }} >{log.dateTime}</Typography>
-                                                </Box>
-                                                <Typography variant='body2' color="text.secondary" style={{ marginLeft: 10 }}  >{log.message}</Typography>
-                                            </Box>
-                                        )
+                                    this.state.packages.map((pPackage,index) => {
+                                        return <UpdateVersion onRefresh={() => { this.setState({packages: []}, () => { this.componentDidMount() })  }} key={index} smartobjects={this.state.smartobjects} package={pPackage} />
                                     })
                                 }
-                                <Box style={{ marginTop: 12, display: 'flex', justifyContent: 'center' }}>
-                                    <Pagination count={parseInt(this.state.logs.length / 20)} onChange={(evt, page) => { this.setState({ page: page }) }} />
-                                </Box>
                             </Card>
                         </Grid>
                     </Grid>
@@ -140,5 +142,7 @@ class System extends React.Component {
         )
     }
 }
+
+
 
 export default System
