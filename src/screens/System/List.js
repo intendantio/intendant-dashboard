@@ -33,32 +33,40 @@ class System extends React.Component {
         this.setState({ status: resultStatusJSON, smartobjects: resultMarketJSON, loading: false }, async () => {
             let resultUpgrade = await new Request().get().fetch("/api/upgrade")
             let resultConfigurations = await new Request().get().fetch("/api/configurations")
-            let resultSmartobjects = await new Request().get().fetch("/api/smartobjects")
             if (resultUpgrade.error) {
                 this.props.setMessage(resultUpgrade.package + " : " + resultUpgrade.message)
             } else if (resultConfigurations.error) {
                 this.props.setMessage(resultConfigurations.package + " : " + resultConfigurations.message)
-            } else if (resultSmartobjects.error) {
-                this.props.setMessage(resultSmartobjects.package + " : " + resultSmartobjects.message)
             } else {
-                let packages = new Map()
-                
-                resultSmartobjects.data.forEach(smartobject => {
-                    if(packages.has(smartobject.module) == false) {
-                        packages.set(smartobject.module,smartobject.configuration)
-                    }
-                })
-
-                let listPackage = Array.from(packages).map(pPackage => {
-                    return pPackage
-                })
 
                 this.setState({
                     upgrade: resultUpgrade.data.upgrade,
-                    packages: listPackage,
                     version: resultUpgrade.data.version,
                     currentVersion: resultConfigurations.data.version
                 })
+
+
+                let resultSmartobjects = await new Request().get().fetch("/api/smartobjects")
+                if (resultSmartobjects.error) {
+                    this.props.setMessage(resultSmartobjects.package + " : " + resultSmartobjects.message)
+                } else {
+                    let packages = new Map()
+
+                    resultSmartobjects.data.forEach(smartobject => {
+                        if (packages.has(smartobject.module) == false) {
+                            packages.set(smartobject.module, smartobject.configuration)
+                        }
+                    })
+
+                    let listPackage = Array.from(packages).map(pPackage => {
+                        return pPackage
+                    })
+
+                    this.setState({
+                        packages: listPackage
+                    })
+
+                }
             }
         })
     }
@@ -66,7 +74,9 @@ class System extends React.Component {
     async upgrade() {
         this.setState({ loading: true })
         await new Request().post().fetch("/api/upgrade")
-        location.reload()
+        setTimeout(() => {
+            location.reload()
+        },5000)
     }
 
     render() {
@@ -130,8 +140,8 @@ class System extends React.Component {
                                 <Typography variant='subtitle2' color="text.secondary" >Smartobject update</Typography>
                                 <Divider style={{ marginTop: 12, marginBottom: 12 }} />
                                 {
-                                    this.state.packages.map((pPackage,index) => {
-                                        return <UpdateVersion onRefresh={() => { this.setState({packages: []}, () => { this.componentDidMount() })  }} key={index} smartobjects={this.state.smartobjects} package={pPackage} />
+                                    this.state.packages.map((pPackage, index) => {
+                                        return <UpdateVersion onRefresh={() => { this.setState({ packages: [] }, () => { this.componentDidMount() }) }} key={index} smartobjects={this.state.smartobjects} package={pPackage} />
                                     })
                                 }
                             </Card>
