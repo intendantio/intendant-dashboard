@@ -60,7 +60,9 @@ class Process extends React.Component {
 
 
         let result = await new Request().post({
-            smartobjects: this.state.process.smartobjects,
+            smartobjects: this.state.process.smartobjects.map(smartobject => {
+                return smartobject.id
+            }),
             action: this.state.process.action,
             settings: tmp
         }).fetch("/api/processes/execute")

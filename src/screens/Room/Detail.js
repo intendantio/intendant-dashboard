@@ -35,7 +35,7 @@ class DetailRoom extends React.Component {
     async componentDidMount() {
         let resultProfile = await new Request().get().fetch("/api/profiles")
         let resultRoom = await new Request().get().fetch("/api/rooms/" + this.state.id)
-        let resultProcess = await new Request().get().fetch("/api/processes")
+        let resultProcess = await new Request().get().fetch("/api/rooms/" + this.state.id +  "/processes")
         if (resultRoom.error) {
             this.props.setMessage(resultRoom.package + " : " + resultRoom.message)
             this.props.history.push('/room')
@@ -47,7 +47,7 @@ class DetailRoom extends React.Component {
             this.props.history.push('/room')
         } else {
             this.props.setTitle(resultRoom.data.name)
-            this.setState({ loading: false, room: resultRoom.data, profiles: resultProfile.data, processes: resultProcess.data.filter(process => process.room.id == this.state.id) })
+            this.setState({ loading: false, room: resultRoom.data, profiles: resultProfile.data, processes: resultProcess.data })
         }
     }
 
@@ -94,7 +94,9 @@ class DetailRoom extends React.Component {
         this.setState({ open: false })
 
         let result = await new Request().post({
-            smartobjects: this.state.process.smartobjects,
+            smartobjects: this.state.process.smartobjects.map(smartobject => {
+                return smartobject.id
+            }),
             action: this.state.process.action,
             settings: tmp 
         }).fetch("/api/processes/execute")

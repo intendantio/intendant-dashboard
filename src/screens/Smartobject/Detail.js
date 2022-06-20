@@ -196,7 +196,9 @@ class DetailSmartObject extends React.Component {
     }
 
     render() {
-        let lastGroup = ""
+        let actions = this.state.smartobject.actions.filter(action => {
+            return action.type == "effect"
+        })
         return (
             <>
                 <Desktop {... this.props}>
@@ -257,7 +259,7 @@ class DetailSmartObject extends React.Component {
                                 </AccordionDetails>
                             </Accordion>
                         </Grid>
-                        {(this.state.smartobject.status.status == "SUCCESS" || this.state.smartobject.status.status == "EXCEPTIONS") && <Grid item xs={12} md={12} lg={12} >
+                        {actions.length > 0 && <Grid item xs={12} md={12} lg={12} >
                             <Accordion variant='outlined' expanded={this.state.expanded === 'action'} onChange={() => this.setState({ expanded: "action" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     <RocketLaunch style={{ fontSize: '28px' }} />
@@ -269,9 +271,7 @@ class DetailSmartObject extends React.Component {
                                 <AccordionDetails>
                                     <Grid container >
                                         {
-                                            this.state.smartobject.actions.filter(action => {
-                                                return action.type == "effect"
-                                            }).map((action, index) => {
+                                            actions.map((action, index) => {
                                                 return (
                                                     <Grid key={index} item xs={12} md={12} lg={12} style={{ marginTop: 7 }} >
                                                         <Grid container spacing={action.settings.length == 0 && this.props.isMobile ? 0 : 2} >
