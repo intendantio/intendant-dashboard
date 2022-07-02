@@ -85,7 +85,7 @@ class Home extends React.Component {
                                     </Box> :
                                     <>
                                         <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
-                                            <Typography variant='h6' fontWeight='bold' >Dashboard</Typography>
+                                            <Typography variant='subtitle1' fontWeight='bold' >Dashboard</Typography>
                                         </Box>
                                     </>
                             }
@@ -183,7 +183,7 @@ class Home extends React.Component {
                 <Grid container spacing={1}   >
                     <Grid item xs={4} md={1} lg={1}>
                         <Card variant='outlined'  >
-                            <Button variant='text' onClick={() => { this.setState({ loading: true, rooms: [], processes: [] }, () => { this.componentDidMount() }) }} style={{ textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                            <Button variant='text' onClick={() => { this.setState({ loading: true,rapports: [], rooms: [], processes: [] }, () => { this.componentDidMount() }) }} style={{ textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
                                 <AbstractIcon.Refresh sx={{ color: 'white' }} size='medium' />
                             </Button>
                         </Card>
