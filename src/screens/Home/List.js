@@ -112,7 +112,7 @@ class Home extends React.Component {
                                 }
 
                             </Grid>
-                            <Button onClick={() => { this.executeAction() }} size='large' style={{ width: '50%', marginTop: 12 }} variant='contained'>
+                            <Button onClick={() => { this.executeAction() }} size='large' style={{ width: '50%', marginTop: 6 }} variant='contained'>
                                 <Typography variant='body2' >
                                     {String.capitalizeFirstLetter("Execute")}
                                 </Typography>
