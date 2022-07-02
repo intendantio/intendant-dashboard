@@ -125,12 +125,12 @@ class Home extends React.Component {
                                 let CurrentIcon = AbstractIcon[room.icon]
                                 return (
                                     <Grid item xs={12} md={4} lg={3} style={{justifyContent: 'center', display: 'flex'}} >
-                                        <Box style={{ padding: 12, width: '90%', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
+                                        <Box style={{ padding: 12, width: '90%', display: 'flex', flexDirection: 'column' }}>
                                             <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center' }}>
-                                                <CurrentIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} fontSize='medium' />
+                                                <CurrentIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} fontSize='large' />
                                             </Box>
-                                            <Typography variant='subtitle1' textAlign='center' >{String.capitalizeFirstLetter(room.name)}</Typography>
-                                            <Grid container spacing={1}>
+                                            <Typography variant='h6' textAlign='center' >{String.capitalizeFirstLetter(room.name)}</Typography>
+                                            <Grid container spacing={1} style={{marginTop: 4}}>
 
                                                 {
                                                     this.state.processes.filter(process => {
@@ -139,7 +139,7 @@ class Home extends React.Component {
                                                         return (
                                                             <Grid item xs={12} md={12} lg={12} style={{ justifyContent: 'center', display: 'flex' }}>
                                                                 <Button variant='contained' onClick={() => { process.settings.length == 0 ? this.executeAction() : this.setState({ process: process, open: true }) }} style={{ backgroundColor: process.isDefault ? 'rgba(255, 17, 0, 0.46)' : 'rgb(0, 127, 255)', textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                                                    <Typography variant='body2'  >
+                                                                    <Typography variant='subtitle1'  >
                                                                         {
                                                                             String.capitalizeFirstLetter(process.name)
                                                                         }
@@ -171,7 +171,7 @@ class Home extends React.Component {
                                 })
                                 return (
                                     <Grid item xs={4} md={2} lg={2} style={{ justifyContent: 'center', display: 'flex' }}>
-                                        <Typography variant='subtitle1'  >
+                                        <Typography variant='h6'  >
                                             {String.capitalizeFirstLetter(rapport.lastData.value + " " + unit)}
                                         </Typography>
                                     </Grid>
