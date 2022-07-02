@@ -124,7 +124,7 @@ class Home extends React.Component {
                             this.state.rooms.map(room => {
                                 let CurrentIcon = AbstractIcon[room.icon]
                                 return (
-                                    <Grid item xs={12} md={4} lg={3} >
+                                    <Grid item xs={12} md={4} lg={3} style={{justifyContent: 'center', display: 'flex'}} >
                                         <Box style={{ padding: 12, width: '90%', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
                                             <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center' }}>
                                                 <CurrentIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} fontSize='medium' />
@@ -170,7 +170,7 @@ class Home extends React.Component {
                                     }
                                 })
                                 return (
-                                    <Grid item xs={12} md={12} lg={2} style={{ justifyContent: 'center', display: 'flex' }}>
+                                    <Grid item xs={4} md={2} lg={2} style={{ justifyContent: 'center', display: 'flex' }}>
                                         <Typography variant='subtitle1'  >
                                             {String.capitalizeFirstLetter(rapport.lastData.value + " " + unit)}
                                         </Typography>
