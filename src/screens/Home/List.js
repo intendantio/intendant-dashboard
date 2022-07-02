@@ -1,18 +1,11 @@
 import React from 'react'
-import { Typography, Paper, Grid, Card, Button } from '@mui/material'
-import Desktop from '../../components/Desktop'
-import Loading from '../../components/Loading'
-import { Responsive, WidthProvider } from "react-grid-layout";
+import { Typography, Paper, Grid, Card, Button, Modal, Box, Skeleton } from '@mui/material'
 import Request from '../../utils/Request'
-import { Delete, Edit, Save } from '@mui/icons-material';
-import AddButton from '../../components/views/AddButton'
-import Smartobject from '../../components/dashboard/Smartobject'
-import Process from '../../components/dashboard/Process';
-import Rapport from '../../components/dashboard/Rapport';
-import Widget from '../../components/dashboard/Widget';
+import * as AbstractIcon from '@mui/icons-material'
+import Action from '../../components/Action'
+import Desktop from '../../components/Desktop'
 
 
-const ResponsiveReactGridLayout = WidthProvider(Responsive);
 
 class Home extends React.Component {
 
@@ -21,296 +14,172 @@ class Home extends React.Component {
         super(props)
         this.state = {
             loading: true,
-            mode: "view",
-            currentBreakpoint: "lg",
-            dashboards: [],
-            layouts: {
-                lg: [],
-                md: [],
-                sm: [],
-                xs: [],
-                xxs: []
+            rooms: [],
+            rapports: [],
+            processes: [],
+            process: {
+                settings: []
             },
         }
         props.setTitle("Home")
         props.setActionType("list")
-        this.globalInterval = setInterval(() => {
-            if(this.state.mode == "view") {
-                this.setState({ loading: true })
-                this.componentDidMount()
-            }
-        }, 60000)
     }
 
     async componentDidMount() {
-        let idUser = localStorage.getItem("user")
-        let result = await new Request().get().fetch("/api/users/" + idUser)
-        if (result.error) {
-            this.props.setMessage(result.package + " : " + result.message)
+        let resultRoom = await new Request().get().fetch("/api/rooms")
+        let resultProcesses = await new Request().get().fetch("/api/processes")
+        let resusltRapports = await new Request().get().fetch("/api/rapports")
+        let resusltWidgets = await new Request().get().fetch("/api/widgets")
+        console.log(resusltWidgets)
+        if (resultRoom.error) {
+            this.props.setMessage(resultRoom.package + " : " + resultRoom.message)
+        } else if (resultProcesses.error) {
+            this.props.setMessage(resultProcesses.package + " : " + resultProcesses.message)
+        } else if (resusltRapports.error) {
+            this.props.setMessage(resusltRapports.package + " : " + resusltRapports.message)
         } else {
-            this.setState({ loading: false, dashboards: result.data.dashboards }, () => {
-                this.setState({
-                    layouts: this.newLayout()
-                })
-            })
+            this.setState({ rapports: resusltRapports.data, rooms: resultRoom.data, processes: resultProcesses.data, loading: false })
         }
     }
 
-    componentWillUnmount() {
-        clearInterval(this.globalInterval)
-    }
-
-    newLayout() {
-        return {
-            lg: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type,"lg")
-                return {
-                    x: parseInt(dashboard.x),
-                    y: parseInt(dashboard.y),
-                    w: width.w,
-                    h: width.h,
-                    i: index,
-                    isResizable: false,
-                    static: this.state.mode == "view",
-                }
-            }),
-            md: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type,"md")
-                return {
-                    x: parseInt(dashboard.x),
-                    y: parseInt(dashboard.y),
-                    w: width.w,
-                    h: width.h,
-                    i: index,
-                    isResizable: false,
-                    static: this.state.mode == "view",
-                }
-            }),
-            sm: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type,"sm")
-                return {
-                    x: parseInt(dashboard.x),
-                    y: parseInt(dashboard.y),
-                    w: width.w,
-                    h: width.h,
-                    i: index,
-                    isResizable: false,
-                    static: this.state.mode == "view",
-                }
-            }),
-            xs: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type,"xs")
-                return {
-                    x: parseInt(dashboard.x),
-                    y: parseInt(dashboard.y),
-                    w: width.w,
-                    h: width.h,
-                    i: index,
-                    isResizable: false,
-                    static: this.state.mode == "view",
-                }
-            }),
-            xxs: this.state.dashboards.map((dashboard, index) => {
-                let width = this.getWidth(dashboard.type,"xxs")
-                return {
-                    x: parseInt(dashboard.x),
-                    y: parseInt(dashboard.y),
-                    w: width.w,
-                    h: width.h,
-                    i: index,
-                    isResizable: false,
-                    static: this.state.mode == "view",
-                }
-            })
-        }
-    }
-
-    updateLayout() {
-        let newLayout = {
-            lg: this.state.layouts.lg.map((layout) => {
-                layout.static = this.state.mode != "edit"
-                return layout
-            }),
-            md: this.state.layouts.md.map((layout) => {
-                layout.static = this.state.mode != "edit"
-                return layout
-            }),
-            sm: this.state.layouts.sm.map((layout) => {
-                layout.static = this.state.mode != "edit"
-                return layout
-            }),
-            xs: this.state.layouts.xs.map((layout) => {
-                layout.static = this.state.mode != "edit"
-                return layout
-            }),
-            xxs: this.state.layouts.xxs.map((layout) => {
-                layout.static = this.state.mode != "edit"
-                return layout
-            })
-        }
-        this.setState({
-            layouts: {
-                lg: [],
-                md: [],
-                sm: [],
-                xs: [],
-                xxs: []
+    async executeAction() {
+        let resetState = {}
+        let tmp = {}
+        for (let index = 0; index < this.state.process.settings.length; index++) {
+            let setting = this.state.process.settings[index]
+            let value = this.state[setting.id]
+            resetState[setting.id] = null
+            if (value) {
+                tmp[setting.id] = value
+            } else {
+                tmp[setting.id] = null
             }
-        }, () => {
-            this.setState({
-                layouts: newLayout
-            }, () => {
-                if (this.state.mode == "view") {
-                    this.state.layouts[this.state.currentBreakpoint].forEach(async (layout) => {
-                        let idUser = localStorage.getItem("user")
-                        await new Request().post({
-                            x: layout.x,
-                            y: layout.y
-                        }).fetch("/api/users/" + idUser + "/dashboards/" + this.state.dashboards[layout.i].id)
-                    })
-                }
-            })
-        })
-        return
-    }
-
-    getWidth(type,breakpointType) {
-        switch (type) {
-            case "smartobject":
-                return {
-                    w: 4,
-                    h: 2
-                }
-            case "process":
-                return {
-                    w: 4,
-                    h: 2
-                }
-            case "rapport":
-                return {
-                    w: 2,
-                    h: 2
-                }
-            case "widget":
-                return {
-                    w: 3,
-                    h: 3
-                }
         }
-    }
+        this.setState({ open: false })
 
-    async delete(idUserDashboard) {
-        let idUser = localStorage.getItem("user")
-        let result = await new Request().delete().fetch("/api/users/" + idUser + "/dashboards/" + idUserDashboard)
+        let result = await new Request().post({
+            smartobjects: this.state.process.smartobjects.map(smartobject => {
+                return smartobject.id
+            }),
+            action: this.state.process.action,
+            settings: tmp
+        }).fetch("/api/processes/execute")
+
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
         } else {
-            this.setState({
-                layouts: {
-                    lg: [],
-                    md: [],
-                    sm: [],
-                    xs: [],
-                    xxs: []
-                },
-                mode: "view"
-            }, () => {
-                this.componentDidMount()
-            })
+            this.setState(resetState)
+            this.componentDidMount()
         }
     }
 
-    getView(layout) {
-        let source = this.state.dashboards[layout.i]
-        switch (source.type) {
-            case "smartobject":
-                return <Smartobject onDelete={() => {
-                    this.delete(this.state.dashboards[layout.i].id)
-                }} mode={this.state.mode} setMessage={this.props.setMessage} source={source} />
-            case "process":
-                return <Process onDelete={() => {
-                    this.delete(this.state.dashboards[layout.i].id)
-                }} mode={this.state.mode} setMessage={this.props.setMessage} source={source} />
-            case "rapport":
-                return <Rapport onDelete={() => {
-                    this.delete(this.state.dashboards[layout.i].id)
-                }} mode={this.state.mode} setMessage={this.props.setMessage} source={source} />
-            case "widget":
-                return <Widget onDelete={() => {
-                    this.delete(this.state.dashboards[layout.i].id)
-                }} mode={this.state.mode} setMessage={this.props.setMessage} source={source} />
-            default:
-                break;
-        }
-    }
+
 
     render() {
         return (
             <>
-
-                <Desktop isMobile={this.props.isMobile}>
-                    <Paper variant="outlined" style={{ padding: 12, justifyContent: 'left', marginBottom: 8 }}>
-                        <Typography variant='h6' fontWeight='bold' >Dashboard</Typography>
-                        <Typography variant='subtitle2' color="text.secondary" >Well at home</Typography>
+                <Desktop {... this.props}>
+                    <Paper variant="outlined" style={{ padding: 12, justifyContent: 'left', marginBottom: 12 }}>
+                        <Box style={{ display: 'flex', flex: 1 }} >
+                            {
+                                this.state.loading ?
+                                    <Box style={{ width: '100%' }}>
+                                        <Skeleton height={40} />
+                                        <Skeleton height={20} />
+                                    </Box> :
+                                    <>
+                                        <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
+                                            <Typography variant='h6' fontWeight='bold' >Dashboard - Well at home</Typography>
+                                        </Box>
+                                    </>
+                            }
+                        </Box>
                     </Paper>
                 </Desktop>
-                <Loading loading={this.state.loading}>
+                <Card variant='outlined' >
+
+                    <Modal onClose={() => { this.setState({ open: false }) }} open={this.state.open}>
+                        <Card variant='outlined' style={{ padding: 10, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300 }}>
+                            <Grid container spacing={1}>
+                                {
+                                    this.state.process.settings.map((input, index) => {
+                                        return (
+                                            <Grid item xs={12} md={12} lg={12}>
+                                                <Action options={input.options} label={String.capitalizeFirstLetter(input.id)} setState={this.setState.bind(this)} id={input.id} action={input} />
+                                            </Grid>
+                                        )
+                                    })
+                                }
+
+                            </Grid>
+                            <Button onClick={() => { this.executeAction() }} size='large' style={{ width: '50%', marginTop: 12 }} variant='contained'>
+                                <Typography variant='body2' >
+                                    {String.capitalizeFirstLetter("Execute")}
+                                </Typography>
+                            </Button>
+                        </Card>
+                    </Modal>
                     <Grid container spacing={1} >
                         {
-                            this.state.dashboards.length > 0 &&
-                            <Grid item xs={12} md={12} lg={12}>
-                                <Card variant='outlined' style={{ width: '100%' }}>
-                                    <div>
-                                        <ResponsiveReactGridLayout
-                                            onBreakpointChange={(breakpoint) => {
-                                                this.setState({ currentBreakpoint: breakpoint })
-                                            }}
-                                            className="layout"
-                                            onLayoutChange={(layouts) => {
-                                                let currentLayouts = this.state.layouts
-                                                currentLayouts[this.state.currentBreakpoint] = layouts
-                                                this.setState({
-                                                    layouts: currentLayouts
-                                                })
-                                            }}
-                                            preventCollision={true}
-                                            rowHeight={30}
-                                            useCSSTransforms={true}
-                                            compactType={null}
-                                            measureBeforeMount={false}
-                                            cols={{ lg: 16, md: 14, sm: 12, xs: 8, xxs: 4 }}
-                                        >
-                                            {
-                                                this.state.layouts[this.state.currentBreakpoint].map((layout, index) => {
-                                                    return (
-                                                        <Card data-grid={layout} style={{ borderWidth: '0px' }} variant='outlined' key={"" + layout.i} >
-                                                            {
-                                                                this.getView(layout)
-                                                            }
-                                                        </Card>
-                                                    )
-                                                })
-                                            }
-                                        </ResponsiveReactGridLayout>
-                                    </div>
-                                </Card>
-                            </Grid>
+                            this.state.rooms.map(room => {
+                                let CurrentIcon = AbstractIcon[room.icon]
+                                return (
+                                    <Grid item xs={12} md={4} lg={3} >
+                                        <Box style={{ padding: 12, width: '90%', justifyContent: 'center', display: 'flex', flexDirection: 'column' }}>
+                                            <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center' }}>
+                                                <CurrentIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} fontSize='medium' />
+                                            </Box>
+                                            <Typography variant='subtitle1' textAlign='center' >{String.capitalizeFirstLetter(room.name)}</Typography>
+                                            <Grid container spacing={1}>
+
+                                                {
+                                                    this.state.processes.filter(process => {
+                                                        return process.room.id == room.id
+                                                    }).map(process => {
+                                                        return (
+                                                            <Grid item xs={12} md={12} lg={12} style={{ justifyContent: 'center', display: 'flex' }}>
+                                                                <Button variant='contained' onClick={() => { process.settings.length == 0 ? this.executeAction() : this.setState({ process: process, open: true }) }} style={{ backgroundColor: process.isDefault ? 'rgba(255, 17, 0, 0.46)' : 'rgb(0, 127, 255)', textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                                                    <Typography variant='body2'  >
+                                                                        {
+                                                                            String.capitalizeFirstLetter(process.name)
+                                                                        }
+                                                                    </Typography>
+                                                                </Button>
+                                                            </Grid>
+                                                        )
+                                                    })
+                                                }
+                                            </Grid>
+
+                                        </Box>
+                                    </Grid>
+                                )
+                            })
                         }
-                        <AddButton xs={2} md={1} lg={1} to="/dashboard/new" />
-                        <Grid item xs={10} md={11} lg={11} style={{ display: 'flex', justifyContent: 'flex-end' }}>
-                            <Paper variant='outlined'>
-                                <Button color={this.state.mode == "edit" ? 'error' : 'primary'} onClick={() => { this.setState({ mode: this.state.mode == "view" ? "edit" : "view" }, () => { this.updateLayout() }) }} variant='contained' style={{ height: '100%', width: '100%' }}>
-                                    {this.state.mode == "edit" ? <Save /> : <Edit />}
-                                </Button>
-                            </Paper>
-                            <Paper variant='outlined' style={{ marginLeft: 12 }} >
-                                <Button color={this.state.mode == "delete" ? 'error' : 'primary'} onClick={() => { this.setState({ mode: this.state.mode == "delete" ? "view" : "delete" }, () => { this.updateLayout() }) }} variant='contained' style={{ height: '100%', width: '100%' }}>
-                                    <Delete />
-                                </Button>
-                            </Paper>
-                        </Grid>
                     </Grid>
-                </Loading>
+                </Card>
+                <Card variant='outlined' style={{ marginTop: 12, marginBottom: 12 }} >
+                    <Grid container spacing={1} style={{ padding: 4 }}  >
+                        {
+                            this.state.rapports.map(rapport => {
+                                let unit = ""
+
+                                rapport.configuration.dataSources.forEach(dataSource => {
+                                    if (dataSource.id == rapport.reference) {
+                                        unit = dataSource.unit
+                                    }
+                                })
+                                return (
+                                    <Grid item xs={12} md={12} lg={2} style={{ justifyContent: 'center', display: 'flex' }}>
+                                        <Typography variant='subtitle1'  >
+                                            {String.capitalizeFirstLetter(rapport.lastData.value + " " + unit)}
+                                        </Typography>
+                                    </Grid>
+                                )
+                            })
+                        }
+                    </Grid>
+                </Card>
             </>
         )
     }
