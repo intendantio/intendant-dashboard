@@ -89,7 +89,7 @@ class Home extends React.Component {
                                     </Box> :
                                     <>
                                         <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
-                                            <Typography variant='h6' fontWeight='bold' >Dashboard - Well at home</Typography>
+                                            <Typography variant='h6' fontWeight='bold' >Dashboard</Typography>
                                         </Box>
                                     </>
                             }
@@ -129,7 +129,7 @@ class Home extends React.Component {
                                             <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center' }}>
                                                 <CurrentIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} fontSize='large' />
                                             </Box>
-                                            <Typography variant='h6' textAlign='center' >{String.capitalizeFirstLetter(room.name)}</Typography>
+                                            <Typography variant='subtitle1' textAlign='center' >{String.capitalizeFirstLetter(room.name)}</Typography>
                                             <Grid container spacing={1} style={{marginTop: 4}}>
 
                                                 {
