@@ -5,8 +5,6 @@ import * as AbstractIcon from '@mui/icons-material'
 import Action from '../../components/Action'
 import Desktop from '../../components/Desktop'
 
-
-
 class Home extends React.Component {
 
 
@@ -30,7 +28,6 @@ class Home extends React.Component {
         let resultProcesses = await new Request().get().fetch("/api/processes")
         let resusltRapports = await new Request().get().fetch("/api/rapports")
         let resusltWidgets = await new Request().get().fetch("/api/widgets")
-        console.log(resusltWidgets)
         if (resultRoom.error) {
             this.props.setMessage(resultRoom.package + " : " + resultRoom.message)
         } else if (resultProcesses.error) {
@@ -85,7 +82,6 @@ class Home extends React.Component {
                                 this.state.loading ?
                                     <Box style={{ width: '100%' }}>
                                         <Skeleton height={40} />
-                                        <Skeleton height={20} />
                                     </Box> :
                                     <>
                                         <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
@@ -96,90 +92,103 @@ class Home extends React.Component {
                         </Box>
                     </Paper>
                 </Desktop>
-                <Card variant='outlined' >
-
-                    <Modal onClose={() => { this.setState({ open: false }) }} open={this.state.open}>
-                        <Card variant='outlined' style={{ padding: 10, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300 }}>
-                            <Grid container spacing={1}>
+                {
+                    this.state.rooms.length == 0 ? null :
+                        <Card variant='outlined' >
+                            <Modal onClose={() => { this.setState({ open: false }) }} open={this.state.open}>
+                                <Card variant='outlined' style={{ padding: 10, position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)', width: 300 }}>
+                                    <Grid container spacing={1}>
+                                        {
+                                            this.state.process.settings.map((input, index) => {
+                                                return (
+                                                    <Grid item xs={12} md={12} lg={12}>
+                                                        <Action options={input.options} label={String.capitalizeFirstLetter(input.id)} setState={this.setState.bind(this)} id={input.id} action={input} />
+                                                    </Grid>
+                                                )
+                                            })
+                                        }
+                                    </Grid>
+                                    <Button onClick={() => { this.executeAction() }} size='large' style={{ width: '50%', marginTop: 6 }} variant='contained'>
+                                        <Typography variant='body2' >
+                                            {String.capitalizeFirstLetter("Execute")}
+                                        </Typography>
+                                    </Button>
+                                </Card>
+                            </Modal>
+                            <Grid container spacing={1} >
                                 {
-                                    this.state.process.settings.map((input, index) => {
+                                    this.state.rooms.map(room => {
+                                        let CurrentIcon = AbstractIcon[room.icon]
                                         return (
-                                            <Grid item xs={12} md={12} lg={12}>
-                                                <Action options={input.options} label={String.capitalizeFirstLetter(input.id)} setState={this.setState.bind(this)} id={input.id} action={input} />
+                                            <Grid item xs={12} md={4} lg={3} style={{ justifyContent: 'center', display: 'flex' }} >
+                                                <Box style={{ padding: 12, width: '90%', display: 'flex', flexDirection: 'column' }}>
+                                                    <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center' }}>
+                                                        <CurrentIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} fontSize='large' />
+                                                    </Box>
+                                                    <Typography variant='subtitle1' textAlign='center' >{String.capitalizeFirstLetter(room.name)}</Typography>
+                                                    <Grid container spacing={1} style={{ marginTop: 4 }}>
+
+                                                        {
+                                                            this.state.processes.filter(process => {
+                                                                return process.room.id == room.id
+                                                            }).map(process => {
+                                                                return (
+                                                                    <Grid item xs={12} md={12} lg={12} style={{ justifyContent: 'center', display: 'flex' }}>
+                                                                        <Button variant='contained' onClick={() => { process.settings.length == 0 ? this.executeAction() : this.setState({ process: process, open: true }) }} style={{ backgroundColor: process.isDefault ? 'rgba(255, 17, 0, 0.46)' : 'rgb(0, 127, 255)', textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                                                            <Typography variant='subtitle1'  >
+                                                                                {
+                                                                                    String.capitalizeFirstLetter(process.name)
+                                                                                }
+                                                                            </Typography>
+                                                                        </Button>
+                                                                    </Grid>
+                                                                )
+                                                            })
+                                                        }
+                                                    </Grid>
+
+                                                </Box>
                                             </Grid>
                                         )
                                     })
                                 }
-
                             </Grid>
-                            <Button onClick={() => { this.executeAction() }} size='large' style={{ width: '50%', marginTop: 6 }} variant='contained'>
-                                <Typography variant='body2' >
-                                    {String.capitalizeFirstLetter("Execute")}
-                                </Typography>
+                        </Card>
+                }
+                {
+                    this.state.rapports.length == 0 ? null :
+                        <Card variant='outlined' style={{ marginTop: 12, marginBottom: 12 }} >
+                            <Grid container spacing={1} style={{ padding: 4 }}  >
+                                {
+                                    this.state.rapports.map(rapport => {
+                                        let unit = ""
+
+                                        rapport.configuration.dataSources.forEach(dataSource => {
+                                            if (dataSource.id == rapport.reference) {
+                                                unit = dataSource.unit
+                                            }
+                                        })
+                                        return (
+                                            <Grid item xs={4} md={2} lg={2} style={{ justifyContent: 'center', display: 'flex' }}>
+                                                <Typography variant='h6'  >
+                                                    {String.capitalizeFirstLetter(rapport.lastData.value + " " + unit)}
+                                                </Typography>
+                                            </Grid>
+                                        )
+                                    })
+                                }
+                            </Grid>
+                        </Card>
+                }
+                <Grid container spacing={1}   >
+                    <Grid item xs={4} md={1} lg={1}>
+                        <Card variant='outlined'  >
+                            <Button variant='text' onClick={() => { this.setState({ loading: true, rooms: [], processes: [] }, () => { this.componentDidMount() }) }} style={{ textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                <AbstractIcon.Refresh sx={{ color: 'white' }} size='medium' />
                             </Button>
                         </Card>
-                    </Modal>
-                    <Grid container spacing={1} >
-                        {
-                            this.state.rooms.map(room => {
-                                let CurrentIcon = AbstractIcon[room.icon]
-                                return (
-                                    <Grid item xs={12} md={4} lg={3} style={{justifyContent: 'center', display: 'flex'}} >
-                                        <Box style={{ padding: 12, width: '90%', display: 'flex', flexDirection: 'column' }}>
-                                            <Box style={{ display: 'flex', justifyContent: 'center', alignSelf: 'center' }}>
-                                                <CurrentIcon sx={{ color: 'rgba(255, 255, 255, 0.7)' }} fontSize='large' />
-                                            </Box>
-                                            <Typography variant='subtitle1' textAlign='center' >{String.capitalizeFirstLetter(room.name)}</Typography>
-                                            <Grid container spacing={1} style={{marginTop: 4}}>
-
-                                                {
-                                                    this.state.processes.filter(process => {
-                                                        return process.room.id == room.id
-                                                    }).map(process => {
-                                                        return (
-                                                            <Grid item xs={12} md={12} lg={12} style={{ justifyContent: 'center', display: 'flex' }}>
-                                                                <Button variant='contained' onClick={() => { process.settings.length == 0 ? this.executeAction() : this.setState({ process: process, open: true }) }} style={{ backgroundColor: process.isDefault ? 'rgba(255, 17, 0, 0.46)' : 'rgb(0, 127, 255)', textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                                                    <Typography variant='subtitle1'  >
-                                                                        {
-                                                                            String.capitalizeFirstLetter(process.name)
-                                                                        }
-                                                                    </Typography>
-                                                                </Button>
-                                                            </Grid>
-                                                        )
-                                                    })
-                                                }
-                                            </Grid>
-
-                                        </Box>
-                                    </Grid>
-                                )
-                            })
-                        }
                     </Grid>
-                </Card>
-                <Card variant='outlined' style={{ marginTop: 12, marginBottom: 12 }} >
-                    <Grid container spacing={1} style={{ padding: 4 }}  >
-                        {
-                            this.state.rapports.map(rapport => {
-                                let unit = ""
-
-                                rapport.configuration.dataSources.forEach(dataSource => {
-                                    if (dataSource.id == rapport.reference) {
-                                        unit = dataSource.unit
-                                    }
-                                })
-                                return (
-                                    <Grid item xs={4} md={2} lg={2} style={{ justifyContent: 'center', display: 'flex' }}>
-                                        <Typography variant='h6'  >
-                                            {String.capitalizeFirstLetter(rapport.lastData.value + " " + unit)}
-                                        </Typography>
-                                    </Grid>
-                                )
-                            })
-                        }
-                    </Grid>
-                </Card>
+                </Grid>
             </>
         )
     }
