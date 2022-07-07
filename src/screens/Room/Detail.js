@@ -78,11 +78,11 @@ class DetailRoom extends React.Component {
         }
     }
 
-    async executeAction() {
+    async executeAction(process) {
         let resetState = {}
         let tmp = {}
-        for (let index = 0; index < this.state.process.settings.length; index++) {
-            let setting = this.state.process.settings[index]
+        for (let index = 0; index < process.settings.length; index++) {
+            let setting = process.settings[index]
             let value = this.state[setting.id]
             resetState[setting.id] = null
             if (value) {
@@ -94,10 +94,10 @@ class DetailRoom extends React.Component {
         this.setState({ open: false })
 
         let result = await new Request().post({
-            smartobjects: this.state.process.smartobjects.map(smartobject => {
+            smartobjects: process.smartobjects.map(smartobject => {
                 return smartobject.id
             }),
-            action: this.state.process.action,
+            action: process.action,
             settings: tmp 
         }).fetch("/api/processes/execute")
 
@@ -148,7 +148,7 @@ class DetailRoom extends React.Component {
                                     this.state.processes.map(process => {
                                         return (
                                             <Grid item xs={12} md={4} lg={3}>
-                                                <Button variant='contained' onClick={() => { process.settings.length == 0 ? this.executeAction() : this.setState({process: process, open: true})  }} style={{backgroundColor: process.isDefault ?  'rgb(1, 67, 134)' : 'rgb(0, 127, 255)',  textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                                <Button variant='contained' onClick={() => { process.settings.length == 0 ? this.executeAction(process) : this.setState({process: process, open: true})  }} style={{backgroundColor: process.isDefault ?  'rgba(255, 17, 0, 0.46)' : 'rgb(0, 127, 255)',  textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
                                                     <Typography variant='body1'  >
                                                         {
                                                             String.capitalizeFirstLetter(process.name)
@@ -176,7 +176,7 @@ class DetailRoom extends React.Component {
                                 }
 
                             </Grid>
-                            <Button onClick={() => { this.executeAction() }} size='large' style={{ width: '50%', marginTop: 12 }} variant='contained'>
+                            <Button onClick={() => { this.executeAction(this.state.process) }} size='large' style={{ width: '50%', marginTop: 12 }} variant='contained'>
                                 <Typography variant='body2' >
                                     {String.capitalizeFirstLetter("Execute")}
                                 </Typography>
