@@ -27,11 +27,13 @@ class Home extends React.Component {
         let resultRoom = await new Request().get().fetch("/api/rooms")
         let resultProcesses = await new Request().get().fetch("/api/processes")
         let resusltRapports = await new Request().get().fetch("/api/rapports")
-        let resusltWidgets = await new Request().get().fetch("/api/widgets")
+
+        if (resultProcesses.error) {
+            resultProcesses.data = []
+        }
+
         if (resultRoom.error) {
             this.props.setMessage(resultRoom.package + " : " + resultRoom.message)
-        } else if (resultProcesses.error) {
-            this.props.setMessage(resultProcesses.package + " : " + resultProcesses.message)
         } else if (resusltRapports.error) {
             this.props.setMessage(resusltRapports.package + " : " + resusltRapports.message)
         } else {

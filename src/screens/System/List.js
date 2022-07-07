@@ -134,18 +134,6 @@ class System extends React.Component {
                                 </Box>
                             </Card>
                         </Grid>
-                        <Grid item xs={12} md={12} lg={9} >
-                            <Card variant='outlined' style={{ padding: 12 }}  >
-                                <Typography variant='subtitle1' fontWeight='bold' >Update</Typography>
-                                <Typography variant='subtitle2' color="text.secondary" >Smartobject update</Typography>
-                                <Divider style={{ marginTop: 12, marginBottom: 12 }} />
-                                {
-                                    this.state.packages.map((pPackage, index) => {
-                                        return <UpdateVersion onRefresh={() => { this.setState({ packages: [] }, () => { this.componentDidMount() }) }} key={index} smartobjects={this.state.smartobjects} package={pPackage} />
-                                    })
-                                }
-                            </Card>
-                        </Grid>
                     </Grid>
                 </Loading>
             </>

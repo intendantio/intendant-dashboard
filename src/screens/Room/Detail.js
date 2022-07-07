@@ -36,11 +36,11 @@ class DetailRoom extends React.Component {
         let resultProfile = await new Request().get().fetch("/api/profiles")
         let resultRoom = await new Request().get().fetch("/api/rooms/" + this.state.id)
         let resultProcess = await new Request().get().fetch("/api/rooms/" + this.state.id +  "/processes")
+        if (resultProcess.error) {
+            resultProcess.data = []
+        } 
         if (resultRoom.error) {
             this.props.setMessage(resultRoom.package + " : " + resultRoom.message)
-            this.props.history.push('/room')
-        } else if (resultProcess.error) {
-            this.props.setMessage(resultProcess.package + " : " + resultProcess.message)
             this.props.history.push('/room')
         } else if (resultProfile.error) {
             this.props.setMessage(resultProfile.package + " : " + resultProfile.message)
