@@ -198,15 +198,18 @@ class Home extends React.Component {
                             </Grid>
                         </Card>
                 }
-                <Grid container spacing={1}   >
-                    <Grid item xs={4} md={1} lg={1}>
-                        <Card variant='outlined'  >
-                            <Button variant='text' onClick={() => { this.setState({ loading: true, rapports: [], rooms: [], processes: [] }, () => { this.componentDidMount() }) }} style={{ textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
-                                <AbstractIcon.Refresh sx={{ color: 'white' }} size='medium' />
-                            </Button>
-                        </Card>
+                {
+                    this.state.loading ? null :
+                    <Grid container spacing={1}   >
+                        <Grid item xs={4} md={1} lg={1}>
+                            <Card variant='outlined'  >
+                                <Button variant='text' onClick={() => { this.setState({ loading: true, rapports: [], rooms: [], processes: [] }, () => { this.componentDidMount() }) }} style={{ textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                                    <AbstractIcon.Refresh sx={{ color: 'white' }} size='medium' />
+                                </Button>
+                            </Card>
+                        </Grid>
                     </Grid>
-                </Grid>
+                }
             </>
         )
     }
