@@ -84,6 +84,13 @@ class Home extends React.Component {
                                 this.state.loading ?
                                     <Box style={{ width: '100%' }}>
                                         <Skeleton height={40} />
+                                        <Skeleton height={40} />
+                                        <Skeleton height={40} />
+                                        <Skeleton height={40} />
+                                        <Skeleton height={40} />
+                                        <Skeleton height={40} />
+                                        <Skeleton height={40} />
+                                        <Skeleton height={40} />
                                     </Box> :
                                     <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
                                         <Typography variant='h6' fontWeight='bold' >Dashboard</Typography>
