@@ -235,11 +235,11 @@ class Sidebar extends React.Component {
                             </ListItem>
                         </Link>
                         <Link to="/system" onClick={() => { this.navigate() }} style={{ textDecoration: 'none', color: 'white' }}>
-                            <ListItem button key={"system"} >
+                            <ListItem button key={"cloud"} >
                                 <ListItemIcon>
                                     <CloudCircle />
                                 </ListItemIcon>
-                                <ListItemText primary={"Information"} />
+                                <ListItemText primary={"Cloud"} />
                             </ListItem>
                         </Link>
                         <Divider />

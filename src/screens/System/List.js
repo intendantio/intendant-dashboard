@@ -1,5 +1,5 @@
 import React from 'react'
-import { CheckCircle, Error } from '@mui/icons-material'
+import { CheckCircle, ConstructionOutlined, Error } from '@mui/icons-material'
 import { Typography, Paper, Grid, Card, Button, Box, Divider, Pagination } from '@mui/material'
 import Request from '../../utils/Request'
 import Desktop from '../../components/Desktop'
@@ -19,6 +19,8 @@ class System extends React.Component {
             upgrade: false,
             version: "",
             smartobjects: [],
+            providers: new Map(),
+            codes: [],
             currentVersion: ""
         }
         props.setTitle("System")
@@ -26,49 +28,36 @@ class System extends React.Component {
     }
 
     async componentDidMount() {
+        let resultUpgrade = await new Request().get().fetch("/api/upgrade")
+        let resultConfigurations = await new Request().get().fetch("/api/configurations")
         let resultStatus = await fetch("https://status.intendant.io/")
         let resultStatusJSON = await resultStatus.json()
-        let resultMarket = await fetch("https://market.intendant.io/smartobjects.json")
-        let resultMarketJSON = await resultMarket.json()
-        this.setState({ status: resultStatusJSON, smartobjects: resultMarketJSON, loading: false }, async () => {
-            let resultUpgrade = await new Request().get().fetch("/api/upgrade")
-            let resultConfigurations = await new Request().get().fetch("/api/configurations")
-            if (resultUpgrade.error) {
-                this.props.setMessage(resultUpgrade.package + " : " + resultUpgrade.message)
-            } else if (resultConfigurations.error) {
-                this.props.setMessage(resultConfigurations.package + " : " + resultConfigurations.message)
-            } else {
-
-                this.setState({
-                    upgrade: resultUpgrade.data.upgrade,
-                    version: resultUpgrade.data.version,
-                    currentVersion: resultConfigurations.data.version
-                })
-
-
-                let resultSmartobjects = await new Request().get().fetch("/api/smartobjects")
-                if (resultSmartobjects.error) {
-                    this.props.setMessage(resultSmartobjects.package + " : " + resultSmartobjects.message)
-                } else {
-                    let packages = new Map()
-
-                    resultSmartobjects.data.forEach(smartobject => {
-                        if (packages.has(smartobject.module) == false) {
-                            packages.set(smartobject.module, smartobject.configuration)
-                        }
-                    })
-
-                    let listPackage = Array.from(packages).map(pPackage => {
-                        return pPackage
-                    })
-
-                    this.setState({
-                        packages: listPackage
-                    })
-
-                }
+        let resultProviders = await fetch("https://cloud.intendant.io/ws/providers")
+        let resultProvidersJSON = await resultProviders.json()
+        let resultCodes = await fetch("https://cloud.intendant.io/ws/homes/" + localStorage.getItem("uuid") + "/codes", {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("cloud_token")
             }
         })
+        let resultCodesJSON = await resultCodes.json()
+        
+        if (resultCodesJSON.error) {
+            this.props.setMessage(resultCodesJSON.package + " : " + resultCodesJSON.message)
+        } else if (resultUpgrade.error) {
+            this.props.setMessage(resultUpgrade.package + " : " + resultUpgrade.message)
+        } else if (resultConfigurations.error) {
+            this.props.setMessage(resultConfigurations.package + " : " + resultConfigurations.message)
+        } else if (resultProvidersJSON.error) {
+            this.props.setMessage(resultProvidersJSON.package + " : " + resultProvidersJSON.message)
+        } else {
+
+            let mapProviders = new Map()
+            resultProvidersJSON.data.forEach(provider => {
+                mapProviders.set(provider.id, provider)
+            })
+            this.setState({ providers: mapProviders, status: resultStatusJSON,codes: resultCodesJSON.data, loading: false })
+   
+        }
     }
 
     async upgrade() {
@@ -77,6 +66,17 @@ class System extends React.Component {
         setTimeout(() => {
             location.reload()
         },5000)
+    }
+
+    async revoke(id) {
+        this.setState({ loading: true })
+        let resultCodes = await fetch("https://cloud.intendant.io/ws/revoke/" + id, {
+            headers: {
+                'Authorization': "Bearer " + localStorage.getItem("cloud_token")
+            },
+            method: 'POST'
+        })
+        this.componentDidMount()
     }
 
     render() {
@@ -132,6 +132,32 @@ class System extends React.Component {
                                     <Typography style={{ marginLeft: 12 }} variant='body1' >{"Manager"}</Typography>
                                     <Typography style={{ alignSelf: 'center', marginLeft: 12, overflowWrap: 'anywhere' }} color="text.secondary" variant='body1' >{this.state.status.manager.message}</Typography>
                                 </Box>
+                            </Card>
+                        </Grid>
+                        <Grid item xs={12} md={12} lg={3} >
+                            <Card variant='outlined' style={{ padding: 12 }}  >
+                                <Typography variant='subtitle1' fontWeight='bold' >Third party service</Typography>
+                                <Typography variant='subtitle2' color="text.secondary" >Connected with another partner</Typography>
+                                <Divider style={{ marginTop: 12, marginBottom: 12 }} />
+                                {
+                                    this.state.codes.length == 0 ?
+
+                                            <Box style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
+                                                <Typography style={{ alignSelf: 'center', overflowWrap: 'anywhere' }} color="text.secondary" variant='body2' >{"No active third party services"}</Typography>
+                                            </Box>
+                                     : null
+                                }
+                                {
+                                    this.state.codes.map(code => {
+                                        return (
+                                            <Box key={code.id} style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
+                                                {this.state.status.web.status == "ok" ? <CheckCircle color='success' /> : this.state.status.web.status == "warning" ? <Error color='warning' /> : <Error color='error' />}
+                                                <Typography style={{ marginLeft: 12 }} variant='body1' >{this.state.providers.get(code.providerId).name}</Typography>
+                                                <Typography onClick={() => {this.revoke(code.id)}} style={{cursor:'pointer', alignSelf: 'center', marginLeft: 12, overflowWrap: 'anywhere' }} color="text.secondary" variant='body1' >{"revoke"}</Typography>
+                                            </Box>
+                                        )
+                                    })
+                                }
                             </Card>
                         </Grid>
                     </Grid>

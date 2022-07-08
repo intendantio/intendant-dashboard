@@ -23,7 +23,7 @@
   },
   "scripts": {
     "build": "react-scripts build && node script",
-    "start": "react-scripts start"
+    "start": "set PORT=3001 && react-scripts start"
   },
   "browserslist": {
     "production": [
