@@ -1,7 +1,7 @@
 import React from 'react'
 import JSONPretty from 'react-json-pretty'
-import { Paper, OutlinedInput, Typography, Card, Grid, Accordion, Box, Modal, AccordionSummary, AccordionDetails, Button, TextField, FormControlLabel, IconButton, Switch, Divider, CardActionArea } from '@mui/material'
-import { ExpandMore, Cloud, Edit, Delete, Help, Refresh, Downloading, House, Settings, RocketLaunch, Add, CheckCircle, Workspaces } from '@mui/icons-material'
+import { Paper, OutlinedInput, Typography, Card, Grid, Accordion, Box, Modal, AccordionSummary, AccordionDetails, Button, Divider } from '@mui/material'
+import { ExpandMore, Cloud, Edit, Help, Refresh, Downloading, House, Settings, RocketLaunch, Add } from '@mui/icons-material'
 import Action from '../../components/Action'
 import Desktop from '../../components/Desktop'
 import Request from '../../utils/Request'
@@ -9,7 +9,6 @@ import Loading from '../../components/Loading'
 import * as AbstractIcon from '@mui/icons-material'
 import DeleteButton from '../../components/views/DeleteButton'
 import md5 from 'md5'
-
 
 class DetailSmartObject extends React.Component {
 
@@ -56,7 +55,6 @@ class DetailSmartObject extends React.Component {
         let resultRoom = await new Request().get().fetch("/api/rooms")
         let resultPositions = await new Request().get().fetch("/api/positions")
         let resultSmartobject = await new Request().get().fetch("/api/smartobjects/" + this.state.id)
-        //let resultSmartobjectState = await new Request().get().fetch("/api/smartobjects/" + this.state.id + "/state")
         let resultSmartobjectWidgetState = await new Request().get().fetch("/api/smartobjects/" + this.state.id + "/widgets/state")
         if(resultSmartobjectWidgetState.error == false) {
             this.setState({smartobjectState: resultSmartobjectWidgetState.data})
@@ -209,7 +207,7 @@ class DetailSmartObject extends React.Component {
                                     {String.capitalizeFirstLetter(this.state.smartobject.reference)}
                                 </Typography>
                                 <Typography variant='subtitle2' color="text.secondary"  >
-                                    {String.capitalizeFirstLetter(this.state.smartobject.module) + " - " + this.state.smartobject.configuration.version}
+                                    {String.capitalizeFirstLetter(this.state.smartobject.module)}
                                 </Typography>
                             </Box>
                         </Box>
