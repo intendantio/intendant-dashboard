@@ -11,14 +11,10 @@ class System extends React.Component {
     constructor(props) {
         super(props)
         this.state = {
-            product: "light",
             status: { web: { status: "SUCCESS", message: "" }, cloud: { status: "SUCCESS", message: "" }, market: { status: "SUCCESS", message: "" }, manager: { status: "SUCCESS", message: "" } },
-            page: 0,
-            packages: [],
             loading: true,
             upgrade: false,
             version: "",
-            smartobjects: [],
             providers: new Map(),
             codes: [],
             currentVersion: ""
@@ -40,7 +36,6 @@ class System extends React.Component {
             }
         })
         let resultCodesJSON = await resultCodes.json()
-        
         if (resultCodesJSON.error) {
             this.props.setMessage(resultCodesJSON.package + " : " + resultCodesJSON.message)
         } else if (resultUpgrade.error) {
@@ -50,13 +45,11 @@ class System extends React.Component {
         } else if (resultProvidersJSON.error) {
             this.props.setMessage(resultProvidersJSON.package + " : " + resultProvidersJSON.message)
         } else {
-
             let mapProviders = new Map()
             resultProvidersJSON.data.forEach(provider => {
                 mapProviders.set(provider.id, provider)
             })
-            this.setState({ providers: mapProviders, status: resultStatusJSON,codes: resultCodesJSON.data, loading: false })
-   
+            this.setState({ providers: mapProviders, currentVersion: resultConfigurations.data.version, upgrade: resultUpgrade.data.upgrade, version: resultUpgrade.data.version, status: resultStatusJSON, codes: resultCodesJSON.data, loading: false })
         }
     }
 
@@ -65,7 +58,7 @@ class System extends React.Component {
         await new Request().post().fetch("/api/upgrade")
         setTimeout(() => {
             location.reload()
-        },5000)
+        }, 5000)
     }
 
     render() {
@@ -94,7 +87,6 @@ class System extends React.Component {
                                         </Card>
                                     </Grid>
                                 </> : null
-
                         }
                         <Grid item xs={12} md={12} lg={3} >
                             <Card variant='outlined' style={{ padding: 12 }}  >
@@ -130,21 +122,18 @@ class System extends React.Component {
                                 <Divider style={{ marginTop: 12, marginBottom: 12 }} />
                                 {
                                     this.state.codes.length == 0 ?
-
-                                            <Box style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
-                                                <Typography style={{ alignSelf: 'center', overflowWrap: 'anywhere' }} color="text.secondary" variant='body2' >{"No active third party services"}</Typography>
-                                            </Box>
-                                     : null
-                                }
-                                {
-                                    this.state.codes.map(code => {
-                                        return (
-                                            <Box key={code.id} style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
-                                                {this.state.status.web.status == "ok" ? <CheckCircle color='success' /> : this.state.status.web.status == "warning" ? <Error color='warning' /> : <Error color='error' />}
-                                                <Typography style={{ marginLeft: 12 }} variant='body1' >{this.state.providers.get(code.providerId).name}</Typography>
-                                            </Box>
-                                        )
-                                    })
+                                        <Box style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
+                                            <Typography style={{ alignSelf: 'center', overflowWrap: 'anywhere' }} color="text.secondary" variant='body2' >{"No active third party services"}</Typography>
+                                        </Box>
+                                        : 
+                                        this.state.codes.map(code => {
+                                            return (
+                                                <Box key={code.id} style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
+                                                    {this.state.status.web.status == "ok" ? <CheckCircle color='success' /> : this.state.status.web.status == "warning" ? <Error color='warning' /> : <Error color='error' />}
+                                                    <Typography style={{ marginLeft: 12 }} variant='body1' >{this.state.providers.get(code.providerId).name}</Typography>
+                                                </Box>
+                                            )
+                                        })
                                 }
                             </Card>
                         </Grid>
