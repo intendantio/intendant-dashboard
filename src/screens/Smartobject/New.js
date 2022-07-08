@@ -1,10 +1,10 @@
 import React from 'react'
-import { MenuItem, TextField, Select, Button, Card, Grid, FormControl, Typography, Paper, Box, Divider } from '@mui/material'
+import { TextField, Button, Card, Grid, Typography, Paper, Box, Divider } from '@mui/material'
 import Desktop from '../../components/Desktop'
 import Action from '../../components/Action'
 import Request from '../../utils/Request'
-import * as AbstractIcon from '@mui/icons-material'
 import Loading from '../../components/Loading'
+import md5 from 'md5'
 
 class NewSmartobject extends React.Component {
 
@@ -37,42 +37,56 @@ class NewSmartobject extends React.Component {
 
     async componentDidMount() {
 
-        let result = await fetch("https://market.intendant.io/docs?id=" + this.props.match.params.idSmartobject)
-        let resultJSON = await result.json()
+        let result = await new Request().get().fetch("/api/smartobjects/configurations")
 
-        if (resultJSON.conditions == undefined) {
-            this.props.setMessage("Missing docs")
-            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
-            return
+        if (result.error) {
+            this.props.setMessage(result.package + " : " + result.message)
+        } else {
+            let currentDocs = false
+            let currentPackage = false
+            result.data.forEach(pPackage => {
+                if(md5(pPackage.name) == this.props.match.params.idSmartobject) {
+                    currentDocs = pPackage.docs
+                    currentPackage = pPackage
+                }
+            })
+            if(currentDocs) {
+                console.log(currentDocs)
+                if (currentDocs.conditions == undefined) {
+                    this.props.setMessage("Missing docs")
+                    this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
+                    return
+                }
+                if (currentDocs.steps == undefined) {
+                    this.props.setMessage("Missing docs")
+                    this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
+                    return
+                }
+                if (currentDocs.video == undefined) {
+                    this.props.setMessage("Missing docs")
+                    this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
+                    return
+                }
+                if (currentPackage == false) {
+                    this.props.setMessage("Missing docs")
+                    this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
+                    return
+                }
+                this.setState({
+                    loading: false,
+                    docs: currentDocs,
+                    package: currentPackage
+                })
+            } else {
+                this.props.setMessage("Missing smartobjects")
+                this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
+                return
+            }
         }
-        if (resultJSON.steps == undefined) {
-            this.props.setMessage("Missing docs")
-            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
-            return
-        }
-        if (resultJSON.video == undefined) {
-            this.props.setMessage("Missing docs")
-            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
-            return
-        }
-        if (resultJSON.package == undefined) {
-            this.props.setMessage("Missing docs")
-            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
-            return
-        }
+        //let result = await fetch("https://market.intendant.io/docs?id=" + this.props.match.params.idSmartobject)
+        //let resultJSON = await result.json()
 
-        let resultInstall = await new Request().patch({package: resultJSON.package.name}).fetch("/api/smartobjects")
-        if(resultInstall.error) {
-            this.props.setMessage(resultInstall.message)
-            this.props.history.push('/room/' + this.state.idRoom + '/smartobject/gallery')
-            return
-
-        }
-        this.setState({
-            loading: false,
-            docs: resultJSON,
-            package: resultJSON.package
-        })
+        
     }
 
 

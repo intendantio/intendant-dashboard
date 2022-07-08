@@ -5,6 +5,7 @@ import { Typography, Paper, Grid, Card, MenuItem, Select, TableHead, InputLabel,
 import Desktop from '../../components/Desktop'
 import md5 from 'md5'
 import Loading from '../../components/Loading'
+import Request from '../../utils/Request'
 
 
 class Smartobject extends React.Component {
@@ -30,27 +31,39 @@ class Smartobject extends React.Component {
     }
 
     async componentDidMount() {
-        let result = await fetch("https://market.intendant.io/products.json")
-        let resultJSON = await result.json()
+        let result = await new Request().get().fetch("/api/smartobjects/configurations")
+
         if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
         } else {
+            let products = []
             let productsType = []
             let manufacturers = []
-            resultJSON.forEach(product => {
-                if (productsType.includes(product.package.product) == false) {
-                    productsType.push(product.package.product)
+
+            result.data.forEach(pPackage => {
+                
+                pPackage.products.forEach(product => {
+                    console.log(product)
+                    product.package = pPackage.name
+                    product.product = pPackage.product
+                    products.push(product)
+                })
+            })
+
+            result.data.forEach(pPackage => {
+                if (productsType.includes(pPackage.product) == false) {
+                    productsType.push(pPackage.product)
                 }
             })
-            resultJSON.forEach(product => {
-                if (manufacturers.includes(product.package.manufacturer) == false) {
-                    manufacturers.push(product.package.manufacturer)
+            products.forEach(product => {
+                if (manufacturers.includes(product.manufacturer) == false) {
+                    manufacturers.push(product.manufacturer)
                 }
             })
             this.setState({
                 loading: false,
-                products: resultJSON,
-                resultProducts: resultJSON,
+                products: products,
+                resultProducts: products,
                 productsType: productsType,
                 manufacturers: manufacturers
             })
@@ -64,10 +77,10 @@ class Smartobject extends React.Component {
                 if (
                     this.state.filter.length == 0 ||
                     product.name.toLowerCase().includes(this.state.filter.toLowerCase()) ||
-                    product.package.manufacturer.toLowerCase().includes(this.state.filter.toLowerCase())
+                    product.manufacturer.toLowerCase().includes(this.state.filter.toLowerCase())
                 ) {
-                    if (this.state.productType == product.package.product || this.state.productType.length == 0) {
-                        if (this.state.manufacturer == product.package.manufacturer || this.state.manufacturer.length == 0) {
+                    if (this.state.productType == product.product || this.state.productType.length == 0) {
+                        if (this.state.manufacturer == product.manufacturer || this.state.manufacturer.length == 0) {
                             arrProducts.push(product)
                         }
                     }
@@ -140,7 +153,7 @@ class Smartobject extends React.Component {
                                             <CardContent style={{ paddingBottom: 2 }} >
                                                 <Typography variant="subtitle1" component="div" >{product.name}</Typography>
                                                 <Typography variant="body2" color="text.secondary">
-                                                    {String.capitalizeFirstLetter(product.package.manufacturer) + " - " + String.capitalizeFirstLetter(product.package.product)}
+                                                    {String.capitalizeFirstLetter(product.manufacturer) + " - " + String.capitalizeFirstLetter(product.product)}
                                                 </Typography>
                                             </CardContent>
                                             <CardActions style={{ justifyContent: 'end' }} >
@@ -149,7 +162,7 @@ class Smartobject extends React.Component {
                                                         <ShoppingCart fontSize='small' />
                                                     </IconButton>
                                                 </a>
-                                                <Link to={"/room/" + this.state.idRoom + "/smartobject/new/" + md5(product.package.name)}>
+                                                <Link to={"/room/" + this.state.idRoom + "/smartobject/new/" + md5(product.package)}>
                                                     <IconButton style={{ borderRadius: 3 }} >
                                                         <Add fontSize='small' />
                                                     </IconButton>
