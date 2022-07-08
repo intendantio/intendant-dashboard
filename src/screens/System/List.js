@@ -68,17 +68,6 @@ class System extends React.Component {
         },5000)
     }
 
-    async revoke(id) {
-        this.setState({ loading: true })
-        let resultCodes = await fetch("https://cloud.intendant.io/ws/revoke/" + id, {
-            headers: {
-                'Authorization': "Bearer " + localStorage.getItem("cloud_token")
-            },
-            method: 'POST'
-        })
-        this.componentDidMount()
-    }
-
     render() {
         return (
             <>
@@ -153,7 +142,6 @@ class System extends React.Component {
                                             <Box key={code.id} style={{ display: 'flex', flexDirection: 'row', marginBottom: 12 }}>
                                                 {this.state.status.web.status == "ok" ? <CheckCircle color='success' /> : this.state.status.web.status == "warning" ? <Error color='warning' /> : <Error color='error' />}
                                                 <Typography style={{ marginLeft: 12 }} variant='body1' >{this.state.providers.get(code.providerId).name}</Typography>
-                                                <Typography onClick={() => {this.revoke(code.id)}} style={{cursor:'pointer', alignSelf: 'center', marginLeft: 12, overflowWrap: 'anywhere' }} color="text.secondary" variant='body1' >{"revoke"}</Typography>
                                             </Box>
                                         )
                                     })
