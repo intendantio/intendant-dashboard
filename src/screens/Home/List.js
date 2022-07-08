@@ -4,6 +4,7 @@ import Request from '../../utils/Request'
 import * as AbstractIcon from '@mui/icons-material'
 import Action from '../../components/Action'
 import Desktop from '../../components/Desktop'
+import Mobile from '../../components/Mobile'
 
 class Home extends React.Component {
 
@@ -84,15 +85,31 @@ class Home extends React.Component {
                                     <Box style={{ width: '100%' }}>
                                         <Skeleton height={40} />
                                     </Box> :
-                                    <>
-                                        <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
-                                            <Typography variant='h6' fontWeight='bold' >Dashboard</Typography>
-                                        </Box>
-                                    </>
+                                    <Box style={{ flex: 4, alignSelf: 'center', alignItems: 'center' }} >
+                                        <Typography variant='h6' fontWeight='bold' >Dashboard</Typography>
+                                    </Box>
                             }
                         </Box>
                     </Paper>
                 </Desktop>
+                <Mobile {... this.props}>
+                    {
+                        this.state.loading ? <Paper variant="outlined" style={{ padding: 12, justifyContent: 'left', marginBottom: 12 }}>
+                            <Box style={{ display: 'flex', flex: 1 }} >
+                                <Box style={{ width: '100%' }}>
+                                    <Skeleton height={40} />
+                                    <Skeleton height={40} />
+                                    <Skeleton height={40} />
+                                    <Skeleton height={40} />
+                                    <Skeleton height={40} />
+                                    <Skeleton height={40} />
+                                    <Skeleton height={40} />
+                                    <Skeleton height={40} />
+                                </Box>
+                            </Box>
+                        </Paper> : null
+                    }
+                </Mobile>
                 {
                     this.state.rooms.length == 0 ? null :
                         <Card variant='outlined' >
@@ -184,7 +201,7 @@ class Home extends React.Component {
                 <Grid container spacing={1}   >
                     <Grid item xs={4} md={1} lg={1}>
                         <Card variant='outlined'  >
-                            <Button variant='text' onClick={() => { this.setState({ loading: true,rapports: [], rooms: [], processes: [] }, () => { this.componentDidMount() }) }} style={{ textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
+                            <Button variant='text' onClick={() => { this.setState({ loading: true, rapports: [], rooms: [], processes: [] }, () => { this.componentDidMount() }) }} style={{ textTransform: 'none', textAlign: 'center', width: '100%', height: '100%', display: 'flex', flexDirection: 'column' }}>
                                 <AbstractIcon.Refresh sx={{ color: 'white' }} size='medium' />
                             </Button>
                         </Card>
