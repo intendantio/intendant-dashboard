@@ -27,16 +27,12 @@ class NewAutomation extends React.Component {
 
     async componentDidMount() {
         let result = await new Request().get().fetch("/api/smartobjects")
-        //let resultProcess = await new Request().get().fetch("/api/processes")
-        /*
-            if (resultProcess.error) {
+        let resultProcess = await new Request().get().fetch("/api/processes/withoutData")
+        
+        if (resultProcess.error) {
                 this.props.setMessage(resultProcess.package + " : " + resultProcess.message)
                 this.props.history.push('/automation')
-            } else 
-        */
-
-
-        if (result.error) {
+        } else if (result.error) {
             this.props.setMessage(result.package + " : " + result.message)
             this.props.history.push('/automation')
         } else {
@@ -49,6 +45,21 @@ class NewAutomation extends React.Component {
                 smartobject.type = "smartobject"
                 sources.push(smartobject)
             })
+
+            resultProcess.data.forEach(process => {
+                process.type = "process"
+                process.triggers = []
+                process.id = process.hash
+                process.reference = process.name
+                process.actions = [{
+                    type: "effect",
+                    name: process.name,
+                    settings: process.settings,
+                    id: process.action
+                }]
+                sources.push(process)
+            })
+
             this.setState({ loading: false, sources: sources })
         }
     }

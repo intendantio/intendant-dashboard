@@ -65,6 +65,7 @@ class Routine extends React.Component {
                                 </Grid>
                                 :
                                 this.state.automations.map((automation, index) => {
+                                    console.log(automation)
                                     return (
                                         <Grid key={index} item xs={12} md={12} lg={12}>
                                             <Card variant='outlined' style={{ padding: 12, display: 'flex', flexDirection: 'row', justifyContent: 'flex-start' }} >
@@ -73,7 +74,7 @@ class Routine extends React.Component {
                                                         <Card variant='outlined' style={{ justifyContent: 'center', alignItems: 'center', padding: 5, display: 'flex', flexDirection: 'row', borderRadius: 5, marginRight: 10 }}>
                                                             <Bolt fontSize='medium' />
                                                             <Box style={{ marginLeft: 12 }}>
-                                                                <Typography variant='subtitle1' >{"TITLE"}</Typography>
+                                                                <Typography variant='subtitle1' >{automation.trigger.trigger.toUpperCase()}</Typography>
                                                             </Box>
                                                         </Card>
                                                     </Grid>
