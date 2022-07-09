@@ -1,7 +1,7 @@
 import React from 'react'
 import JSONPretty from 'react-json-pretty'
 import { Paper, OutlinedInput, Typography, Card, Grid, Accordion, Box, Modal, AccordionSummary, AccordionDetails, Button, Divider } from '@mui/material'
-import { ExpandMore, Cloud, Edit, Help, Refresh, Downloading, House, Settings, RocketLaunch, Add } from '@mui/icons-material'
+import { ExpandMore, Cloud, Edit, Help, Refresh, Downloading, House, Settings, RocketLaunch, Add, History } from '@mui/icons-material'
 import Action from '../../components/Action'
 import Desktop from '../../components/Desktop'
 import Request from '../../utils/Request'
@@ -35,6 +35,7 @@ class DetailSmartObject extends React.Component {
             positions: [],
             expanded: "action",
             rooms: [],
+            history: [],
             modalOpen: false,
             content: {},
             loadingAction: "",
@@ -56,8 +57,9 @@ class DetailSmartObject extends React.Component {
         let resultPositions = await new Request().get().fetch("/api/positions")
         let resultSmartobject = await new Request().get().fetch("/api/smartobjects/" + this.state.id)
         let resultSmartobjectWidgetState = await new Request().get().fetch("/api/smartobjects/" + this.state.id + "/widgets/state")
-        if(resultSmartobjectWidgetState.error == false) {
-            this.setState({smartobjectState: resultSmartobjectWidgetState.data})
+        let resultSmartobjectHistory = await new Request().get().fetch("/api/smartobjects/" + this.state.id + "/history")
+        if (resultSmartobjectWidgetState.error == false) {
+            this.setState({ smartobjectState: resultSmartobjectWidgetState.data })
         }
         if (resultRoom.error) {
             this.props.setMessage(resultRoom.package + " : " + resultRoom.message)
@@ -68,10 +70,13 @@ class DetailSmartObject extends React.Component {
         } else if (resultPositions.error) {
             this.props.setMessage(resultPositions.package + " : " + resultPositions.message)
             this.props.history.push('/room/' + this.state.idRoom)
+        } else if (resultSmartobjectHistory.error) {
+            this.props.setMessage(resultSmartobjectHistory.package + " : " + resultSmartobjectHistory.message)
+            this.props.history.push('/room/' + this.state.idRoom)
         } else {
             this.props.setTitle(resultSmartobject.data.reference)
             this.setState({
-                reference: resultSmartobject.data.reference, positions: resultPositions.data, loadingAction: "", loading: false, smartobject: resultSmartobject.data, rooms: resultRoom.data
+                reference: resultSmartobject.data.reference, history: resultSmartobjectHistory.data.reverse().slice(1,25), positions: resultPositions.data, loadingAction: "", loading: false, smartobject: resultSmartobject.data, rooms: resultRoom.data
             })
         }
     }
@@ -115,7 +120,7 @@ class DetailSmartObject extends React.Component {
     }
 
     async addPosition() {
-        if(this.state.positionName.length == "") {
+        if (this.state.positionName.length == "") {
             this.props.setMessage("Missing position name")
         } else {
             let result = await new Request().post({ name: this.state.positionName }).fetch("/api/positions")
@@ -223,19 +228,19 @@ class DetailSmartObject extends React.Component {
                                         this.state.smartobject.status.status == "ERROR" ?
                                             <AbstractIcon.PriorityHigh style={{ fontSize: '28px', marginRight: 10 }} /> :
                                             this.state.smartobject.status.status == "SUCCESS" ?
-                                                <AbstractIcon.Check style={Object.assign({ fontSize: '28px', marginRight: 10 },this.state.smartobjectState.title.styles)} /> :
+                                                <AbstractIcon.Check style={Object.assign({ fontSize: '28px', marginRight: 10 }, this.state.smartobjectState.title.styles)} /> :
                                                 this.state.smartobject.status.status == "EXCEPTIONS" ?
                                                     <AbstractIcon.QuestionMark style={{ fontSize: '28px', marginRight: 10 }} /> :
                                                     <Help style={{ fontSize: '28px' }} />
                                     }
                                     {
                                         this.state.smartobject.status.status == "SUCCESS" ?
-                                        <Typography variant='h6' style={this.state.smartobjectState.title.styles} >
-                                            {String.capitalizeFirstLetter(this.state.smartobjectState.title.value)}
-                                        </Typography> :
-                                        <Typography variant='h6' >
-                                            {String.capitalizeFirstLetter(this.state.smartobject.status.reason)}
-                                        </Typography>
+                                            <Typography variant='h6' style={this.state.smartobjectState.title.styles} >
+                                                {String.capitalizeFirstLetter(this.state.smartobjectState.title.value)}
+                                            </Typography> :
+                                            <Typography variant='h6' >
+                                                {String.capitalizeFirstLetter(this.state.smartobject.status.reason)}
+                                            </Typography>
                                     }
                                 </AccordionSummary>
                                 <Divider />
@@ -243,14 +248,14 @@ class DetailSmartObject extends React.Component {
                                     <Grid container >
                                         {
                                             this.state.smartobject.status.status == "SUCCESS" &&
-                                            this.state.smartobjectState.values.map(content => {
-                                                    return (
-                                                        <Grid style={{marginTop: 5}} item xs={12} md={12} lg={12} >
-                                                            <Typography style={content.styles} variant='body2' >
-                                                                {String.capitalizeFirstLetter(content.value)}
-                                                            </Typography>
-                                                        </Grid>
-                                                    )
+                                            this.state.smartobjectState.values.map((content, index) => {
+                                                return (
+                                                    <Grid key={index} style={{ marginTop: 5 }} item xs={12} md={12} lg={12} >
+                                                        <Typography style={content.styles} variant='body2' >
+                                                            {String.capitalizeFirstLetter(content.value)}
+                                                        </Typography>
+                                                    </Grid>
+                                                )
                                             })
                                         }
                                     </Grid>
@@ -330,13 +335,13 @@ class DetailSmartObject extends React.Component {
                                             })
                                         }
                                     </Grid>
-                                    <Divider style={{marginTop: 15, marginBottom: 15}} />
+                                    <Divider style={{ marginTop: 15, marginBottom: 15 }} />
                                     <Grid container spacing={1}>
                                         {
                                             this.state.positions.map((position, index) => {
                                                 let currentPosition = this.state.smartobject.position ? this.state.smartobject.position.id : -1
                                                 return (
-                                                    <Grid key={index} item xs={12} md={3} lg={2}  style={{display:'flex'}}>
+                                                    <Grid key={index} item xs={12} md={3} lg={2} style={{ display: 'flex' }}>
                                                         <Button onClick={() => { this.updatePosition(currentPosition == position.id ? -1 : position.id) }} color={this.state.smartobject.position && position.id == this.state.smartobject.position.id ? 'success' : 'primary'} variant={'contained'} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderColor: 'white', width: '100%' }} >
                                                             <Typography variant='body1' style={{ color: 'white' }}   >
                                                                 {position.name}
@@ -346,17 +351,17 @@ class DetailSmartObject extends React.Component {
                                                 )
                                             })
                                         }
-                                        <Grid item xs={12} md={6} lg={2} style={{display:'flex'}}>
+                                        <Grid item xs={12} md={6} lg={2} style={{ display: 'flex' }}>
                                             <OutlinedInput
-                                                style={{borderEndEndRadius: 0, borderTopRightRadius: 0, width: '100%'}}
+                                                style={{ borderEndEndRadius: 0, borderTopRightRadius: 0, width: '100%' }}
                                                 size='small'
                                                 value={this.state.positionName}
-                                                onChange={(event) => {  this.setState({ positionName: event.nativeEvent.target.value })  }}
+                                                onChange={(event) => { this.setState({ positionName: event.nativeEvent.target.value }) }}
                                                 variant="filled"
                                                 margin='none'
                                             />
                                             <Button onClick={() => { this.addPosition() }} color={'primary'} variant={'contained'} style={{ padding: 5, paddingTop: 10, paddingBottom: 10, borderStartStartRadius: 0, borderBottomLeftRadius: 0, borderColor: 'white' }} >
-                                                <Add/>
+                                                <Add />
                                             </Button>
                                         </Grid>
                                     </Grid>
@@ -387,7 +392,37 @@ class DetailSmartObject extends React.Component {
                                     </Grid>
                                 </AccordionDetails>
                             </Accordion>
-                        </Grid> <Grid item xs={12} md={12} lg={12} >
+                        </Grid>
+                        <Grid item xs={12} md={12} lg={12} >
+                            <Accordion variant='outlined' expanded={this.state.expanded === 'history'} onChange={() => this.setState({ expanded: "history" })}>
+                                <AccordionSummary expandIcon={<ExpandMore />} >
+                                    <History style={{ fontSize: '28px' }} />
+                                    <Typography variant='h6' style={{ marginLeft: 10 }}>
+                                        History
+                                    </Typography>
+                                </AccordionSummary>
+                                <Divider />
+                                <AccordionDetails>
+                                    <Grid container spacing={2} style={{ height: 200, overflowX: 'auto', marginTop: 6 }} >
+                                        {
+                                            this.state.history.map(history => {
+                                                return (
+                                                    <Grid item xs={12} md={4} lg={3} >
+                                                        <Typography variant='subtitle1' >
+                                                            {String.capitalizeFirstLetter(history.action)}
+                                                        </Typography>
+                                                        <Typography variant='caption' >
+                                                            {history.date}
+                                                        </Typography>
+                                                    </Grid>
+                                                )
+                                            })
+                                        }
+                                    </Grid>
+                                </AccordionDetails>
+                            </Accordion>
+                        </Grid>
+                        <Grid item xs={12} md={12} lg={12} >
                             <Accordion variant='outlined' expanded={this.state.expanded === 'more'} onChange={() => this.setState({ expanded: "more" })}>
                                 <AccordionSummary expandIcon={<ExpandMore />} >
                                     <Settings style={{ fontSize: '28px' }} />
