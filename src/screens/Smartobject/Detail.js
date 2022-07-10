@@ -407,7 +407,7 @@ class DetailSmartObject extends React.Component {
                                         {
                                             this.state.history.map(history => {
                                                 return (
-                                                    <Grid item xs={12} md={4} lg={3} >
+                                                    <Grid item xs={6} md={4} lg={3} >
                                                         <Typography variant='subtitle1' >
                                                             {String.capitalizeFirstLetter(history.action)}
                                                         </Typography>
