@@ -1,5 +1,5 @@
 import React from 'react'
-import { Paper, Typography, Radio, Box, Grid, Card, FormControl, RadioGroup, FormControlLabel } from '@mui/material'
+import { Paper, Typography, Radio, Box, Grid, Card, FormControl, RadioGroup, FormControlLabel, TextField, Button } from '@mui/material'
 import Desktop from '../../components/Desktop'
 import Loading from '../../components/Loading'
 import DeleteButton from '../../components/views/DeleteButton'
@@ -14,6 +14,8 @@ class DetailUser extends React.Component {
             id: props.match.params.id,
             profiles: [],
             loading: true,
+            update: false,
+            newPassword: "",
             user: {
                 login: "",
                 imei: "",
@@ -58,6 +60,26 @@ class DetailUser extends React.Component {
         }
     }
 
+
+    async updatePassword() {
+        console.log(this.state)
+        if(this.state.newPassword.isNumber()) {
+            if(this.state.newPassword.length == 6) {
+                let result = await new Request().post({ password: this.state.newPassword }).fetch("/api/users/" + this.state.id + "/password")
+                if (result.error) {
+                    this.props.setMessage(result.package + " : " + result.message)
+                } else {
+                    this.setState({update: false, loading: true, newPassword: ""})
+                    this.componentDidMount()
+                }
+            } else {
+                this.props.setMessage("Password must have length of 6")
+            }
+        } else {
+            this.props.setMessage("Password must have only a number")
+        }
+    }
+
     render() {
         return (
             <>
@@ -69,7 +91,7 @@ class DetailUser extends React.Component {
                                     {String.capitalizeFirstLetter(this.state.user.login)}
                                 </Typography>
                                 <Typography variant='subtitle2' color="text.secondary"  >
-                                    {this.state.user.imei}
+                                    {"Everything you need to know about a user"}
                                 </Typography>
                             </Box>
                         </Box>
@@ -79,6 +101,9 @@ class DetailUser extends React.Component {
                     <Grid container spacing={1} style={{ marginTop: 0 }}>
                         <Grid item xs={12} md={4} lg={4}>
                             <Card variant={'outlined'} style={{ padding: 10 }} >
+                                <Typography variant='h6' style={{ marginBottom: 10 }}  >
+                                    {"Profile"}
+                                </Typography>
                                 <FormControl>
                                     <RadioGroup value={this.state.user.profile} onChange={(event) => { this.updateProfile(event.target.value) }} >
                                         {
@@ -94,7 +119,7 @@ class DetailUser extends React.Component {
                         </Grid>
                         <Grid item xs={12} md={8} lg={8}>
                             <Card variant={'outlined'} style={{ padding: 10 }} >
-                                <Typography variant='h5' style={{ marginBottom: 10 }}  >
+                                <Typography variant='h6' style={{ marginBottom: 10 }}  >
                                     {"Histories"}
                                 </Typography>
                                 {
@@ -109,6 +134,28 @@ class DetailUser extends React.Component {
                                 }
                             </Card>
                         </Grid>
+                        <Grid item xs={12} md={4} lg={4}>
+                            <Card variant={'outlined'} style={{ padding: 10 }} >
+                                <Typography variant='h6' style={{ marginBottom: 10 }}  >
+                                    {"Settings"}
+                                </Typography>
+                                <FormControl>
+                                    {
+                                        this.state.update ?
+                                            <>
+                                                <TextField value={this.state.newPassword} onChange={(event) => { this.setState({newPassword: event.currentTarget.value}) }} placeholder='000000' variant="outlined" size='small' />
+                                                <Button onClick={() => this.updatePassword()} color='primary' variant='contained' style={{ marginTop: 12 }} size='small' >
+                                                    Save
+                                                </Button>
+                                            </>
+                                            :
+                                            <Button onClick={() => this.setState({ update: true, newPassword: "" })} color='primary' variant='contained' size='small' >
+                                                Update password
+                                            </Button>
+                                    }
+                                </FormControl>
+                            </Card>
+                        </Grid>
                         <DeleteButton onClick={() => { this.delete() }} />
                     </Grid>
                 </Loading>
@@ -116,6 +163,8 @@ class DetailUser extends React.Component {
         )
     }
 }
+
+String.prototype.isNumber = function(){return /^\d+$/.test(this);}
 
 
 export default DetailUser

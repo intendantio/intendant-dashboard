@@ -18,8 +18,7 @@ class NewAutomation extends React.Component {
             selected: null,
             trigger: null,
             triggers: [],
-            step: "trigger",
-            description: ""
+            step: "trigger"
         }
         props.setTitle("New automation")
         props.setActionType("return")
@@ -77,7 +76,6 @@ class NewAutomation extends React.Component {
         }
 
         let automation = {
-            description: this.state.description,
             trigger: {
                 type: this.state.trigger.parentType,
                 object: this.state.trigger.parent,
@@ -110,15 +108,12 @@ class NewAutomation extends React.Component {
                 </Desktop>
                 <Loading loading={this.state.loading}>
                     <Card variant='outlined' style={{ padding: 10, marginTop: 8 }}>
-                        <Stepper activeStep={{ trigger: 0, action: 1, description: 2 }[this.state.step]} >
+                        <Stepper activeStep={{ trigger: 0, action: 1 }[this.state.step]} >
                             <Step key={"trigger"}>
                                 <StepLabel>{"Trigger"}</StepLabel>
                             </Step>
                             <Step key={"action"}>
                                 <StepLabel>{"Action"}</StepLabel>
-                            </Step>
-                            <Step key={"description"}>
-                                <StepLabel>{"Description"}</StepLabel>
                             </Step>
                         </Stepper>
                     </Card>
@@ -132,7 +127,7 @@ class NewAutomation extends React.Component {
                                         return (
                                             <Grid key={index} item xs={12} md={6} lg={4} >
                                                 <Card variant='outlined'   >
-                                                    <CardActionArea onClick={() => { this.setState({ step: "action", trigger: trigger, selected: null, description: "IF " + trigger.name.toLowerCase() + " THEN " }) }} style={{ padding: 10 }} >
+                                                    <CardActionArea onClick={() => { this.setState({ step: "action", trigger: trigger, selected: null }) }} style={{ padding: 10 }} >
                                                         <Typography variant='subtitle1'  >
                                                             {String.capitalizeFirstLetter(trigger.name)}
                                                         </Typography>
@@ -182,7 +177,7 @@ class NewAutomation extends React.Component {
                                                                 {action.name}
                                                             </Typography>
                                                         </Grid>
-                                                        <NextButton xs={6} md={1} lg={1} onClick={() => { this.setState({ step: "description", action: action, selected: null, description: this.state.description + action.name.toLowerCase() }) }} />
+                                                        <NextButton xs={6} md={1} lg={1} onClick={() => { this.setState({step: "", action: action, selected: null }, () => { this.submit() });  }} />
                                                         {
                                                             action.settings.map((setting, pIndex) => {
                                                                 return <Action key={pIndex} options={setting.options} label={String.capitalizeFirstLetter(setting.id)} setState={this.setState.bind(this)} id={action.id + "-" + setting.id} action={setting} />
@@ -225,26 +220,6 @@ class NewAutomation extends React.Component {
                                     </>
 
                             }
-                        </StepperProxy>
-                        <StepperProxy index={"description"} value={this.state.step} >
-                            <Grid item xs={12} md={12} lg={12}>
-                                <Card variant='outlined' style={{ padding: 10, display: 'flex', alignItems: 'center' }}>
-                                    <Grid container spacing={1}>
-                                        <Grid item xs={12} md={10} lg={10}>
-                                            <TextField value={this.state.description} onChange={(event) => { this.setState({ description: event.nativeEvent.target.value }) }} placeholder='Description' style={{ width: '100%' }} >
-
-                                            </TextField>
-                                        </Grid>
-                                        <Grid item xs={12} md={2} lg={2} style={{ display: 'flex', justifyContent: 'end' }}>
-                                            <Card variant='outlined' style={{ height: '100%', width: 'min-content' }} >
-                                                <CardActionArea onClick={() => { this.submit() }} style={{ padding: 8, paddingLeft: 16, paddingRight: 16, display: 'flex', height: '100%' }}>
-                                                    <Typography variant='subtitle1' >Submit</Typography>
-                                                </CardActionArea>
-                                            </Card>
-                                        </Grid>
-                                    </Grid>
-                                </Card>
-                            </Grid>
                         </StepperProxy>
                     </Grid>
                 </Loading>

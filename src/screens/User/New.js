@@ -41,11 +41,19 @@ class NewUser extends React.Component {
         } else if (this.state.password != this.state.confirmationPassword) {
             this.props.setMessage("Passwords are not the same")
         } else {
-            let result = await new Request().post({ login: this.state.login, password: this.state.password, profile: this.state.profile.id, imei: "" }).fetch("/api/users")
-            if (result.error) {
-                this.props.setMessage(result.package + " : " + result.message)
+            if(this.state.password.isNumber()) {
+                if(this.state.password.length == 6) {
+                    let result = await new Request().post({ login: this.state.login, password: this.state.password, profile: this.state.profile.id, imei: "" }).fetch("/api/users")
+                    if (result.error) {
+                        this.props.setMessage(result.package + " : " + result.message)
+                    } else {
+                        this.props.history.push('/user')
+                    }
+                } else {
+                    this.props.setMessage("Password must have length of 6")
+                }
             } else {
-                this.props.history.push('/user')
+                this.props.setMessage("Password must have only a number")
             }
         }
     }
@@ -76,10 +84,10 @@ class NewUser extends React.Component {
                                 <TextField style={{ width: '100%' }} placeholder='Login' variant="outlined" value={this.state.login} onChange={(event) => { this.setState({ login: event.currentTarget.value }) }} />
                             </Grid>
                             <Grid item xs={12} md={6} lg={6}>
-                                <TextField style={{ width: '100%' }} type='password' placeholder='Password' variant="outlined" value={this.state.password} onChange={(event) => { this.setState({ password: event.currentTarget.value }) }} />
+                                <TextField style={{ width: '100%' }} placeholder='Password' variant="outlined" value={this.state.password} onChange={(event) => { this.setState({ password: event.currentTarget.value }) }} />
                             </Grid>
                             <Grid item xs={12} md={6} lg={6}>
-                                <TextField style={{ width: '100%' }} placeholder='Confirm password' type='password' variant="outlined" value={this.state.confirmationPassword} onChange={(event) => { this.setState({ confirmationPassword: event.currentTarget.value }) }} />
+                                <TextField style={{ width: '100%' }} placeholder='Confirm password'  variant="outlined" value={this.state.confirmationPassword} onChange={(event) => { this.setState({ confirmationPassword: event.currentTarget.value }) }} />
                             </Grid>
                             <Grid item xs={12} md={10} lg={7}>
                                 <FormControl>
