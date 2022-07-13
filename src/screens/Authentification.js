@@ -64,7 +64,7 @@ class Authentification extends React.Component {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json'
             },
-            body: JSON.stringify({ login: "admin_pin", password: this.state.codepin })
+            body: JSON.stringify({ login: "admin", password: this.state.codepin })
         })
         let resultJSON = await result.json()
         if (resultJSON.error) {
